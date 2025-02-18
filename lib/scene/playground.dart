@@ -14,12 +14,27 @@ class Playground extends World with HasGameReference<WOTGame> {
 
     await Flame.images.loadAll([
       'room/bg.png',
+      'room/bill.png',
       'room/box.png',
+      'room/calendar.png',
       'room/clock.png',
-      'room/pay.png',
-      'room/tv.png'
+      'room/coat.png',
+      'room/picFrame.png',
+      'room/scarf.png',
+      'room/tv.png',
+      'room/vase.png',
     ]);
-    final home = Home.withItems(['box', 'clock', 'pay', 'tv']);
+    final home = Home.withItems([
+      'bill',
+      'box',
+      'calendar',
+      'clock',
+      'coat',
+      'picFrame',
+      'scarf',
+      'tv',
+      'vase'
+    ]);
     add(home);
 
     game.camera.viewfinder.anchor = Anchor.topLeft;

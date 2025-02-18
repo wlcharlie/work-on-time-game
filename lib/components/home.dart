@@ -1,12 +1,18 @@
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
+import 'package:work_on_time_game/models/vector_with_index.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
-Map<String, Vector2> itemPositions = {
-  'clock': Vector2(140, 176),
-  'pay': Vector2(1006, 633),
-  'tv': Vector2(456, 460),
-  'box': Vector2(59, 598),
+Map<String, VectorWithIndex> itemPositions = {
+  'bill': VectorWithIndex(x: 1001, y: 594),
+  'box': VectorWithIndex(x: 67, y: 541),
+  'calendar': VectorWithIndex(x: 704, y: 548),
+  'clock': VectorWithIndex(x: 161, y: 159),
+  'coat': VectorWithIndex(x: 791, y: 283, index: 1),
+  'picFrame': VectorWithIndex(x: 797, y: 542),
+  'scarf': VectorWithIndex(x: 964, y: 327),
+  'tv': VectorWithIndex(x: 356, y: 416),
+  'vase': VectorWithIndex(x: 0, y: 416),
 };
 
 class Home extends PositionComponent with HasGameReference<WOTGame> {
@@ -25,11 +31,9 @@ class Home extends PositionComponent with HasGameReference<WOTGame> {
 
     final image = game.images.fromCache("room/bg.png");
     final sprite = Sprite(image);
-    final scale = game.size.y / sprite.src.bottom;
-    final width = sprite.src.width * scale;
+    final width = sprite.src.width;
     background = SpriteComponent(
       sprite: sprite,
-      size: Vector2(width, game.size.y),
     );
     size = Vector2(width, game.size.y);
     add(background);
@@ -40,7 +44,8 @@ class Home extends PositionComponent with HasGameReference<WOTGame> {
         final sprite = Sprite(image);
         final itemComponent = SpriteComponent(
           sprite: sprite,
-          position: itemPositions[item]!,
+          position: itemPositions[item]!.vector2,
+          priority: itemPositions[item]!.index,
         );
         add(itemComponent);
       }
