@@ -17,6 +17,9 @@ List<String> itemKeys = [
 ];
 
 class BedRoom extends PositionComponent with HasGameReference<WOTGame> {
+  @override
+  ComponentKey get key => ComponentKey.named("bed_room");
+
   late SpriteComponent background;
 
   Map<String, Component> items = {};

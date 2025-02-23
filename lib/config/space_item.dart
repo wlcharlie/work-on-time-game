@@ -7,7 +7,7 @@ Map<String, VectorWithIndex> itemPositions = {
   'calendar': VectorWithIndex(x: 704, y: 548),
   'clock': VectorWithIndex(x: 161, y: 159),
   'coat': VectorWithIndex(x: 791, y: 283, index: 1),
-  'picFrame': VectorWithIndex(x: 797, y: 542),
+  'pic_frame': VectorWithIndex(x: 797, y: 542),
   'scarf': VectorWithIndex(x: 964, y: 327),
   'tv': VectorWithIndex(x: 356, y: 416),
   'vase': VectorWithIndex(x: 0, y: 416),

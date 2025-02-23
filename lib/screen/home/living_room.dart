@@ -4,6 +4,9 @@ import 'package:work_on_time_game/config/space_item.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 class LivingRoom extends PositionComponent with HasGameReference<WOTGame> {
+  @override
+  ComponentKey get key => ComponentKey.named("living_room");
+
   late SpriteComponent background;
   List<String> items = [
     'bill',
@@ -11,7 +14,7 @@ class LivingRoom extends PositionComponent with HasGameReference<WOTGame> {
     'calendar',
     'clock',
     'coat',
-    'picFrame',
+    'pic_frame',
     'scarf',
     'tv',
     'vase',

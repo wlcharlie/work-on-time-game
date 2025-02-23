@@ -19,7 +19,7 @@ class Playground extends World with HasGameReference<WOTGame> {
       'room/calendar.png',
       'room/clock.png',
       'room/coat.png',
-      'room/picFrame.png',
+      'room/pic_frame.png',
       'room/scarf.png',
       'room/tv.png',
       'room/vase.png',
@@ -30,7 +30,7 @@ class Playground extends World with HasGameReference<WOTGame> {
       'calendar',
       'clock',
       'coat',
-      'picFrame',
+      'pic_frame',
       'scarf',
       'tv',
       'vase'

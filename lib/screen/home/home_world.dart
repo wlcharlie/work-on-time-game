@@ -2,10 +2,15 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
 import 'package:work_on_time_game/screen/home/bed_room.dart';
-// import 'package:work_on_time_game/screen/home/living_room.dart';
+import 'package:work_on_time_game/screen/home/living_room.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 class HomeWorld extends World with HasGameReference<WOTGame> {
+  final initialScene = 'bed_room';
+  final bedRoom = BedRoom();
+  final livingRoom = LivingRoom();
+  String currentScene = ''; // living_room, bed_room
+
   @override
   ComponentKey get key => ComponentKey.named("home_world");
 
@@ -37,20 +42,39 @@ class HomeWorld extends World with HasGameReference<WOTGame> {
       'bed_room/paper_ball.png',
       'bed_room/phone.png',
     ]);
-    // final livingRoom = LivingRoom();
-    // add(livingRoom);
-
-    // game.camera.viewfinder.anchor = Anchor.topLeft;
-    // game.camera.setBounds(livingRoom.bounds);
-
-    final bedRoom = BedRoom();
-    add(bedRoom);
 
     game.camera.viewfinder.anchor = Anchor.topLeft;
-    game.camera.setBounds(bedRoom.bounds);
+    switchScene(initialScene);
+
+    // add(livingRoom);
+    // game.camera.setBounds(livingRoom.bounds);
+    game.overlays.add('homeLevelInspector');
   }
 
   void handlePanUpdate(DragUpdateInfo info) {
     game.camera.moveBy(Vector2(-info.delta.global.x, 0));
+  }
+
+  void switchScene(String scene) {
+    // currentScene = scene;
+    if (scene == currentScene) return;
+
+    if (scene == 'living_room') {
+      currentScene = 'living_room';
+      if (game.findByKey(bedRoom.key) != null) {
+        remove(bedRoom);
+      }
+      add(livingRoom);
+      game.camera.setBounds(livingRoom.bounds);
+    } else if (scene == 'bed_room') {
+      currentScene = 'bed_room';
+      if (game.findByKey(livingRoom.key) != null) {
+        remove(livingRoom);
+      }
+      add(bedRoom);
+      game.camera.setBounds(bedRoom.bounds);
+    }
+
+    game.camera.moveTo(Vector2(0, 0));
   }
 }
