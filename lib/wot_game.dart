@@ -1,17 +1,20 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
-import 'package:work_on_time_game/scene/playground.dart';
+import 'package:work_on_time_game/screen/home/home_world.dart';
 
 class WOTGame extends FlameGame with PanDetector {
   late final RouterComponent router;
+  late final HomeWorld homeWorld;
 
   @override
   bool debugMode = true;
 
   @override
   void onLoad() {
-    world = Playground();
+    homeWorld = HomeWorld();
+
+    world = homeWorld;
     // 固定解析度(?) 看起來不用出兩倍圖了Ａ＿Ａ
     camera = CameraComponent.withFixedResolution(
       width: 393,
@@ -22,25 +25,10 @@ class WOTGame extends FlameGame with PanDetector {
   // - PanDetector
   // 看起來能只透過FlameGame extends PanDetector 來實現嗎
   @override
-  void onPanDown(DragDownInfo info) {
-    super.onPanDown(info);
-  }
-
-  @override
   void onPanUpdate(DragUpdateInfo info) {
     super.onPanUpdate(info);
-    if (world.key == ComponentKey.named("playground")) {
-      (world as Playground).handlePanUpdate(info);
+    if (world.key == homeWorld.key) {
+      (world as HomeWorld).handlePanUpdate(info);
     }
-  }
-
-  @override
-  void onPanEnd(DragEndInfo info) {
-    super.onPanEnd(info);
-  }
-
-  @override
-  void onPanCancel() {
-    super.onPanCancel();
   }
 }
