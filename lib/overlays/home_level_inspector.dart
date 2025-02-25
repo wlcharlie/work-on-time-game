@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:work_on_time_game/config/icons.dart';
 import 'package:work_on_time_game/config/style.dart';
 import 'package:work_on_time_game/config/typography.dart';
+import 'package:work_on_time_game/screen/home/home_world.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 class HomeLevelInspector extends StatefulWidget {
@@ -14,23 +15,24 @@ class HomeLevelInspector extends StatefulWidget {
 
 class _HomeLevelInspectorState extends State<HomeLevelInspector> {
   String sceneText = '';
+  late HomeWorld homeWorld;
 
   @override
   void initState() {
     super.initState();
+    homeWorld = widget.game.findByKey(HomeWorld.componentKey) as HomeWorld;
     sceneText = getSceneText();
   }
 
   String getSceneText() {
-    return widget.game.homeWorld.currentScene == 'living_room' ? '客廳' : '臥室';
+    return homeWorld.currentScene == 'living_room' ? '客廳' : '臥室';
   }
 
   void onSwitchScene() {
-    final scene = widget.game.homeWorld.currentScene == 'living_room'
-        ? 'bed_room'
-        : 'living_room';
+    final scene =
+        homeWorld.currentScene == 'living_room' ? 'bed_room' : 'living_room';
 
-    widget.game.homeWorld.switchScene(scene);
+    homeWorld.switchScene(scene);
     setState(() {
       sceneText = getSceneText();
     });

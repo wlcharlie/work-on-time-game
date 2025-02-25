@@ -1,6 +1,6 @@
 import 'package:flame/components.dart';
-import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
+import 'package:work_on_time_game/components/item/mirror.dart';
 import 'package:work_on_time_game/screen/home/bed_room.dart';
 import 'package:work_on_time_game/screen/home/living_room.dart';
 import 'package:work_on_time_game/wot_game.dart';
@@ -11,8 +11,10 @@ class HomeWorld extends World with HasGameReference<WOTGame> {
   final livingRoom = LivingRoom();
   String currentScene = ''; // living_room, bed_room
 
+  static ComponentKey componentKey = ComponentKey.named("home_world");
+
   @override
-  ComponentKey get key => ComponentKey.named("home_world");
+  ComponentKey get key => componentKey;
 
   @override
   Future<void> onLoad() async {
@@ -37,7 +39,7 @@ class HomeWorld extends World with HasGameReference<WOTGame> {
       'bed_room/blanket_undo.png',
       'bed_room/books.png',
       'bed_room/hair_iron.png',
-      'bed_room/mirror.png',
+      Mirror.imagePath,
       'bed_room/painting.png',
       'bed_room/paper_ball.png',
       'bed_room/phone.png',
@@ -46,16 +48,10 @@ class HomeWorld extends World with HasGameReference<WOTGame> {
     game.camera.viewfinder.anchor = Anchor.topLeft;
     switchScene(initialScene);
 
-    // add(livingRoom);
-    // game.camera.setBounds(livingRoom.bounds);
     game.overlays.add('homeLevelInspector');
   }
 
-  void handlePanUpdate(DragUpdateInfo info) {
-    game.camera.moveBy(Vector2(-info.delta.global.x, 0));
-  }
-
-  void switchScene(String scene) {
+  void switchScene(String scene) async {
     // currentScene = scene;
     if (scene == currentScene) return;
 
@@ -72,7 +68,6 @@ class HomeWorld extends World with HasGameReference<WOTGame> {
         remove(livingRoom);
       }
       add(bedRoom);
-      game.camera.setBounds(bedRoom.bounds);
     }
 
     game.camera.moveTo(Vector2(0, 0));

@@ -1,6 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
-import 'package:work_on_time_game/config/space_item.dart';
+import 'package:work_on_time_game/config/home_item.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 class LivingRoom extends PositionComponent with HasGameReference<WOTGame> {
