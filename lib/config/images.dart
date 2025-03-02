@@ -15,8 +15,15 @@ class Images {
   final String vase = 'living_room/vase.png';
 
   final String bedRoomBackground = 'bed_room/bg.png';
+  final String bag = 'bed_room/bag.png';
+  final String blanketDo = 'bed_room/blanket_do.png';
+  final String blanketUndo = 'bed_room/blanket_undo.png';
+  final String books = 'bed_room/books.png';
+  final String hairIron = 'bed_room/hair_iron.png';
   final String mirror = 'bed_room/mirror.png';
+  final String painting = 'bed_room/painting.png';
   final String paperBall = 'bed_room/paper_ball.png';
+  final String phone = 'bed_room/phone.png';
 }
 
 final images = Images();

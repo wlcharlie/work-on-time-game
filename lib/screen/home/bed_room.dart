@@ -3,12 +3,12 @@ import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 // import 'package:flutter/material.dart' as M hide Route;
 import 'package:work_on_time_game/components/background/bed_room.dart';
-import 'package:work_on_time_game/components/item/mirror.dart';
-import 'package:work_on_time_game/components/item/paper_ball.dart';
+import 'package:work_on_time_game/components/item/blanket.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 // 這一頁的做法是用將每個物件獨立建一個 component
-// 可以在裡面寫邏輯 或是 利用 callback 處理一些互動事件
+// 好處可以在裡面寫邏輯 或是 利用 callback 處理一些互動事件
+// 壞處就是有一個弄一個
 class BedRoom extends Component with HasGameReference<WOTGame> {
   @override
   ComponentKey get key => ComponentKey.named("bed_room");
@@ -27,21 +27,16 @@ class BedRoom extends Component with HasGameReference<WOTGame> {
     // 由於預設高度同遊戲視窗（裝置），所以可移動高度設為0
     game.camera.setBounds(Rectangle.fromLTWH(0, 0, size.x - game.size.x, 0));
 
-    add(Mirror(
-      position: Vector2(29, 271),
+    add(Blanket(
+      position: Vector2(438, 483),
       onTapDownCallback: (event) {
-        print('我是鏡子！');
-      },
-    ));
-    add(PaperBall(
-      position: Vector2(264, 677),
-      onTapDownCallback: (event) async {
-        print('我是紙球！');
+        print('我是毯子！');
       },
     ));
   }
 }
 
+// 下面在try dialog stuff
 // game.router.pushOverlay('cd');
 // game.router.pushOverlay('dialog');
 // final result = await game.router.pushAndWait(YesNoDialog('Dialog'));
