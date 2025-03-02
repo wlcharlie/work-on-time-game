@@ -7,6 +7,8 @@ import 'package:work_on_time_game/components/item/mirror.dart';
 import 'package:work_on_time_game/components/item/paper_ball.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
+// 這一頁的做法是用將每個物件獨立建一個 component
+// 可以在裡面寫邏輯 或是 利用 callback 處理一些互動事件
 class BedRoom extends Component with HasGameReference<WOTGame> {
   @override
   ComponentKey get key => ComponentKey.named("bed_room");
@@ -24,7 +26,6 @@ class BedRoom extends Component with HasGameReference<WOTGame> {
     // 提供給camera的可視範圍，減去遊戲視窗（裝置）的寬度
     // 由於預設高度同遊戲視窗（裝置），所以可移動高度設為0
     game.camera.setBounds(Rectangle.fromLTWH(0, 0, size.x - game.size.x, 0));
-    print('background priority: ${background.priority}');
 
     add(Mirror(
       position: Vector2(29, 271),

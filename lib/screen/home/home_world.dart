@@ -6,7 +6,7 @@ import 'package:work_on_time_game/screen/home/living_room.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 class HomeWorld extends World with HasGameReference<WOTGame> {
-  final initialScene = 'bed_room';
+  final initialScene = 'living_room';
   final bedRoom = BedRoom();
   final livingRoom = LivingRoom();
   String currentScene = ''; // living_room, bed_room

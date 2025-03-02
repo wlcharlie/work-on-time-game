@@ -6,9 +6,11 @@ class ItemComponent extends SpriteComponent
     with HasGameReference<WOTGame>, TapCallbacks {
   final String imagePath;
   final String name;
+  final void Function(String name, TapDownEvent event) action;
   ItemComponent({
     required this.imagePath,
     required this.name,
+    required this.action,
     required Vector2 position,
     int priority = 0,
   }) {
@@ -29,6 +31,6 @@ class ItemComponent extends SpriteComponent
   @override
   void onTapDown(TapDownEvent event) {
     super.onTapDown(event);
-    print('you tap $name');
+    action(name, event);
   }
 }
