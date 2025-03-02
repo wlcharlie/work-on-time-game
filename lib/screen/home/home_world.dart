@@ -19,7 +19,6 @@ class HomeWorld extends World with HasGameReference<WOTGame> {
   @override
   Future<void> onLoad() async {
     super.onLoad();
-
     await Flame.images.loadAll([
       // 像是客廳的地方
       'living_room/bg.png',
@@ -61,7 +60,6 @@ class HomeWorld extends World with HasGameReference<WOTGame> {
         remove(bedRoom);
       }
       add(livingRoom);
-      game.camera.setBounds(livingRoom.bounds);
     } else if (scene == 'bed_room') {
       currentScene = 'bed_room';
       if (game.findByKey(livingRoom.key) != null) {

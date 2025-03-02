@@ -1,7 +1,7 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
-// import 'package:flutter/material.dart' as Material hide Route;
+// import 'package:flutter/material.dart' as M hide Route;
 import 'package:work_on_time_game/screen/home/home_world.dart';
 
 class WOTGame extends FlameGame with PanDetector {
@@ -13,9 +13,17 @@ class WOTGame extends FlameGame with PanDetector {
   @override
   void onLoad() {
     router = RouterComponent(
-      initialRoute: 'home',
       routes: {
         'home': WorldRoute(HomeWorld.new),
+        // 'dialog': OverlayRoute((context, game) {
+        //   return M.Center(
+        //     child: M.Container(
+        //       width: game.canvasSize.x,
+        //       height: game.canvasSize.y,
+        //       color: M.Colors.red,
+        //     ),
+        //   );
+        // }),
         // 'cd': OverlayRoute((context, game) {
         //   return Material.Center(
         //     child: Material.Container(
@@ -37,6 +45,7 @@ class WOTGame extends FlameGame with PanDetector {
         //   );
         // }),
       },
+      initialRoute: 'home',
     );
     add(router);
 

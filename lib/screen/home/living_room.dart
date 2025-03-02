@@ -1,57 +1,34 @@
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
-import 'package:work_on_time_game/config/home_item.dart';
+import 'package:flame/game.dart';
+import 'package:work_on_time_game/components/item/item_component.dart';
+import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
-class LivingRoom extends PositionComponent with HasGameReference<WOTGame> {
+class LivingRoom extends Component with HasGameReference<WOTGame> {
   @override
   ComponentKey get key => ComponentKey.named("living_room");
-
-  late SpriteComponent background;
-  List<String> items = [
-    'bill',
-    'box',
-    'calendar',
-    'clock',
-    'coat',
-    'pic_frame',
-    'scarf',
-    'tv',
-    'vase',
-  ];
-
-  // LivingRoom.withItems(this.items);
-
-  // 提供給camera的可視範圍，減去遊戲視窗（裝置）的寬度
-  // 由於預設高度同遊戲視窗（裝置），所以可移動高度設為0
-  Shape get bounds => Rectangle.fromLTWH(0, 0, size.x - game.size.x, 0);
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
 
-    final image = game.images.fromCache("living_room/bg.png");
-    final sprite = Sprite(image);
-    final width = sprite.src.width;
-    background = SpriteComponent(
-      sprite: sprite,
+    final background = SpriteComponent(
+      sprite: Sprite(game.images.fromCache(images.livingRoomBackground)),
     );
-    size = Vector2(width, game.size.y);
-
     add(background);
 
-    if (items.isNotEmpty) {
-      for (var item in items) {
-        final image = game.images.fromCache("living_room/$item.png");
-        final sprite = Sprite(image);
-        final itemComponent = SpriteComponent(
-          sprite: sprite,
-          position: itemPositions[item]!.vector2,
-          priority: itemPositions[item]!.index,
-        );
+    final width = background.sprite?.src.width ?? 0;
+    final size = Vector2(width, game.size.y);
+    // 提供給camera的可視範圍，減去遊戲視窗（裝置）的寬度
+    // 由於預設高度同遊戲視窗（裝置），所以可移動高度設為0
+    game.camera.setBounds(Rectangle.fromLTWH(0, 0, size.x - game.size.x, 0));
+    print('background priority: ${background.priority}');
 
-        add(itemComponent);
-      }
-    }
+    add(ItemComponent(
+      imagePath: images.vase,
+      name: 'vase',
+      position: Vector2(0, 416),
+    ));
   }
 }
