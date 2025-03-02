@@ -2,6 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/screen/home/bed_room.dart';
+import 'package:work_on_time_game/screen/home/enter_way.dart';
 import 'package:work_on_time_game/screen/home/living_room.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
@@ -9,7 +10,8 @@ class HomeWorld extends World with HasGameReference<WOTGame> {
   final initialScene = 'bed_room';
   final bedRoom = BedRoom();
   final livingRoom = LivingRoom();
-  String currentScene = ''; // living_room, bed_room
+  final enterWay = EnterWay();
+  String currentScene = ''; // living_room, bed_room, enter_way
 
   static ComponentKey componentKey = ComponentKey.named("home_world");
 
@@ -40,6 +42,7 @@ class HomeWorld extends World with HasGameReference<WOTGame> {
       images.painting,
       images.paperBall,
       images.phone,
+      images.enterWay,
     ]);
 
     game.camera.viewfinder.anchor = Anchor.topLeft;
@@ -49,22 +52,26 @@ class HomeWorld extends World with HasGameReference<WOTGame> {
   }
 
   void switchScene(String scene) async {
-    // currentScene = scene;
     if (scene == currentScene) return;
 
-    if (scene == 'living_room') {
-      currentScene = 'living_room';
-      if (game.findByKey(bedRoom.key) != null) {
-        remove(bedRoom);
-      }
-      add(livingRoom);
-    } else if (scene == 'bed_room') {
-      currentScene = 'bed_room';
-      if (game.findByKey(livingRoom.key) != null) {
-        remove(livingRoom);
-      }
-      add(bedRoom);
+    final currentSceneComponent =
+        game.findByKey(ComponentKey.named(currentScene));
+    if (currentSceneComponent != null) {
+      remove(currentSceneComponent);
     }
+
+    switch (scene) {
+      case 'living_room':
+        add(livingRoom);
+        break;
+      case 'bed_room':
+        add(bedRoom);
+        break;
+      case 'enter_way':
+        add(enterWay);
+        break;
+    }
+    currentScene = scene;
 
     game.camera.moveTo(Vector2(0, 0));
   }

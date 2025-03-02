@@ -5,6 +5,9 @@ import 'package:work_on_time_game/config/typography.dart';
 import 'package:work_on_time_game/screen/home/home_world.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
+/// living_room 客廳
+/// bed_room 臥室
+/// enter_way 玄關
 class HomeLevelInspector extends StatefulWidget {
   final WOTGame game;
   const HomeLevelInspector({super.key, required this.game});
@@ -25,12 +28,21 @@ class _HomeLevelInspectorState extends State<HomeLevelInspector> {
   }
 
   String getSceneText() {
-    return homeWorld.currentScene == 'living_room' ? '客廳' : '臥室';
+    return switch (homeWorld.currentScene) {
+      'living_room' => '客廳',
+      'bed_room' => '臥室',
+      'enter_way' => '玄關',
+      _ => '',
+    };
   }
 
   void onSwitchScene() {
-    final scene =
-        homeWorld.currentScene == 'living_room' ? 'bed_room' : 'living_room';
+    final scene = switch (homeWorld.currentScene) {
+      'living_room' => 'bed_room',
+      'bed_room' => 'enter_way',
+      'enter_way' => 'living_room',
+      _ => '',
+    };
 
     homeWorld.switchScene(scene);
     setState(() {

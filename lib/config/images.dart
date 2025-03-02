@@ -24,6 +24,8 @@ class Images {
   final String painting = 'bed_room/painting.png';
   final String paperBall = 'bed_room/paper_ball.png';
   final String phone = 'bed_room/phone.png';
+
+  final String enterWay = 'enter_way/bg.png';
 }
 
 final images = Images();
