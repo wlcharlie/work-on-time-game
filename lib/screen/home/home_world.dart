@@ -47,7 +47,11 @@ class HomeWorld extends World with HasGameReference<WOTGame> {
 
     game.camera.viewfinder.anchor = Anchor.topLeft;
     switchScene(initialScene);
+  }
 
+  @override
+  void onMount() {
+    super.onMount();
     game.overlays.add('homeLevelInspector');
   }
 

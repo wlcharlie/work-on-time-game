@@ -34,6 +34,12 @@ class Images {
   final String shoppingList = 'enter_way/shopping_list.png';
   final String sneakers = 'enter_way/sneakers.png';
   final String umbrella = 'enter_way/umbrella.png';
+
+  final String loading = 'loading.png';
+
+  String getFullPath(String image) {
+    return 'assets/images/$image';
+  }
 }
 
 final images = Images();

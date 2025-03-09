@@ -10,7 +10,10 @@ class WOTGame extends FlameGame with PanDetector {
   bool debugMode = true;
 
   @override
-  void onLoad() {
+  void onLoad() async {
+    // sleep 3 seconds for the loading screen development
+    await Future.delayed(const Duration(seconds: 3));
+
     router = RouterComponent(
       routes: {
         'home': WorldRoute(HomeWorld.new),
@@ -24,6 +27,9 @@ class WOTGame extends FlameGame with PanDetector {
       width: 393,
       height: 852,
     );
+
+    // for development
+    // overlays.add('loading');
   }
 
   // - PanDetector
