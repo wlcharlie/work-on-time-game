@@ -17,6 +17,7 @@ class HomeLevelInspector extends StatefulWidget {
 }
 
 class _HomeLevelInspectorState extends State<HomeLevelInspector> {
+  List<String> scenes = ['living_room', 'bed_room', 'enter_way'];
   String sceneText = '';
   late HomeWorld homeWorld;
 
@@ -36,15 +37,31 @@ class _HomeLevelInspectorState extends State<HomeLevelInspector> {
     };
   }
 
-  void onSwitchScene() {
-    final scene = switch (homeWorld.currentScene) {
-      'living_room' => 'bed_room',
-      'bed_room' => 'enter_way',
-      'enter_way' => 'living_room',
-      _ => '',
-    };
+  // void onSwitchScene() {
+  //   final scene = switch (homeWorld.currentScene) {
+  //     'living_room' => 'bed_room',
+  //     'bed_room' => 'enter_way',
+  //     'enter_way' => 'living_room',
+  //     _ => '',
+  //   };
 
-    homeWorld.switchScene(scene);
+  //   homeWorld.switchScene(scene);
+  //   setState(() {
+  //     sceneText = getSceneText();
+  //   });
+  // }
+
+  /// index should be +1 or -1
+  void onSwitchScene(int delta) {
+    final currentIndex = scenes.indexOf(homeWorld.currentScene);
+    var newIndex = currentIndex + delta;
+    if (newIndex < 0) {
+      newIndex = scenes.length - 1;
+    } else if (newIndex >= scenes.length) {
+      newIndex = 0;
+    }
+
+    homeWorld.switchScene(scenes[newIndex]);
     setState(() {
       sceneText = getSceneText();
     });
@@ -107,34 +124,37 @@ class _HomeLevelInspectorState extends State<HomeLevelInspector> {
                   ),
                 ),
                 Expanded(
-                  child: GestureDetector(
-                    onTap: onSwitchScene,
-                    child: Container(
-                      height: 47,
-                      decoration: style.defaultBoxDecoration.copyWith(
-                        color: Color(0xCCFFFFFF),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(
+                  child: Container(
+                    height: 47,
+                    decoration: style.defaultBoxDecoration.copyWith(
+                      color: Color(0xCCFFFFFF),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () => onSwitchScene(-1),
+                          child: Icon(
                             gIcons.navLeft,
                             color: Color(0xFF887768),
                           ),
-                          Text(
-                            getSceneText(),
-                            style: typography.tp20,
-                          ),
-                          Icon(
+                        ),
+                        Text(
+                          getSceneText(),
+                          style: typography.tp20,
+                        ),
+                        GestureDetector(
+                          onTap: () => onSwitchScene(1),
+                          child: Icon(
                             gIcons.navRight,
                             color: Color(0xFF887768),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

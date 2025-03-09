@@ -1,17 +1,67 @@
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
-// import 'package:flutter/material.dart' as M hide Route;
 import 'package:work_on_time_game/components/background/bed_room.dart';
 import 'package:work_on_time_game/components/item/blanket.dart';
-import 'package:work_on_time_game/components/item/paper_ball.dart';
+import 'package:work_on_time_game/components/item/item_component.dart';
+import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
-// 這一頁的做法是用將每個物件獨立建一個 component
-// 好處可以在裡面寫邏輯 或是 利用 callback 處理一些互動事件
-// 壞處就是有一個弄一個
+final List<Map<String, String>> items = [
+  {
+    'imagePath': images.bag,
+    'name': 'bag',
+    'position': '1030,677',
+  },
+  {
+    'imagePath': images.books,
+    'name': 'books',
+    'position': '589,691',
+  },
+  {
+    'imagePath': images.hairIron,
+    'name': 'hair_iron',
+    'position': '7,659',
+  },
+  {
+    'imagePath': images.mirror,
+    'name': 'mirror',
+    'position': '29,271',
+  },
+  {
+    'imagePath': images.painting,
+    'name': 'painting',
+    'position': '589,150',
+  },
+  {
+    'imagePath': images.paperBall,
+    'name': 'paper_ball',
+    'position': '264,677',
+  },
+  {
+    'imagePath': images.phone,
+    'name': 'phone',
+    'position': '703,636',
+  },
+];
+
+/// 臥室
+/// Loop items:
+/// bag
+/// books
+/// hair_iron
+/// mirror
+/// painting
+/// paper_ball
+/// phone
+///
+/// Individual items:
+/// bg
+/// blanket
+///
 class BedRoom extends Component with HasGameReference<WOTGame> {
   @override
   ComponentKey get key => ComponentKey.named("bed_room");
@@ -32,19 +82,28 @@ class BedRoom extends Component with HasGameReference<WOTGame> {
 
     add(Blanket(
       position: Vector2(438, 483),
-      onTapDownCallback: (event) {
-        print('I am Blanket!!');
-      },
-    ));
-    add(PaperBall(
-      position: Vector2(264, 677),
       onTapDownCallback: (event) async {
-        // ValueRoute 已開 issue 希望作者可以趕快修ＸＤ
-        print('PaperBall!!');
+        print('I am Blanket!!');
         final result = await game.router.pushAndWait(YesNoDialog('Dialog'));
         print('result: ${result.toString()}');
       },
     ));
+
+    for (final item in items) {
+      add(ItemComponent(
+        imagePath: item['imagePath'] ?? '',
+        name: item['name'] ?? '',
+        position: Vector2(
+          double.parse(item['position']?.split(',')[0] ?? '0'),
+          double.parse(item['position']?.split(',')[1] ?? '0'),
+        ),
+        action: _onTapDown,
+      ));
+    }
+  }
+
+  void _onTapDown(String name, TapDownEvent event) {
+    print('!!you tap $name');
   }
 }
 

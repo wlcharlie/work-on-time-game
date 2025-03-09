@@ -26,6 +26,14 @@ class Images {
   final String phone = 'bed_room/phone.png';
 
   final String enterWay = 'enter_way/bg.png';
+  final String boots = 'enter_way/boots.png';
+  final String doorClose = 'enter_way/door_close.png';
+  final String doorOpen = 'enter_way/door_open.png';
+  final String idCard = 'enter_way/id_card.png';
+  final String maryJanes = 'enter_way/mary_janes.png';
+  final String shoppingList = 'enter_way/shopping_list.png';
+  final String sneakers = 'enter_way/sneakers.png';
+  final String umbrella = 'enter_way/umbrella.png';
 }
 
 final images = Images();

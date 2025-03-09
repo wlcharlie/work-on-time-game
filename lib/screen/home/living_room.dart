@@ -54,10 +54,21 @@ final List<Map<String, String>> items = [
   },
 ];
 
-// 這一頁的做法是用 ItemComponent 來處理每個物件的互動事件
-// 可以將每個物件的資訊放在 List<Map<String, String>> 中
-// 可以省去建立每個元件的功 但無法處理特有邏輯
-
+/// 客廳
+/// Loop items:
+/// bill
+/// box
+/// calendar
+/// clock
+/// coat
+/// pic_frame
+/// scarf
+/// tv
+/// vase
+///
+/// Individual items:
+/// bg
+///
 class LivingRoom extends Component with HasGameReference<WOTGame> {
   @override
   ComponentKey get key => ComponentKey.named("living_room");
