@@ -1,7 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
-import 'package:flame/game.dart';
 import 'package:work_on_time_game/components/item/item_component.dart';
 import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/wot_game.dart';
@@ -78,12 +77,6 @@ class LivingRoom extends Component with HasGameReference<WOTGame> {
     // 由於預設高度同遊戲視窗（裝置），所以可移動高度設為0
     game.camera.setBounds(Rectangle.fromLTWH(0, 0, size.x - game.size.x, 0));
 
-    // add(ItemComponent(
-    //   imagePath: images.vase,
-    //   name: 'vase',
-    //   position: Vector2(0, 416),
-    //   action: _onTapDown,
-    // ));
     for (final item in items) {
       add(ItemComponent(
         imagePath: item['imagePath'] ?? '',
