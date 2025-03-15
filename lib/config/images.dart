@@ -36,6 +36,27 @@ class Images {
   final String umbrella = 'enter_way/umbrella.png';
 
   final String loading = 'loading.png';
+  final String itemDialogBg = 'item/dialog_bg.png';
+
+  final String bagLg = 'item/bag.png';
+  final String billLg = 'item/bill.png';
+  final String bookLg = 'item/book.png';
+  final String bootLg = 'item/boot.png';
+  final String boxLg = 'item/box.png';
+  final String calendarLg = 'item/calendar.png';
+  final String clockLg = 'item/clock.png';
+  final String coatLg = 'item/coat.png';
+  final String hairIronLg = 'item/hair_iron.png';
+  final String idCardLg = 'item/id_card.png';
+  final String maryJanesLg = 'item/mary_janes.png';
+  final String phoneLg = 'item/phone.png';
+  final String photoClear = 'item/photo_clear.png';
+  final String photoUnclear = 'item/photo_unclear.png';
+  final String photo = 'item/photo.png';
+  final String scarfLg = 'item/scarf.png';
+  final String shoppingListLg = 'item/shopping_list.png';
+  final String sneakerLg = 'item/sneaker.png';
+  final String umbrellaLg = 'item/umbrella.png';
 
   String getFullPath(String image) {
     return 'assets/images/$image';

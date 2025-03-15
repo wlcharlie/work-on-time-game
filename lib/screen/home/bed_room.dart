@@ -1,12 +1,10 @@
-import 'dart:ui';
-
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
-import 'package:flame/game.dart';
 import 'package:work_on_time_game/components/background/bed_room.dart';
 import 'package:work_on_time_game/components/item/blanket.dart';
 import 'package:work_on_time_game/components/item/item_component.dart';
+import 'package:work_on_time_game/components/item/item_dialog.dart';
 import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
@@ -15,16 +13,25 @@ final List<Map<String, String>> items = [
     'imagePath': images.bag,
     'name': 'bag',
     'position': '1030,677',
+    'dialogImagePath': images.bagLg,
+    'dialogTitle': '草綠色托特包',
+    'dialogDescription': '成為社會新鮮人後，朋友送的禮物，容量很大可以裝很多東西。',
   },
   {
     'imagePath': images.books,
     'name': 'books',
     'position': '589,691',
+    'dialogImagePath': images.bookLg,
+    'dialogTitle': '書',
+    'dialogDescription': '最近常看的書',
   },
   {
     'imagePath': images.hairIron,
     'name': 'hair_iron',
     'position': '7,659',
+    'dialogImagePath': images.hairIronLg,
+    'dialogTitle': '離子夾',
+    'dialogDescription': '要換個造型嗎？',
   },
   {
     'imagePath': images.mirror,
@@ -45,6 +52,9 @@ final List<Map<String, String>> items = [
     'imagePath': images.phone,
     'name': 'phone',
     'position': '703,636',
+    'dialogImagePath': images.phoneLg,
+    'dialogTitle': '手機',
+    'dialogDescription': '',
   },
 ];
 
@@ -84,8 +94,6 @@ class BedRoom extends Component with HasGameReference<WOTGame> {
       position: Vector2(438, 483),
       onTapDownCallback: (event) async {
         print('I am Blanket!!');
-        final result = await game.router.pushAndWait(YesNoDialog('Dialog'));
-        print('result: ${result.toString()}');
       },
     ));
 
@@ -102,36 +110,19 @@ class BedRoom extends Component with HasGameReference<WOTGame> {
     }
   }
 
-  void _onTapDown(String name, TapDownEvent event) {
-    print('!!you tap $name');
-  }
-}
+  void _onTapDown(String name, TapDownEvent event) async {
+    final item = items.firstWhere((element) => element['name'] == name);
+    final dialogImagePath = item['dialogImagePath'];
+    final dialogTitle = item['dialogTitle'];
+    final dialogDescription = item['dialogDescription'];
 
-class YesNoDialog extends ValueRoute<bool> {
-  YesNoDialog(this.text) : super(value: false);
-  final String text;
-
-  @override
-  Component build() {
-    return PositionComponent(
-      size: Vector2(300, 100),
-      position: Vector2(264, 677),
-      children: [
-        RectangleComponent(
-          size: Vector2(300, 100),
-          position: Vector2(0, 0),
-          paint: Paint()..color = Color(0xFFFF0000),
-        ),
-        TextComponent(text: text),
-        // Button(
-        //   text: 'Yes',
-        //   action: () => completeWith(true),
-        // ),
-        // Button(
-        //   text: 'No',
-        //   action: () => completeWith(false),
-        // ),
-      ],
-    );
+    if (dialogImagePath != null) {
+      final dialog = ItemDialog(
+        imagePath: dialogImagePath,
+        dialogTitle: dialogTitle ?? '',
+        dialogDescription: dialogDescription ?? "",
+      );
+      game.router.pushAndWait(dialog);
+    }
   }
 }

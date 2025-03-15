@@ -5,10 +5,10 @@ packages:
     dependency: transitive
     description:
       name: args
-      sha256: bf9f5caeea8d8fe6721a9c358dd8a5c1947b27f1cfaa18b39c301273594919e6
+      sha256: d0481093c50b1da8910eb0bb301626d4d8eb7284aa739614d2b394ee09e3ea04
       url: "https://pub.dev"
     source: hosted
-    version: "2.6.0"
+    version: "2.7.0"
   async:
     dependency: transitive
     description:
@@ -29,10 +29,10 @@ packages:
     dependency: transitive
     description:
       name: chalkdart
-      sha256: "08c910ee341fcdd1e46f20ddce59b13c1d85f5d97f2fd2f12014c46ede670e40"
+      sha256: e7cfcc9a9d9546843304c1ff87fe0696c7eb82ee70e6df63f555f321b15a40d8
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.2"
+    version: "2.3.3"
   characters:
     dependency: transitive
     description:
@@ -85,10 +85,10 @@ packages:
     dependency: "direct main"
     description:
       name: flame
-      sha256: "8b5abd3fe76b8b3357ba777513900fa4f1c0dc5b46ab07ad7c38e8b290773bb9"
+      sha256: "03e90d4bd3bc4f6a325602914ee27509f02d8743bb7ccb9282c88192b58eeb84"
       url: "https://pub.dev"
     source: hosted
-    version: "1.25.0"
+    version: "1.26.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -167,10 +167,10 @@ packages:
     dependency: "direct main"
     description:
       name: material_symbols_icons
-      sha256: "1403944c2a68dbdf934fca2b2115a372e70a4a185c136ab71a9d16e2108d0b14"
+      sha256: ee916e08fc0e15d4544a3544b3a46821808b8c965629b56e076e4da1cfe69915
       url: "https://pub.dev"
     source: hosted
-    version: "4.2805.1"
+    version: "4.2808.1"
   meta:
     dependency: transitive
     description:

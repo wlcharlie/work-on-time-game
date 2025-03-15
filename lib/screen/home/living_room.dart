@@ -102,7 +102,5 @@ class LivingRoom extends Component with HasGameReference<WOTGame> {
     }
   }
 
-  void _onTapDown(String name, TapDownEvent event) {
-    print('!!you tap $name');
-  }
+  void _onTapDown(String name, TapDownEvent event) async {}
 }

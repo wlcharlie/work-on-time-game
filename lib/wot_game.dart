@@ -14,6 +14,12 @@ class WOTGame extends FlameGame with PanDetector {
     // sleep 3 seconds for the loading screen development
     await Future.delayed(const Duration(seconds: 3));
 
+    // 固定解析度(?) 看起來不用出兩倍圖了Ａ＿Ａ
+    camera = CameraComponent.withFixedResolution(
+      width: 393,
+      height: 852,
+    );
+
     router = RouterComponent(
       routes: {
         'home': WorldRoute(HomeWorld.new),
@@ -21,12 +27,6 @@ class WOTGame extends FlameGame with PanDetector {
       initialRoute: 'home',
     );
     add(router);
-
-    // 固定解析度(?) 看起來不用出兩倍圖了Ａ＿Ａ
-    camera = CameraComponent.withFixedResolution(
-      width: 393,
-      height: 852,
-    );
 
     // for development
     // overlays.add('loading');
