@@ -55,11 +55,66 @@ class Images {
   final String photo = 'item/photo.png';
   final String scarfLg = 'item/scarf.png';
   final String shoppingListLg = 'item/shopping_list.png';
-  final String sneakerLg = 'item/sneaker.png';
+  final String sneakerLg = 'item/sneakers.png';
   final String umbrellaLg = 'item/umbrella.png';
 
   String getFullPath(String image) {
     return 'assets/images/$image';
+  }
+
+  List<String> allImages() {
+    return [
+      livingRoomBackground,
+      bill,
+      box,
+      calendar,
+      clock,
+      coat,
+      picFrame,
+      scarf,
+      tv,
+      vase,
+      bedRoomBackground,
+      bag,
+      blanketDo,
+      blanketUndo,
+      books,
+      hairIron,
+      mirror,
+      painting,
+      paperBall,
+      phone,
+      enterWay,
+      boots,
+      doorClose,
+      doorOpen,
+      idCard,
+      maryJanes,
+      shoppingList,
+      sneakers,
+      umbrella,
+      loading,
+      itemDialogBg,
+      bagLg,
+      billLg,
+      bookLg,
+      bootLg,
+      boxLg,
+      calendarLg,
+      clockLg,
+      coatLg,
+      hairIronLg,
+      idCardLg,
+      maryJanesLg,
+      phoneLg,
+      photoClear,
+      photoUnclear,
+      photo,
+      scarfLg,
+      shoppingListLg,
+      sneakerLg,
+      umbrellaLg,
+    ];
   }
 }
 

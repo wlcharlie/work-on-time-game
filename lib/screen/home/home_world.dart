@@ -21,29 +21,7 @@ class HomeWorld extends World with HasGameReference<WOTGame> {
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    await Flame.images.loadAll([
-      images.livingRoomBackground,
-      images.bill,
-      images.box,
-      images.calendar,
-      images.clock,
-      images.coat,
-      images.picFrame,
-      images.scarf,
-      images.tv,
-      images.vase,
-      images.bedRoomBackground,
-      images.bag,
-      images.blanketDo,
-      images.blanketUndo,
-      images.books,
-      images.hairIron,
-      images.mirror,
-      images.painting,
-      images.paperBall,
-      images.phone,
-      images.enterWay,
-    ]);
+    await Flame.images.loadAll(images.allImages());
 
     game.camera.viewfinder.anchor = Anchor.topLeft;
     switchScene(initialScene);
