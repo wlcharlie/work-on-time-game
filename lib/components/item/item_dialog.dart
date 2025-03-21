@@ -121,22 +121,24 @@ class ItemDialogComponent extends PositionComponent
 
     // description
     if (dialogDescription != null) {
-      children.add(TextBoxComponent(
-        position: Vector2(_width / 2, 288),
-        anchor: Anchor.center,
-        boxConfig: TextBoxConfig(
-          maxWidth: _width - 48,
-        ),
-        text: dialogDescription ?? '',
-        textRenderer: TextPaint(
-          style: TextStyle(
-            fontFamily: 'TaiwanPearl',
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF917055),
+      children.add(
+        TextBoxComponent(
+          position: Vector2(_width / 2, 288),
+          anchor: Anchor.center,
+          boxConfig: TextBoxConfig(
+            maxWidth: _width - 48,
+          ),
+          text: dialogDescription ?? '',
+          textRenderer: TextPaint(
+            style: TextStyle(
+              fontFamily: 'TaiwanPearl',
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF917055),
+            ),
           ),
         ),
-      ));
+      );
     }
 
     // close button
