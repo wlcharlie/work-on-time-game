@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flame/effects.dart';
 import 'package:flutter/painting.dart';
 
 import 'package:flame/components.dart';
@@ -81,9 +82,10 @@ class ItemDialogComponent extends PositionComponent
   void onLoad() {
     super.onLoad();
     position = Vector2(
-      (game.canvasSize.x - _width) / 2,
-      (game.canvasSize.y - _height) / 2,
+      (game.canvasSize.x) / 2,
+      (game.canvasSize.y) / 2,
     );
+    anchor = Anchor.center;
     _bgImage = game.images.fromCache(images.itemDialogBg);
     _bgPaint = Paint()
       ..shader = ImageShader(
@@ -161,6 +163,23 @@ class ItemDialogComponent extends PositionComponent
     ));
 
     addAll(children);
+
+    // 加一點打開動畫～～
+    scale = Vector2.all(0.95);
+    add(
+      ScaleEffect.to(
+        Vector2.all(1.08),
+        EffectController(duration: 0.1),
+        onComplete: () {
+          add(
+            ScaleEffect.to(
+              Vector2.all(1.0),
+              EffectController(duration: 0.1),
+            ),
+          );
+        },
+      ),
+    );
   }
 
   @override
