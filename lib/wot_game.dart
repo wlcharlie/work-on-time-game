@@ -1,9 +1,10 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:work_on_time_game/screen/home/home_world.dart';
 
-class WOTGame extends FlameGame with PanDetector {
+class WOTGame extends FlameGame with PanDetector, RiverpodGameMixin {
   late final RouterComponent router;
 
   @override
@@ -11,6 +12,7 @@ class WOTGame extends FlameGame with PanDetector {
 
   @override
   void onLoad() async {
+    await super.onLoad();
     // sleep 3 seconds for the loading screen development
     await Future.delayed(const Duration(seconds: 3));
 
@@ -27,9 +29,6 @@ class WOTGame extends FlameGame with PanDetector {
       initialRoute: 'home',
     );
     add(router);
-
-    // for development
-    // overlays.add('loading');
   }
 
   // - PanDetector

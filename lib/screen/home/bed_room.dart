@@ -1,11 +1,13 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
+import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:work_on_time_game/components/background/bed_room.dart';
 import 'package:work_on_time_game/components/item/blanket.dart';
 import 'package:work_on_time_game/components/item/item_component.dart';
 import 'package:work_on_time_game/components/item/item_dialog.dart';
 import 'package:work_on_time_game/config/images.dart';
+import 'package:work_on_time_game/providers/global.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 final List<Map<String, String>> items = [
@@ -72,13 +74,20 @@ final List<Map<String, String>> items = [
 /// bg
 /// blanket
 ///
-class BedRoom extends Component with HasGameReference<WOTGame> {
+class BedRoom extends Component
+    with HasGameReference<WOTGame>, RiverpodComponentMixin {
   @override
   ComponentKey get key => ComponentKey.named("bed_room");
 
   @override
-  Future<void> onLoad() async {
-    super.onLoad();
+  Future<void> onMount() async {
+    addToGameWidgetBuild(() {
+      ref.listen(globalNotifierProvider, (previous, next) {
+        print('globalNotifierProvider: $next');
+      });
+    });
+
+    super.onMount();
 
     final background = BedRoomBackground();
     add(background);
