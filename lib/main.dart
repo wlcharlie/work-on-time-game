@@ -11,14 +11,18 @@ final gameInstance = WOTGame();
 void main() {
   runApp(
     ProviderScope(
-      child: RiverpodAwareGameWidget<WOTGame>(
-        key: gameWidgetKey,
-        game: gameInstance,
-        loadingBuilder: (_) => Loading(),
-        overlayBuilderMap: {
-          // 'loading': (_, game) => Loading(),
-          'homeLevelInspector': (_, game) => HomeLevelInspector(game: game),
-        },
+      child: MaterialApp(
+        home: Scaffold(
+          body: RiverpodAwareGameWidget<WOTGame>(
+            key: gameWidgetKey,
+            game: gameInstance,
+            loadingBuilder: (_) => Loading(),
+            overlayBuilderMap: {
+              // 'loading': (_, game) => Loading(),
+              'homeLevelInspector': (_, game) => HomeLevelInspector(game: game),
+            },
+          ),
+        ),
       ),
     ),
   );

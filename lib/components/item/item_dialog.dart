@@ -33,13 +33,14 @@ class ItemDialog extends ValueRoute<bool> with HasGameReference<WOTGame> {
 }
 
 class ItemDialogComponent extends PositionComponent
-    with HasGameReference<WOTGame> {
+    with HasGameReference<WOTGame>, HasPaint {
   // Dialog base
   /// width include the border 4px
   final _width = 349.0;
 
   /// height include the border 4px
   final _height = 433.0;
+
   late Image _bgImage;
   late RRect _rrect;
   late Paint _bgPaint;
@@ -76,6 +77,8 @@ class ItemDialogComponent extends PositionComponent
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4
       ..strokeJoin = StrokeJoin.round;
+
+    setPaint(0, _borderPaint);
   }
 
   @override
@@ -88,23 +91,28 @@ class ItemDialogComponent extends PositionComponent
     anchor = Anchor.center;
     _bgImage = game.images.fromCache(images.itemDialogBg);
     _bgPaint = Paint()
+      ..color = Color(0xFFA9886C)
       ..shader = ImageShader(
         _bgImage,
         TileMode.repeated,
         TileMode.repeated,
         (Matrix4.identity()).storage,
       );
+    setPaint(1, _bgPaint);
 
     _itemImage = game.images.fromCache(imagePath);
 
     List<Component> children = [];
 
     /// itemImage
-    children.add(SpriteComponent(
+    final itemImage = SpriteComponent(
       sprite: Sprite(_itemImage),
       size: _itemImageSize,
       position: _itemImagePosition,
-    ));
+    );
+    children.add(itemImage);
+    setPaint(2, itemImage.paint);
+    makeTransparent(paintId: 2);
 
     // title
     children.add(TextComponent(
@@ -127,6 +135,7 @@ class ItemDialogComponent extends PositionComponent
         TextBoxComponent(
           position: Vector2(_width / 2, 288),
           anchor: Anchor.center,
+          align: Anchor.center,
           boxConfig: TextBoxConfig(
             maxWidth: _width - 48,
           ),
@@ -137,6 +146,7 @@ class ItemDialogComponent extends PositionComponent
               fontSize: 20,
               fontWeight: FontWeight.w600,
               color: Color(0xFF917055),
+              height: 1.25,
             ),
           ),
         ),
@@ -145,7 +155,7 @@ class ItemDialogComponent extends PositionComponent
 
     // close button
     children.add(ButtonComponent(
-      position: Vector2(90, 361),
+      position: Vector2(48, 376),
       button: ItemDialogButton(
         text: '關閉',
         color: Color(0xFF887768),
@@ -157,7 +167,7 @@ class ItemDialogComponent extends PositionComponent
 
     // add button
     children.add(ButtonComponent(
-      position: Vector2(175, 361),
+      position: Vector2(180, 376),
       button: ItemDialogButton(text: '帶上'),
       onPressed: () => onPressed(true),
     ));
@@ -166,16 +176,29 @@ class ItemDialogComponent extends PositionComponent
 
     // 加一點打開動畫～～
     scale = Vector2.all(0.95);
+
     add(
       ScaleEffect.to(
         Vector2.all(1.08),
-        EffectController(duration: 0.1),
+        EffectController(duration: 0.12),
         onComplete: () {
           add(
             ScaleEffect.to(
               Vector2.all(1.0),
-              EffectController(duration: 0.1),
+              EffectController(duration: 0.12),
             ),
+          );
+        },
+      ),
+    );
+
+    add(
+      OpacityEffect.to(
+        0,
+        EffectController(duration: 0),
+        onComplete: () {
+          add(
+            OpacityEffect.to(1, EffectController(duration: 0.25)),
           );
         },
       ),
@@ -189,7 +212,7 @@ class ItemDialogComponent extends PositionComponent
   }
 }
 
-class ItemDialogButton extends PositionComponent {
+class ItemDialogButton extends PositionComponent with HasPaint {
   final String text;
   final Color color;
   final Color bgColor;
@@ -212,7 +235,7 @@ class ItemDialogButton extends PositionComponent {
             fontWeight: FontWeight.w400,
           ),
         ).toTextPainter(text) {
-    size = Vector2(73, 36);
+    size = Vector2(120, 36);
     _textOffset = Offset(
       (size.x - _textDrawable.width) / 2,
       (size.y - _textDrawable.height) / 2,
@@ -229,6 +252,19 @@ class ItemDialogButton extends PositionComponent {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2
       ..color = borderColor;
+    setPaint(0, _borderPaint);
+    setPaint(1, _bgPaint);
+  }
+
+  @override
+  void onLoad() {
+    super.onLoad();
+    add(
+      SequenceEffect([
+        OpacityEffect.to(0, EffectController(duration: 0)),
+        OpacityEffect.to(1, EffectController(duration: 0.25)),
+      ]),
+    );
   }
 
   @override

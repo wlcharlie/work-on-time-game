@@ -1,9 +1,12 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
+import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:work_on_time_game/components/item/door.dart';
 import 'package:work_on_time_game/components/item/item_component.dart';
+import 'package:work_on_time_game/components/item/item_dialog.dart';
 import 'package:work_on_time_game/config/images.dart';
+import 'package:work_on_time_game/providers/inventory.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 final List<Map<String, String>> items = [
@@ -21,7 +24,7 @@ final List<Map<String, String>> items = [
     'position': '48,373',
     'dialogImagePath': images.idCardLg,
     'dialogTitle': '公司識別證',
-    'dialogDescription': '進公司大門和打卡的時候會 用到，千萬不能忘記帶了！',
+    'dialogDescription': '進公司大門和打卡的時候\n會用到，千萬不能忘記帶了！',
   },
   {
     'imagePath': images.maryJanes,
@@ -37,7 +40,7 @@ final List<Map<String, String>> items = [
     'position': '3,379',
     'dialogImagePath': images.shoppingListLg,
     'dialogTitle': '超市購物清單',
-    'dialogDescription': '回家的時候再順便 去買個菜吧！',
+    'dialogDescription': '回家的時候再順便去買個菜吧！',
   },
   {
     'imagePath': images.sneakers,
@@ -45,7 +48,7 @@ final List<Map<String, String>> items = [
     'position': '280,537',
     'dialogImagePath': images.sneakerLg,
     'dialogTitle': '白色帆布鞋',
-    'dialogDescription': '偶爾運動會穿出門…不過已經好久沒有出門運動了。',
+    'dialogDescription': '偶爾運動會穿出門，不過\n已經好久沒有出門運動了。',
   },
   {
     'imagePath': images.umbrella,
@@ -57,13 +60,14 @@ final List<Map<String, String>> items = [
   },
 ];
 
-class EnterWay extends Component with HasGameReference<WOTGame> {
+class EnterWay extends Component
+    with HasGameReference<WOTGame>, RiverpodComponentMixin {
   @override
   ComponentKey get key => ComponentKey.named("enter_way");
 
   @override
-  Future<void> onLoad() async {
-    super.onLoad();
+  Future<void> onMount() async {
+    super.onMount();
 
     final background = SpriteComponent(
       sprite: Sprite(game.images.fromCache(images.enterWay)),
@@ -91,7 +95,23 @@ class EnterWay extends Component with HasGameReference<WOTGame> {
     }
   }
 
-  void _onTapDown(String name, TapDownEvent event) {
-    print('!!you tap $name');
+  void _onTapDown(String name, TapDownEvent event) async {
+    final inventory = ref.read(inventoryNotifierProvider.notifier);
+
+    final item = items.firstWhere((element) => element['name'] == name);
+    final dialogImagePath = item['dialogImagePath'];
+    final dialogTitle = item['dialogTitle'];
+    final dialogDescription = item['dialogDescription'];
+
+    if (dialogImagePath != null) {
+      final dialog = ItemDialog(
+        imagePath: dialogImagePath,
+        dialogTitle: dialogTitle ?? '',
+        dialogDescription: dialogDescription ?? "",
+      );
+      final result = await game.router.pushAndWait(dialog);
+      if (result == false) return;
+      inventory.addItem(name);
+    }
   }
 }

@@ -1,8 +1,11 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
+import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:work_on_time_game/components/item/item_component.dart';
+import 'package:work_on_time_game/components/item/item_dialog.dart';
 import 'package:work_on_time_game/config/images.dart';
+import 'package:work_on_time_game/providers/inventory.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 final List<Map<String, String>> items = [
@@ -20,7 +23,7 @@ final List<Map<String, String>> items = [
     'position': '67,541',
     'dialogImagePath': images.boxLg,
     'dialogTitle': '金屬吊飾',
-    'dialogDescription': '看起來有些老舊的盒子，裡面放著一個寫著英文的金屬 吊飾。',
+    'dialogDescription': '看起來有些老舊的盒子，裡面\n放著一個寫著英文的金屬吊飾。',
   },
   {
     'imagePath': images.calendar,
@@ -53,7 +56,7 @@ final List<Map<String, String>> items = [
     'position': '797,542',
     'dialogImagePath': images.phoneLg,
     'dialogTitle': '小時候的照片',
-    'dialogDescription': '某一次全家旅行得時候，爸爸用相機拍的。',
+    'dialogDescription': '某一次全家旅行得時候，\n爸爸用相機拍的。',
   },
   {
     'imagePath': images.scarf,
@@ -90,13 +93,14 @@ final List<Map<String, String>> items = [
 /// Individual items:
 /// bg
 ///
-class LivingRoom extends Component with HasGameReference<WOTGame> {
+class LivingRoom extends Component
+    with HasGameReference<WOTGame>, RiverpodComponentMixin {
   @override
   ComponentKey get key => ComponentKey.named("living_room");
 
   @override
-  Future<void> onLoad() async {
-    super.onLoad();
+  Future<void> onMount() async {
+    super.onMount();
 
     final background = SpriteComponent(
       sprite: Sprite(game.images.fromCache(images.livingRoomBackground)),
@@ -123,5 +127,23 @@ class LivingRoom extends Component with HasGameReference<WOTGame> {
     }
   }
 
-  void _onTapDown(String name, TapDownEvent event) async {}
+  void _onTapDown(String name, TapDownEvent event) async {
+    final inventory = ref.read(inventoryNotifierProvider.notifier);
+
+    final item = items.firstWhere((element) => element['name'] == name);
+    final dialogImagePath = item['dialogImagePath'];
+    final dialogTitle = item['dialogTitle'];
+    final dialogDescription = item['dialogDescription'];
+
+    if (dialogImagePath != null) {
+      final dialog = ItemDialog(
+        imagePath: dialogImagePath,
+        dialogTitle: dialogTitle ?? '',
+        dialogDescription: dialogDescription ?? "",
+      );
+      final result = await game.router.pushAndWait(dialog);
+      if (result == false) return;
+      inventory.addItem(name);
+    }
+  }
 }

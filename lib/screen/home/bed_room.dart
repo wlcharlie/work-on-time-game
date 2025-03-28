@@ -8,6 +8,7 @@ import 'package:work_on_time_game/components/item/item_component.dart';
 import 'package:work_on_time_game/components/item/item_dialog.dart';
 import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/providers/global.dart';
+import 'package:work_on_time_game/providers/inventory.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 final List<Map<String, String>> items = [
@@ -17,7 +18,7 @@ final List<Map<String, String>> items = [
     'position': '1030,677',
     'dialogImagePath': images.bagLg,
     'dialogTitle': '草綠色托特包',
-    'dialogDescription': '成為社會新鮮人後，朋友送的禮物，容量很大可以裝很多東西。',
+    'dialogDescription': '成為社會新鮮人後，朋友送的禮物，\n容量很大可以裝很多東西。',
   },
   {
     'imagePath': images.books,
@@ -81,12 +82,6 @@ class BedRoom extends Component
 
   @override
   Future<void> onMount() async {
-    addToGameWidgetBuild(() {
-      ref.listen(globalNotifierProvider, (previous, next) {
-        print('globalNotifierProvider: $next');
-      });
-    });
-
     super.onMount();
 
     final background = BedRoomBackground();
@@ -120,6 +115,8 @@ class BedRoom extends Component
   }
 
   void _onTapDown(String name, TapDownEvent event) async {
+    final inventory = ref.read(inventoryNotifierProvider.notifier);
+
     final item = items.firstWhere((element) => element['name'] == name);
     final dialogImagePath = item['dialogImagePath'];
     final dialogTitle = item['dialogTitle'];
@@ -131,7 +128,9 @@ class BedRoom extends Component
         dialogTitle: dialogTitle ?? '',
         dialogDescription: dialogDescription ?? "",
       );
-      game.router.pushAndWait(dialog);
+      final result = await game.router.pushAndWait(dialog);
+      if (result == false) return;
+      inventory.addItem(name);
     }
   }
 }

@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:work_on_time_game/config/icons.dart';
 import 'package:work_on_time_game/config/style.dart';
 import 'package:work_on_time_game/config/typography.dart';
+import 'package:work_on_time_game/providers/inventory.dart';
 import 'package:work_on_time_game/screen/home/home_world.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 /// living_room 客廳
 /// bed_room 臥室
 /// enter_way 玄關
-class HomeLevelInspector extends StatefulWidget {
+class HomeLevelInspector extends ConsumerStatefulWidget {
   final WOTGame game;
   const HomeLevelInspector({super.key, required this.game});
 
   @override
-  State<HomeLevelInspector> createState() => _HomeLevelInspectorState();
+  ConsumerState<HomeLevelInspector> createState() => _HomeLevelInspectorState();
 }
 
-class _HomeLevelInspectorState extends State<HomeLevelInspector> {
+class _HomeLevelInspectorState extends ConsumerState<HomeLevelInspector> {
   List<String> scenes = ['living_room', 'bed_room', 'enter_way'];
   String sceneText = '';
   late HomeWorld homeWorld;
@@ -37,20 +39,6 @@ class _HomeLevelInspectorState extends State<HomeLevelInspector> {
     };
   }
 
-  // void onSwitchScene() {
-  //   final scene = switch (homeWorld.currentScene) {
-  //     'living_room' => 'bed_room',
-  //     'bed_room' => 'enter_way',
-  //     'enter_way' => 'living_room',
-  //     _ => '',
-  //   };
-
-  //   homeWorld.switchScene(scene);
-  //   setState(() {
-  //     sceneText = getSceneText();
-  //   });
-  // }
-
   /// index should be +1 or -1
   void onSwitchScene(int delta) {
     final currentIndex = scenes.indexOf(homeWorld.currentScene);
@@ -65,6 +53,15 @@ class _HomeLevelInspectorState extends State<HomeLevelInspector> {
     setState(() {
       sceneText = getSceneText();
     });
+  }
+
+  void onOpenInventory() {
+    // widget.game.overlays.add('inventory');
+
+    // debug print
+    // final inventory
+    final inventory = ref.read(inventoryNotifierProvider);
+    print(inventory.items);
   }
 
   @override
@@ -99,7 +96,6 @@ class _HomeLevelInspectorState extends State<HomeLevelInspector> {
           ),
           Expanded(
             child: IgnorePointer(
-              ignoring: true,
               child: Container(
                 color: Colors.transparent,
               ),
@@ -158,16 +154,19 @@ class _HomeLevelInspectorState extends State<HomeLevelInspector> {
                     ),
                   ),
                 ),
-                Container(
-                  height: 47,
-                  width: 47,
-                  decoration: style.defaultBoxDecoration.copyWith(
-                    color: Color(0xCCFFFFFF),
-                  ),
-                  child: Center(
-                    child: Text(
-                      '道具',
-                      style: typography.tp14,
+                GestureDetector(
+                  onTap: onOpenInventory,
+                  child: Container(
+                    height: 47,
+                    width: 47,
+                    decoration: style.defaultBoxDecoration.copyWith(
+                      color: Color(0xCCFFFFFF),
+                    ),
+                    child: Center(
+                      child: Text(
+                        '道具',
+                        style: typography.tp14,
+                      ),
                     ),
                   ),
                 ),
