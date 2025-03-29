@@ -12,6 +12,9 @@ class ItemDialog extends ValueRoute<bool> with HasGameReference<WOTGame> {
   final String imagePath;
   final String dialogTitle;
   final String? dialogDescription;
+  final bool noAnimation;
+  final bool withBackdrop;
+  final bool revertAction;
 
   late Image image;
 
@@ -19,16 +22,50 @@ class ItemDialog extends ValueRoute<bool> with HasGameReference<WOTGame> {
     required this.imagePath,
     required this.dialogTitle,
     this.dialogDescription,
+    this.noAnimation = false,
+    this.withBackdrop = false,
+    this.revertAction = false,
   }) : super(value: false);
 
   @override
   Component build() {
-    return ItemDialogComponent(
-      imagePath: imagePath,
-      dialogTitle: dialogTitle,
-      dialogDescription: dialogDescription,
-      onPressed: (value) => completeWith(value),
+    return ItemDialogBackdrop(
+      showBackdrop: withBackdrop,
+      child: ItemDialogComponent(
+        imagePath: imagePath,
+        dialogTitle: dialogTitle,
+        dialogDescription: dialogDescription,
+        noAnimation: noAnimation,
+        revertAction: revertAction,
+        onPressed: (value) => completeWith(value),
+      ),
     );
+  }
+}
+
+class ItemDialogBackdrop extends PositionComponent
+    with HasGameReference<WOTGame> {
+  final Component child;
+  final bool showBackdrop;
+  late Paint _paint;
+
+  ItemDialogBackdrop({required this.child, required this.showBackdrop});
+
+  @override
+  void onLoad() {
+    super.onLoad();
+    size = Vector2(game.canvasSize.x, game.canvasSize.y);
+    anchor = Anchor.topLeft;
+    _paint = Paint()..color = Color(0xFFFFFFFF).withValues(alpha: 0.2);
+
+    add(child);
+  }
+
+  @override
+  void render(Canvas canvas) {
+    if (showBackdrop) {
+      canvas.drawRect(Rect.fromLTWH(0, 0, size.x, size.y), _paint);
+    }
   }
 }
 
@@ -54,7 +91,8 @@ class ItemDialogComponent extends PositionComponent
   final String dialogTitle;
   final String? dialogDescription;
   final void Function(bool) onPressed;
-
+  final bool noAnimation;
+  final bool revertAction;
   late Image _itemImage;
 
   ItemDialogComponent({
@@ -62,6 +100,8 @@ class ItemDialogComponent extends PositionComponent
     required this.dialogTitle,
     this.dialogDescription,
     required this.onPressed,
+    this.noAnimation = false,
+    this.revertAction = false,
   }) {
     size = Vector2(_width, _height);
 
@@ -112,7 +152,6 @@ class ItemDialogComponent extends PositionComponent
     );
     children.add(itemImage);
     setPaint(2, itemImage.paint);
-    makeTransparent(paintId: 2);
 
     // title
     children.add(TextComponent(
@@ -161,6 +200,7 @@ class ItemDialogComponent extends PositionComponent
         color: Color(0xFF887768),
         bgColor: Color(0xFFFFDEC1),
         borderColor: Color(0xFF887768),
+        noAnimation: noAnimation,
       ),
       onPressed: () => onPressed(false),
     ));
@@ -168,19 +208,24 @@ class ItemDialogComponent extends PositionComponent
     // add button
     children.add(ButtonComponent(
       position: Vector2(180, 376),
-      button: ItemDialogButton(text: '帶上'),
+      button: ItemDialogButton(
+        text: revertAction ? '放回去' : '帶上',
+        noAnimation: noAnimation,
+      ),
       onPressed: () => onPressed(true),
     ));
 
     addAll(children);
 
+    if (noAnimation) return;
+
     // 加一點打開動畫～～
-    scale = Vector2.all(0.95);
+    scale = Vector2.all(0.97);
 
     add(
       ScaleEffect.to(
-        Vector2.all(1.08),
-        EffectController(duration: 0.12),
+        Vector2.all(1.06),
+        EffectController(duration: 0.1),
         onComplete: () {
           add(
             ScaleEffect.to(
@@ -198,7 +243,7 @@ class ItemDialogComponent extends PositionComponent
         EffectController(duration: 0),
         onComplete: () {
           add(
-            OpacityEffect.to(1, EffectController(duration: 0.25)),
+            OpacityEffect.to(1, EffectController(duration: 0.12)),
           );
         },
       ),
@@ -223,11 +268,14 @@ class ItemDialogButton extends PositionComponent with HasPaint {
   late final Paint _borderPaint;
   late final Paint _bgPaint;
 
+  final bool noAnimation;
+
   ItemDialogButton({
     required this.text,
     this.color = const Color(0xFFFFFFFF),
     this.bgColor = const Color(0xFF6A4D3A),
     this.borderColor = const Color(0xFF6A4D3A),
+    this.noAnimation = false,
   }) : _textDrawable = TextPaint(
           style: TextStyle(
             fontSize: 16,
@@ -259,6 +307,8 @@ class ItemDialogButton extends PositionComponent with HasPaint {
   @override
   void onLoad() {
     super.onLoad();
+    if (noAnimation) return;
+
     add(
       SequenceEffect([
         OpacityEffect.to(0, EffectController(duration: 0)),

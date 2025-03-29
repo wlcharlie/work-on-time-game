@@ -6,60 +6,13 @@ import 'package:work_on_time_game/components/background/bed_room.dart';
 import 'package:work_on_time_game/components/item/blanket.dart';
 import 'package:work_on_time_game/components/item/item_component.dart';
 import 'package:work_on_time_game/components/item/item_dialog.dart';
-import 'package:work_on_time_game/config/images.dart';
-import 'package:work_on_time_game/providers/global.dart';
+import 'package:work_on_time_game/config/items.dart';
+import 'package:work_on_time_game/models/item.dart';
 import 'package:work_on_time_game/providers/inventory.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
-final List<Map<String, String>> items = [
-  {
-    'imagePath': images.bag,
-    'name': 'bag',
-    'position': '1030,677',
-    'dialogImagePath': images.bagLg,
-    'dialogTitle': '草綠色托特包',
-    'dialogDescription': '成為社會新鮮人後，朋友送的禮物，\n容量很大可以裝很多東西。',
-  },
-  {
-    'imagePath': images.books,
-    'name': 'books',
-    'position': '589,691',
-    'dialogImagePath': images.bookLg,
-    'dialogTitle': '書',
-    'dialogDescription': '最近常看的書',
-  },
-  {
-    'imagePath': images.hairIron,
-    'name': 'hair_iron',
-    'position': '7,659',
-    'dialogImagePath': images.hairIronLg,
-    'dialogTitle': '離子夾',
-    'dialogDescription': '要換個造型嗎？',
-  },
-  {
-    'imagePath': images.mirror,
-    'name': 'mirror',
-    'position': '29,271',
-  },
-  {
-    'imagePath': images.painting,
-    'name': 'painting',
-    'position': '589,150',
-  },
-  {
-    'imagePath': images.paperBall,
-    'name': 'paper_ball',
-    'position': '264,677',
-  },
-  {
-    'imagePath': images.phone,
-    'name': 'phone',
-    'position': '703,636',
-    'dialogImagePath': images.phoneLg,
-    'dialogTitle': '手機',
-    'dialogDescription': '',
-  },
-];
+final List<Item> ITEMS =
+    items.where((element) => element.sceneName == 'bed_room').toList();
 
 /// 臥室
 /// Loop items:
@@ -101,14 +54,12 @@ class BedRoom extends Component
       },
     ));
 
-    for (final item in items) {
+    for (final item in ITEMS) {
       add(ItemComponent(
-        imagePath: item['imagePath'] ?? '',
-        name: item['name'] ?? '',
-        position: Vector2(
-          double.parse(item['position']?.split(',')[0] ?? '0'),
-          double.parse(item['position']?.split(',')[1] ?? '0'),
-        ),
+        imagePath: item.imagePath,
+        name: item.name,
+        position: item.position,
+        priority: item.priority,
         action: _onTapDown,
       ));
     }
@@ -117,10 +68,10 @@ class BedRoom extends Component
   void _onTapDown(String name, TapDownEvent event) async {
     final inventory = ref.read(inventoryNotifierProvider.notifier);
 
-    final item = items.firstWhere((element) => element['name'] == name);
-    final dialogImagePath = item['dialogImagePath'];
-    final dialogTitle = item['dialogTitle'];
-    final dialogDescription = item['dialogDescription'];
+    final item = ITEMS.firstWhere((element) => element.name == name);
+    final dialogImagePath = item.imagePathLg;
+    final dialogTitle = item.title;
+    final dialogDescription = item.description;
 
     if (dialogImagePath != null) {
       final dialog = ItemDialog(

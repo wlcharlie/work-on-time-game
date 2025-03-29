@@ -40,6 +40,7 @@ dependencies:
   flame_riverpod: ^5.4.11
   flutter_riverpod: ^2.6.1
   riverpod_annotation: ^2.6.1
+  collection: ^1.19.0
 
 dev_dependencies:
   flutter_test:

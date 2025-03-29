@@ -2,6 +2,7 @@ import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:work_on_time_game/overlays/home_level_inspector.dart';
+import 'package:work_on_time_game/overlays/inventory.dart';
 import 'package:work_on_time_game/screen/loading.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
@@ -20,6 +21,7 @@ void main() {
             overlayBuilderMap: {
               // 'loading': (_, game) => Loading(),
               'homeLevelInspector': (_, game) => HomeLevelInspector(game: game),
+              'inventory': (_, game) => Inventory(game: game),
             },
           ),
         ),

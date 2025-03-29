@@ -6,11 +6,11 @@ class Inventory {
   final List<String> _items = [];
   // 背包容量
   int _capacity = 3;
-  get items => List.unmodifiable(_items);
+  List<String> get items => List.unmodifiable(_items);
   // 背包容量
-  get capacity => _capacity;
+  int get capacity => _capacity;
   // 背包目前容量
-  get currentCount => _items.length;
+  int get currentCount => _items.length;
 
   Inventory();
 

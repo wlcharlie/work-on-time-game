@@ -56,7 +56,7 @@ class _HomeLevelInspectorState extends ConsumerState<HomeLevelInspector> {
   }
 
   void onOpenInventory() {
-    // widget.game.overlays.add('inventory');
+    widget.game.overlays.add('inventory');
 
     // debug print
     // final inventory

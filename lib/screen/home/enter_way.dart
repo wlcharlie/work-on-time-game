@@ -6,59 +6,13 @@ import 'package:work_on_time_game/components/item/door.dart';
 import 'package:work_on_time_game/components/item/item_component.dart';
 import 'package:work_on_time_game/components/item/item_dialog.dart';
 import 'package:work_on_time_game/config/images.dart';
+import 'package:work_on_time_game/config/items.dart';
+import 'package:work_on_time_game/models/item.dart';
 import 'package:work_on_time_game/providers/inventory.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
-final List<Map<String, String>> items = [
-  {
-    'imagePath': images.boots,
-    'name': 'boots',
-    'position': '279,461',
-    'dialogImagePath': images.bootLg,
-    'dialogTitle': '黑色長筒靴',
-    'dialogDescription': '還蠻耐走的！很適合搭配可愛的 衣服穿去逛街。',
-  },
-  {
-    'imagePath': images.idCard,
-    'name': 'id_card',
-    'position': '48,373',
-    'dialogImagePath': images.idCardLg,
-    'dialogTitle': '公司識別證',
-    'dialogDescription': '進公司大門和打卡的時候\n會用到，千萬不能忘記帶了！',
-  },
-  {
-    'imagePath': images.maryJanes,
-    'name': 'mary_janes',
-    'position': '318,475',
-    'dialogImagePath': images.maryJanesLg,
-    'dialogTitle': '棕色瑪莉珍鞋',
-    'dialogDescription': '唯一的一雙比較正式的鞋子。',
-  },
-  {
-    'imagePath': images.shoppingList,
-    'name': 'shopping_list',
-    'position': '3,379',
-    'dialogImagePath': images.shoppingListLg,
-    'dialogTitle': '超市購物清單',
-    'dialogDescription': '回家的時候再順便去買個菜吧！',
-  },
-  {
-    'imagePath': images.sneakers,
-    'name': 'sneakers',
-    'position': '280,537',
-    'dialogImagePath': images.sneakerLg,
-    'dialogTitle': '白色帆布鞋',
-    'dialogDescription': '偶爾運動會穿出門，不過\n已經好久沒有出門運動了。',
-  },
-  {
-    'imagePath': images.umbrella,
-    'name': 'umbrella',
-    'position': '263,408',
-    'dialogImagePath': images.umbrellaLg,
-    'dialogTitle': '折傘',
-    'dialogDescription': '今天會下雨嗎？',
-  },
-];
+final List<Item> ITEMS =
+    items.where((element) => element.sceneName == 'enter_way').toList();
 
 class EnterWay extends Component
     with HasGameReference<WOTGame>, RiverpodComponentMixin {
@@ -82,14 +36,12 @@ class EnterWay extends Component
       position: Vector2(86, 253),
     ));
 
-    for (final item in items) {
+    for (final item in ITEMS) {
       add(ItemComponent(
-        imagePath: item['imagePath'] ?? '',
-        name: item['name'] ?? '',
-        position: Vector2(
-          double.parse(item['position']?.split(',')[0] ?? '0'),
-          double.parse(item['position']?.split(',')[1] ?? '0'),
-        ),
+        imagePath: item.imagePath,
+        name: item.name,
+        position: item.position,
+        priority: item.priority,
         action: _onTapDown,
       ));
     }
@@ -98,10 +50,10 @@ class EnterWay extends Component
   void _onTapDown(String name, TapDownEvent event) async {
     final inventory = ref.read(inventoryNotifierProvider.notifier);
 
-    final item = items.firstWhere((element) => element['name'] == name);
-    final dialogImagePath = item['dialogImagePath'];
-    final dialogTitle = item['dialogTitle'];
-    final dialogDescription = item['dialogDescription'];
+    final item = ITEMS.firstWhere((element) => element.name == name);
+    final dialogImagePath = item.imagePathLg;
+    final dialogTitle = item.title;
+    final dialogDescription = item.description;
 
     if (dialogImagePath != null) {
       final dialog = ItemDialog(
