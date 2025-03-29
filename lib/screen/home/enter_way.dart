@@ -1,7 +1,7 @@
 import 'package:flame/components.dart';
-import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame_riverpod/flame_riverpod.dart';
+import 'package:work_on_time_game/components/common/inventory_listener_mixin.dart';
 import 'package:work_on_time_game/components/item/door.dart';
 import 'package:work_on_time_game/components/item/item_component.dart';
 import 'package:work_on_time_game/components/item/item_dialog.dart';
@@ -15,12 +15,19 @@ final List<Item> ITEMS =
     items.where((element) => element.sceneName == 'enter_way').toList();
 
 class EnterWay extends Component
-    with HasGameReference<WOTGame>, RiverpodComponentMixin {
+    with
+        HasGameReference<WOTGame>,
+        RiverpodComponentMixin,
+        InventoryListenerMixin {
   @override
   ComponentKey get key => ComponentKey.named("enter_way");
 
   @override
+  List<Item> get roomItems => ITEMS;
+
+  @override
   Future<void> onMount() async {
+    setupInventoryListener();
     super.onMount();
 
     final background = SpriteComponent(
@@ -42,12 +49,15 @@ class EnterWay extends Component
         name: item.name,
         position: item.position,
         priority: item.priority,
-        action: _onTapDown,
+        action: onItemTapDown,
       ));
     }
+
+    children.register<ItemComponent>();
   }
 
-  void _onTapDown(String name, TapDownEvent event) async {
+  @override
+  void onItemTapDown(String name, event) async {
     final inventory = ref.read(inventoryNotifierProvider.notifier);
 
     final item = ITEMS.firstWhere((element) => element.name == name);

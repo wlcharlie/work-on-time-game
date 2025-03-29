@@ -3,10 +3,11 @@
 /// 關鍵道具會增到九格
 class Inventory {
   // 先存 string, 不製作貧血模型
-  final List<String> _items = [];
+  List<String> _items = [];
   // 背包容量
   int _capacity = 3;
   List<String> get items => List.unmodifiable(_items);
+
   // 背包容量
   int get capacity => _capacity;
   // 背包目前容量
@@ -14,20 +15,28 @@ class Inventory {
 
   Inventory();
 
+  Inventory.copy(Inventory other) {
+    _capacity = other._capacity;
+    _items = List.from(other._items);
+  }
+
   Inventory addItem(String item) {
     if (_items.contains(item)) return this;
     if (_items.length >= _capacity) return this;
 
+    final newInventory = Inventory.copy(this);
+
     if (item == 'bag') {
-      _capacity = 9;
+      newInventory._capacity = 9;
     }
-    _items.add(item);
-    return this;
+    newInventory._items.add(item);
+    return newInventory;
   }
 
   Inventory removeItem(String item) {
-    _items.remove(item);
-    return this;
+    final newInventory = Inventory.copy(this);
+    newInventory._items.remove(item);
+    return newInventory;
   }
 
   bool hasItem(String item) {

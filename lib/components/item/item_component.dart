@@ -1,4 +1,5 @@
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flame/events.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
@@ -7,6 +8,7 @@ class ItemComponent extends SpriteComponent
   final String imagePath;
   final String name;
   final void Function(String name, TapDownEvent event) action;
+
   ItemComponent({
     required this.imagePath,
     required this.name,

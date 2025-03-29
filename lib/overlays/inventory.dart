@@ -52,7 +52,7 @@ class _InventoryState extends ConsumerState<Inventory> {
     final inventory = ref.watch(inventoryNotifierProvider);
 
     return Container(
-      color: Colors.white.withValues(alpha: 0.80),
+      // color: Colors.white.withValues(alpha: 0.80),
       child: SafeArea(
         child: Scaffold(
           backgroundColor: Colors.transparent,

@@ -1,12 +1,14 @@
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
+import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/screen/home/bed_room.dart';
 import 'package:work_on_time_game/screen/home/enter_way.dart';
 import 'package:work_on_time_game/screen/home/living_room.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
-class HomeWorld extends World with HasGameReference<WOTGame> {
+class HomeWorld extends World
+    with HasGameReference<WOTGame>, RiverpodComponentMixin {
   final initialScene = 'bed_room';
   final bedRoom = BedRoom();
   final livingRoom = LivingRoom();
