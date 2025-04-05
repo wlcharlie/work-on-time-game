@@ -1,11 +1,20 @@
+import 'dart:ui';
+
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flame/events.dart';
+import 'package:flame/extensions.dart';
 import 'package:flutter/material.dart' show Canvas;
 import 'package:work_on_time_game/config/images.dart';
+import 'package:work_on_time_game/config/typography.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 class Mirror extends PositionComponent
-    with HasGameReference<WOTGame>, TapCallbacks {
+    with HasGameReference<WOTGame>, TapCallbacks, HasPaint {
+  late EndlessScrollingBackground _bg;
+  late SpriteComponent _character;
+  late Dialog _dialog;
+
   final void Function() onTap;
 
   Mirror({required this.onTap});
@@ -14,12 +23,39 @@ class Mirror extends PositionComponent
   void onLoad() {
     super.onLoad();
     size = game.size;
-    final image = game.images.fromCache(images.greenDotBackground);
-    final movingBg = EndlessScrollingBackground(
-      image: image,
-      // Diagonal movement from top-left to bottom-right
+
+    _bg = EndlessScrollingBackground(
+      image: game.images.fromCache(images.greenDotBackground),
     );
-    add(movingBg);
+    final characterImage = game.images.fromCache(images.character);
+    final characterSprite = Sprite(characterImage);
+    _character = SpriteComponent(
+      sprite: characterSprite,
+      position: Vector2(79, 73),
+    );
+
+    _dialog = Dialog(onTap: () {});
+
+    _bg.makeTransparent();
+    _character.makeTransparent();
+
+    add(_bg);
+    add(_character);
+    _bg.add(
+      OpacityEffect.to(
+        1,
+        EffectController(duration: 0.8),
+      ),
+    );
+    _character.add(
+      OpacityEffect.to(
+        1,
+        EffectController(duration: 0.8, startDelay: 0.8),
+        onComplete: () {
+          add(_dialog);
+        },
+      ),
+    );
   }
 
   @override
@@ -31,7 +67,7 @@ class Mirror extends PositionComponent
 
 // Create a new component for an endless scrolling background
 class EndlessScrollingBackground extends PositionComponent
-    with HasGameReference<WOTGame> {
+    with HasGameReference<WOTGame>, HasPaint {
   final Vector2 speed;
   late final Sprite _sprite;
   late final Vector2 _textureSize;
@@ -40,9 +76,12 @@ class EndlessScrollingBackground extends PositionComponent
   EndlessScrollingBackground({
     required image,
     Vector2? speed,
-  }) : speed = speed ?? Vector2(20, 10) {
+  }) : speed = speed ?? Vector2(30, 12) {
     _sprite = Sprite(image);
+    _sprite.srcSize =
+        Vector2(image.width.toDouble() - 12, image.height.toDouble() + 2);
     _textureSize = Vector2(image.width.toDouble(), image.height.toDouble());
+    _sprite.paint = paint;
   }
 
   @override
@@ -87,5 +126,61 @@ class EndlessScrollingBackground extends PositionComponent
     super.update(dt);
     // Update the position by the speed (positive values for both x and y)
     _position -= speed * dt;
+  }
+}
+
+class Dialog extends PositionComponent with HasGameReference<WOTGame> {
+  Dialog({required this.onTap});
+
+  final void Function() onTap;
+
+  @override
+  void onLoad() {
+    super.onLoad();
+    size = Vector2(345, 68);
+    position = Vector2(24, 755);
+    anchor = Anchor.topLeft;
+
+    // text
+    final text = TextBoxComponent(
+        text: "今天的裝扮感覺很不錯！",
+        textRenderer: TextPaint(
+          style: typography.tp20,
+        ),
+        align: Anchor.center,
+        anchor: Anchor.center,
+        position: Vector2(size.x / 2, size.y / 2),
+        boxConfig: TextBoxConfig(
+          timePerChar: 0.05,
+        ));
+    add(text);
+  }
+
+  @override
+  void render(Canvas canvas) {
+    super.render(canvas);
+
+    // bgfill
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, 0, size.x, size.y),
+        Radius.circular(10),
+      ),
+      Paint()
+        ..color =
+            ColorExtension.fromRGBHexString("#FFFFFF").withValues(alpha: 0.8),
+    );
+
+    // border
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, 0, size.x, size.y),
+        Radius.circular(10),
+      ),
+      Paint()
+        ..color = ColorExtension.fromRGBHexString("#887768")
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 3,
+    );
   }
 }

@@ -16,6 +16,8 @@ class Images {
   final String tabbarMenuIcon = 'tabbar_icon_menu.png';
   final String tabbarSettingsIcon = 'tabbar_icon_settings.png';
 
+  final String character = 'character.png';
+
   // 房間找東西關卡
   final String livingRoomBackground = 'living_room/bg.png';
   final String bill = 'living_room/bill.png';
@@ -78,6 +80,7 @@ class Images {
 
   List<String> allHomeLevelImages() {
     return [
+      character,
       livingRoomBackground,
       bill,
       box,

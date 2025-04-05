@@ -1,5 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
+import 'package:flame/rendering.dart';
 import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/screen/home/bed_room.dart';
@@ -17,6 +18,10 @@ class HomeWorld extends World
   final enterWay = EnterWay();
   String currentScene = ''; // living_room, bed_room, enter_way
 
+  double _cutsceneBlur = 10;
+  double _cutsceneSpeed = 3;
+  bool _cutsceneOff = false;
+
   static ComponentKey componentKey = ComponentKey.named("home_world");
 
   @override
@@ -30,8 +35,8 @@ class HomeWorld extends World
     cutscene = SpriteComponent(
       sprite: Sprite(game.images.fromCache(images.loading)),
     );
-
-    add(cutscene);
+    cutscene.decorator = PaintDecorator.blur(_cutsceneBlur);
+    await Flame.images.loadAll(images.allHomeLevelImages());
 
     game.camera.viewfinder.anchor = Anchor.topLeft;
   }
@@ -39,11 +44,25 @@ class HomeWorld extends World
   @override
   void onMount() async {
     super.onMount();
-    await Future.delayed(const Duration(seconds: 2));
-    await Flame.images.loadAll(images.allHomeLevelImages());
-    cutscene.removeFromParent();
     switchScene(initialScene);
-    game.overlays.add('homeLevelInspector');
+    add(cutscene);
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    if (_cutsceneOff) return;
+
+    if (_cutsceneBlur > 0) {
+      _cutsceneBlur -= dt * _cutsceneSpeed;
+      cutscene.decorator = PaintDecorator.blur(_cutsceneBlur);
+    }
+
+    if (_cutsceneBlur <= 0) {
+      cutscene.removeFromParent();
+      game.overlays.add('homeLevelInspector');
+      _cutsceneOff = true;
+    }
   }
 
   void switchScene(String scene) async {
