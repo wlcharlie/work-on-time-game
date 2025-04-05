@@ -2,9 +2,12 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame_riverpod/flame_riverpod.dart';
+import 'package:work_on_time_game/components/tap_circle.dart';
 import 'package:work_on_time_game/screen/home/home_world.dart';
+import 'package:work_on_time_game/screen/lobby/lobby_world.dart';
 
-class WOTGame extends FlameGame with PanDetector, RiverpodGameMixin {
+class WOTGame extends FlameGame
+    with TapDetector, PanDetector, RiverpodGameMixin {
   late final RouterComponent router;
 
   @override
@@ -14,7 +17,7 @@ class WOTGame extends FlameGame with PanDetector, RiverpodGameMixin {
   void onLoad() async {
     await super.onLoad();
     // sleep 3 seconds for the loading screen development
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 1));
 
     // 固定解析度(?) 看起來不用出兩倍圖了Ａ＿Ａ
     camera = CameraComponent.withFixedResolution(
@@ -24,9 +27,12 @@ class WOTGame extends FlameGame with PanDetector, RiverpodGameMixin {
 
     router = RouterComponent(
       routes: {
+        // 大廳 初始畫面
+        'lobby': WorldRoute(LobbyWorld.new),
+        // 關卡 收集出門物品
         'home': WorldRoute(HomeWorld.new),
       },
-      initialRoute: 'home',
+      initialRoute: 'lobby',
     );
     add(router);
   }
@@ -40,5 +46,11 @@ class WOTGame extends FlameGame with PanDetector, RiverpodGameMixin {
     if (currentRoute.name == 'home') {
       camera.moveBy(Vector2(-info.delta.global.x, 0));
     }
+  }
+
+  @override
+  void onTapDown(TapDownInfo info) {
+    super.onTapDown(info);
+    router.add(TapCircle(center: info.eventPosition.global));
   }
 }

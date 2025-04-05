@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:work_on_time_game/overlays/home_level_inspector.dart';
 import 'package:work_on_time_game/overlays/inventory.dart';
+import 'package:work_on_time_game/overlays/lobby_tools.dart';
 import 'package:work_on_time_game/screen/loading.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
@@ -19,7 +20,7 @@ void main() {
             game: gameInstance,
             loadingBuilder: (_) => Loading(),
             overlayBuilderMap: {
-              // 'loading': (_, game) => Loading(),
+              'lobbyTools': (_, game) => LobbyTools(game: game),
               'homeLevelInspector': (_, game) => HomeLevelInspector(game: game),
               'inventory': (_, game) => Inventory(game: game),
             },

@@ -58,11 +58,13 @@ class Images {
   final String sneakerLg = 'item/sneakers.png';
   final String umbrellaLg = 'item/umbrella.png';
 
+  final String lobbyBackground = 'home_bg.png';
+
   String getFullPath(String image) {
     return 'assets/images/$image';
   }
 
-  List<String> allImages() {
+  List<String> allHomeLevelImages() {
     return [
       livingRoomBackground,
       bill,

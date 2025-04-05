@@ -23,9 +23,8 @@ class HomeWorld extends World
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    await Flame.images.loadAll(images.allImages());
-
     game.camera.viewfinder.anchor = Anchor.topLeft;
+    await Flame.images.loadAll(images.allHomeLevelImages());
     switchScene(initialScene);
   }
 
