@@ -21,6 +21,11 @@ class LobbyWorld extends World
     final background = Sprite(image);
     final backgroundComponent = SpriteComponent()..sprite = background;
     add(backgroundComponent);
+  }
+
+  @override
+  void onMount() {
+    super.onMount();
     game.overlays.add('lobbyTools');
   }
 }

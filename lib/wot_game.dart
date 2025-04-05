@@ -50,6 +50,7 @@ class WOTGame extends FlameGame
 
   @override
   void onTapDown(TapDownInfo info) {
+    print('onTapDown');
     super.onTapDown(info);
     router.add(TapCircle(center: info.eventPosition.global));
   }
