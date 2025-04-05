@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/config/typography.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 final tabBarIcons = [
-  'assets/images/tabbar_icon_home.png',
-  'assets/images/tabbar_icon_2.png',
-  'assets/images/tabbar_icon_book.png',
-  'assets/images/tabbar_icon_settings.png',
-  'assets/images/tabbar_icon_menu.png',
+  images.getFullPath(images.tabbarHomeIcon),
+  images.getFullPath(images.tabbar2Icon),
+  images.getFullPath(images.tabbarBookIcon),
+  images.getFullPath(images.tabbarSettingsIcon),
+  images.getFullPath(images.tabbarMenuIcon),
 ];
 
 final statusIcons = [
-  'assets/images/status/mind.png',
-  'assets/images/status/saving.png',
-  'assets/images/status/energy.png',
+  images.getFullPath(images.statusMindIcon),
+  images.getFullPath(images.statusSavingIcon),
+  images.getFullPath(images.statusEnergyIcon),
 ];
 
 class LobbyTools extends ConsumerStatefulWidget {
@@ -29,6 +30,11 @@ class _LobbyToolsState extends ConsumerState<LobbyTools> {
   @override
   void initState() {
     super.initState();
+  }
+
+  void _onStartButtonTap() {
+    widget.game.router.pushNamed('home');
+    widget.game.overlays.remove('lobbyTools');
   }
 
   @override
@@ -187,30 +193,33 @@ class _LobbyToolsState extends ConsumerState<LobbyTools> {
   }
 
   Widget _buildStartButton() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14),
+    return GestureDetector(
+      onTap: _onStartButtonTap,
       child: Container(
-        height: 87,
-        decoration: BoxDecoration(
-          color: const Color(0xFFF7ECE0),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: const Color(0xFFAE866B),
-            width: 4,
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: 8,
-          children: [
-            Text('準備去上班！', style: typography.tp20m),
-            Text(
-              '（消耗 1 能量）',
-              style: typography.tp16m.copyWith(
-                color: const Color(0xFF8A5E41).withValues(alpha: 0.5),
-              ),
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        child: Container(
+          height: 87,
+          decoration: BoxDecoration(
+            color: const Color(0xFFF7ECE0),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: const Color(0xFFAE866B),
+              width: 4,
             ),
-          ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 8,
+            children: [
+              Text('準備去上班！', style: typography.tp20m),
+              Text(
+                '（消耗 1 能量）',
+                style: typography.tp16m.copyWith(
+                  color: const Color(0xFF8A5E41).withValues(alpha: 0.5),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -6,9 +6,11 @@ import 'package:work_on_time_game/components/common/inventory_listener_mixin.dar
 import 'package:work_on_time_game/components/item/blanket.dart';
 import 'package:work_on_time_game/components/item/item_component.dart';
 import 'package:work_on_time_game/components/item/item_dialog.dart';
+import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/config/items.dart';
 import 'package:work_on_time_game/models/item.dart';
 import 'package:work_on_time_game/providers/inventory.dart';
+import 'package:work_on_time_game/screen/home/mirror.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 final List<Item> ITEMS =
@@ -76,6 +78,18 @@ class BedRoom extends Component
 
   @override
   void onItemTapDown(String name, event) async {
+    if (name == 'mirror') {
+      // remove the overlay
+      game.overlays.remove('homeLevelInspector');
+      late final Mirror mirror;
+      mirror = Mirror(onTap: () {
+        game.overlays.add('homeLevelInspector');
+        mirror.removeFromParent();
+      });
+      add(mirror);
+      return;
+    }
+
     final inventory = ref.read(inventoryNotifierProvider.notifier);
 
     final item = ITEMS.firstWhere((element) => element.name == name);

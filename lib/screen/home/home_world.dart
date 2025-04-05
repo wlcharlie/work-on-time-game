@@ -9,6 +9,8 @@ import 'package:work_on_time_game/wot_game.dart';
 
 class HomeWorld extends World
     with HasGameReference<WOTGame>, RiverpodComponentMixin {
+  late final SpriteComponent cutscene;
+
   final initialScene = 'bed_room';
   final bedRoom = BedRoom();
   final livingRoom = LivingRoom();
@@ -23,14 +25,24 @@ class HomeWorld extends World
   @override
   Future<void> onLoad() async {
     super.onLoad();
+
+    // cutscene
+    cutscene = SpriteComponent(
+      sprite: Sprite(game.images.fromCache(images.loading)),
+    );
+
+    add(cutscene);
+
     game.camera.viewfinder.anchor = Anchor.topLeft;
-    await Flame.images.loadAll(images.allHomeLevelImages());
-    switchScene(initialScene);
   }
 
   @override
-  void onMount() {
+  void onMount() async {
     super.onMount();
+    await Future.delayed(const Duration(seconds: 2));
+    await Flame.images.loadAll(images.allHomeLevelImages());
+    cutscene.removeFromParent();
+    switchScene(initialScene);
     game.overlays.add('homeLevelInspector');
   }
 

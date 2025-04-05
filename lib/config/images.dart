@@ -3,6 +3,20 @@ class Images {
   factory Images() => _instance;
   Images._internal();
 
+  final String loading = 'loading.png';
+  final String lobbyBackground = 'home_bg.png';
+
+  final String statusMindIcon = 'status/mind.png';
+  final String statusSavingIcon = 'status/saving.png';
+  final String statusEnergyIcon = 'status/energy.png';
+
+  final String tabbarBookIcon = 'tabbar_icon_book.png';
+  final String tabbar2Icon = 'tabbar_icon_2.png';
+  final String tabbarHomeIcon = 'tabbar_icon_home.png';
+  final String tabbarMenuIcon = 'tabbar_icon_menu.png';
+  final String tabbarSettingsIcon = 'tabbar_icon_settings.png';
+
+  // 房間找東西關卡
   final String livingRoomBackground = 'living_room/bg.png';
   final String bill = 'living_room/bill.png';
   final String box = 'living_room/box.png';
@@ -13,7 +27,7 @@ class Images {
   final String scarf = 'living_room/scarf.png';
   final String tv = 'living_room/tv.png';
   final String vase = 'living_room/vase.png';
-
+  // 房間找東西關卡
   final String bedRoomBackground = 'bed_room/bg.png';
   final String bag = 'bed_room/bag.png';
   final String blanketDo = 'bed_room/blanket_do.png';
@@ -24,7 +38,7 @@ class Images {
   final String painting = 'bed_room/painting.png';
   final String paperBall = 'bed_room/paper_ball.png';
   final String phone = 'bed_room/phone.png';
-
+  // 房間找東西關卡
   final String enterWay = 'enter_way/bg.png';
   final String boots = 'enter_way/boots.png';
   final String doorClose = 'enter_way/door_close.png';
@@ -35,9 +49,8 @@ class Images {
   final String sneakers = 'enter_way/sneakers.png';
   final String umbrella = 'enter_way/umbrella.png';
 
-  final String loading = 'loading.png';
+  // 房間找東西關卡 對話大窗窗
   final String itemDialogBg = 'item/dialog_bg.png';
-
   final String bagLg = 'item/bag.png';
   final String billLg = 'item/bill.png';
   final String bookLg = 'item/book.png';
@@ -57,8 +70,7 @@ class Images {
   final String shoppingListLg = 'item/shopping_list.png';
   final String sneakerLg = 'item/sneakers.png';
   final String umbrellaLg = 'item/umbrella.png';
-
-  final String lobbyBackground = 'home_bg.png';
+  final String greenDotBackground = 'bg_green_dot.png';
 
   String getFullPath(String image) {
     return 'assets/images/$image';
@@ -116,6 +128,7 @@ class Images {
       shoppingListLg,
       sneakerLg,
       umbrellaLg,
+      greenDotBackground,
     ];
   }
 }

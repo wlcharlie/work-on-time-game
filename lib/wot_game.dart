@@ -1,8 +1,10 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:work_on_time_game/components/tap_circle.dart';
+import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/screen/home/home_world.dart';
 import 'package:work_on_time_game/screen/lobby/lobby_world.dart';
 
@@ -16,6 +18,8 @@ class WOTGame extends FlameGame
   @override
   void onLoad() async {
     await super.onLoad();
+    await Flame.images.load(images.loading);
+
     // sleep 3 seconds for the loading screen development
     await Future.delayed(const Duration(seconds: 1));
 
@@ -50,7 +54,6 @@ class WOTGame extends FlameGame
 
   @override
   void onTapDown(TapDownInfo info) {
-    print('onTapDown');
     super.onTapDown(info);
     router.add(TapCircle(center: info.eventPosition.global));
   }
