@@ -6,6 +6,7 @@ import 'package:work_on_time_game/models/item.dart';
 
 final List<Item> items = [
   // 臥室物品
+  // 紙球跟棉被另外獨立刻了
   Item(
     name: 'bag',
     imagePath: images.bag,
@@ -49,15 +50,6 @@ final List<Item> items = [
     title: null,
     description: null,
     position: Vector2(589, 150),
-    sceneName: 'bed_room',
-  ),
-  Item(
-    name: 'paper_ball',
-    imagePath: images.paperBall,
-    imagePathLg: null,
-    title: null,
-    description: null,
-    position: Vector2(264, 677),
     sceneName: 'bed_room',
   ),
   Item(

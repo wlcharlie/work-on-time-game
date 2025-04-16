@@ -6,6 +6,7 @@ import 'package:work_on_time_game/components/common/inventory_listener_mixin.dar
 import 'package:work_on_time_game/components/item/blanket.dart';
 import 'package:work_on_time_game/components/item/item_component.dart';
 import 'package:work_on_time_game/components/item/item_dialog.dart';
+import 'package:work_on_time_game/components/item/paper_ball.dart';
 import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/config/items.dart';
 import 'package:work_on_time_game/models/item.dart';
@@ -61,6 +62,9 @@ class BedRoom extends Component
       onTapDownCallback: (event) async {
         print('I am Blanket!!');
       },
+    ));
+    add(PaperBall(
+      position: Vector2(264, 677),
     ));
 
     for (final item in ITEMS) {
