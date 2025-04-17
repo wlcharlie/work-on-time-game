@@ -23,7 +23,7 @@ class Mirror extends PositionComponent
   void onLoad() {
     super.onLoad();
     size = game.size;
-
+    position = game.camera.viewfinder.position;
     _bg = EndlessScrollingBackground(
       image: game.images.fromCache(images.greenDotBackground),
     );

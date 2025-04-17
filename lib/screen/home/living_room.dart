@@ -8,6 +8,8 @@ import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/config/items.dart';
 import 'package:work_on_time_game/models/item.dart';
 import 'package:work_on_time_game/providers/inventory.dart';
+import 'package:work_on_time_game/screen/home/home_world.dart';
+import 'package:work_on_time_game/screen/home/weather_forecast.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 final List<Item> ITEMS =
@@ -31,6 +33,7 @@ final List<Item> ITEMS =
 class LivingRoom extends Component
     with
         HasGameReference<WOTGame>,
+        HasWorldReference<HomeWorld>,
         RiverpodComponentMixin,
         InventoryListenerMixin {
   @override
@@ -73,6 +76,17 @@ class LivingRoom extends Component
     final inventory = ref.read(inventoryNotifierProvider.notifier);
 
     final item = ITEMS.firstWhere((element) => element.name == name);
+
+    if (item.name == 'tv') {
+      // 顯示另外的內容
+      game.overlays.remove('homeLevelInspector');
+      final weatherForecast = WeatherForecast(onTap: () {
+        game.overlays.add('homeLevelInspector');
+      });
+      world.add(weatherForecast);
+      return;
+    }
+
     final dialogImagePath = item.imagePathLg;
     final dialogTitle = item.title;
     final dialogDescription = item.description;

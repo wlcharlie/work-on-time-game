@@ -74,6 +74,11 @@ class Images {
   final String umbrellaLg = 'item/umbrella.png';
   final String greenDotBackground = 'bg_green_dot.png';
 
+  final String weatherForecastHost = 'tv/host.png';
+  final String weatherForecastSunny = 'tv/weather_sunny.png';
+  final String weatherForecastRain = 'tv/weather_rain.png';
+  final String weatherForecastCloudy = 'tv/weather_cloudy.png';
+
   String getFullPath(String image) {
     return 'assets/images/$image';
   }
@@ -132,6 +137,10 @@ class Images {
       sneakerLg,
       umbrellaLg,
       greenDotBackground,
+      weatherForecastHost,
+      weatherForecastSunny,
+      weatherForecastRain,
+      weatherForecastCloudy,
     ];
   }
 }
