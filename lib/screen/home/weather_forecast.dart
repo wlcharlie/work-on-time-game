@@ -21,6 +21,8 @@ class WeatherForecast extends PositionComponent
   late WeatherType _weatherType;
   late String _weatherDescription;
 
+  bool canInteract = false;
+
   final void Function() onTap;
 
   WeatherForecast({required this.onTap});
@@ -28,6 +30,7 @@ class WeatherForecast extends PositionComponent
   @override
   void onLoad() {
     super.onLoad();
+    game.isPannable = false;
 
     _weatherType =
         WeatherType.values[Random().nextInt(WeatherType.values.length)];
@@ -90,6 +93,10 @@ class WeatherForecast extends PositionComponent
           EffectController(duration: 0.4, startDelay: 1.6),
           onComplete: () {
             add(_dialog);
+
+            Future.delayed(const Duration(milliseconds: 1200), () {
+              canInteract = true;
+            });
           },
         ),
         ScaleEffect.to(
@@ -107,8 +114,15 @@ class WeatherForecast extends PositionComponent
   }
 
   @override
+  void onRemove() {
+    game.isPannable = true;
+    super.onRemove();
+  }
+
+  @override
   void onTapDown(TapDownEvent event) {
     super.onTapDown(event);
+    if (!canInteract) return;
 
     removeFromParent();
 

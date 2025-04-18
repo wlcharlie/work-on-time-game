@@ -15,6 +15,8 @@ class Mirror extends PositionComponent
   late SpriteComponent _character;
   late Dialog _dialog;
 
+  bool canInteract = false;
+
   final void Function() onTap;
 
   Mirror({required this.onTap});
@@ -22,6 +24,7 @@ class Mirror extends PositionComponent
   @override
   void onLoad() {
     super.onLoad();
+    game.isPannable = false;
     size = game.size;
     position = game.camera.viewfinder.position;
     _bg = EndlessScrollingBackground(
@@ -53,14 +56,25 @@ class Mirror extends PositionComponent
         EffectController(duration: 0.8, startDelay: 0.8),
         onComplete: () {
           add(_dialog);
+
+          Future.delayed(const Duration(milliseconds: 500), () {
+            canInteract = true;
+          });
         },
       ),
     );
   }
 
   @override
+  void onRemove() {
+    game.isPannable = true;
+    super.onRemove();
+  }
+
+  @override
   void onTapDown(TapDownEvent event) {
     super.onTapDown(event);
+    if (!canInteract) return;
     onTap();
   }
 }

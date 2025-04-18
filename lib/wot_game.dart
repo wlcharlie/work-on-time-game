@@ -12,6 +12,8 @@ class WOTGame extends FlameGame
     with TapDetector, PanDetector, RiverpodGameMixin {
   late final RouterComponent router;
 
+  bool isPannable = true; // for camera usage
+
   @override
   bool debugMode = true;
 
@@ -46,6 +48,7 @@ class WOTGame extends FlameGame
   @override
   void onPanUpdate(DragUpdateInfo info) {
     super.onPanUpdate(info);
+    if (!isPannable) return;
     final currentRoute = router.currentRoute;
     if (currentRoute.name == 'home') {
       camera.moveBy(Vector2(-info.delta.global.x, 0));
