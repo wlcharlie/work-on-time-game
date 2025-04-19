@@ -9,6 +9,7 @@ import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/config/items.dart';
 import 'package:work_on_time_game/models/item.dart';
 import 'package:work_on_time_game/providers/inventory.dart';
+import 'package:work_on_time_game/screen/home/home_world.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 final List<Item> ITEMS =
@@ -17,6 +18,7 @@ final List<Item> ITEMS =
 class EnterWay extends Component
     with
         HasGameReference<WOTGame>,
+        HasWorldReference<HomeWorld>,
         RiverpodComponentMixin,
         InventoryListenerMixin {
   @override

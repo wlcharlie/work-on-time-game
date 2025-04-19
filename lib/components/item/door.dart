@@ -2,10 +2,11 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 
 import 'package:work_on_time_game/config/images.dart';
+import 'package:work_on_time_game/screen/home/home_world.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 class Door extends SpriteComponent
-    with HasGameReference<WOTGame>, TapCallbacks {
+    with HasGameReference<WOTGame>, HasWorldReference<HomeWorld>, TapCallbacks {
   static final List<String> imagePaths = [
     images.doorClose,
     images.doorOpen,
@@ -14,12 +15,9 @@ class Door extends SpriteComponent
 
   int _currentIndex = 0;
 
-  final void Function(TapDownEvent event)? onTapDownCallback;
-
   Door({
     required Vector2 position,
     int priority = 0,
-    this.onTapDownCallback,
   }) {
     this.position = position;
     this.priority = priority;
@@ -39,13 +37,17 @@ class Door extends SpriteComponent
   }
 
   @override
-  void onTapDown(TapDownEvent event) {
+  void onTapDown(TapDownEvent event) async {
     super.onTapDown(event);
+
+    // if door open
+    if (_currentIndex == 1) return;
+
+    final result = await world.leaveWorld();
+    if (!result) return;
+
     _currentIndex = (_currentIndex + 1) % Door.imagePaths.length;
     final image = game.images.fromCache(Door.imagePaths[_currentIndex]);
     sprite = Sprite(image);
-    if (onTapDownCallback != null) {
-      onTapDownCallback!(event);
-    }
   }
 }

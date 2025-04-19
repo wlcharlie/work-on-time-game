@@ -1,8 +1,10 @@
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/rendering.dart';
 import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:work_on_time_game/config/images.dart';
+import 'package:work_on_time_game/screen/common/dialog.dart';
 import 'package:work_on_time_game/screen/home/bed_room.dart';
 import 'package:work_on_time_game/screen/home/enter_way.dart';
 import 'package:work_on_time_game/screen/home/living_room.dart';
@@ -88,5 +90,18 @@ class HomeWorld extends World
     currentScene = scene;
 
     game.camera.moveTo(Vector2(0, 0));
+  }
+
+  Future<bool> leaveWorld() async {
+    game.overlays.remove('homeLevelInspector');
+    final result = await game.router.pushAndWait(CommonDialog(
+      dialogTitle: '確定要離開嗎？',
+    ));
+
+    if (!result) {
+      game.overlays.add('homeLevelInspector');
+    }
+
+    return result;
   }
 }
