@@ -13,6 +13,9 @@ class Door extends SpriteComponent
   ];
   static final String name = 'item_door';
 
+  @override
+  ComponentKey get key => ComponentKey.named('item_door');
+
   int _currentIndex = 0;
 
   Door({
@@ -41,7 +44,7 @@ class Door extends SpriteComponent
     super.onTapDown(event);
 
     // if door open
-    if (_currentIndex == 1) return;
+    // if (_currentIndex == 1) return;
 
     final result = await world.leaveWorld();
     if (!result) return;

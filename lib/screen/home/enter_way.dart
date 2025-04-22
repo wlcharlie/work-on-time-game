@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame_riverpod/flame_riverpod.dart';
@@ -38,8 +40,8 @@ class EnterWay extends Component
     add(background);
 
     final width = background.sprite?.src.width ?? 0;
-    final size = Vector2(width, game.size.y);
-    game.camera.setBounds(Rectangle.fromLTWH(0, 0, size.x - game.size.x, 0));
+    final _size = Vector2(width, game.size.y);
+    game.camera.setBounds(Rectangle.fromLTWH(0, 0, _size.x - game.size.x, 0));
 
     add(Door(
       position: Vector2(86, 253),

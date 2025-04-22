@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/flame.dart';
@@ -7,6 +9,7 @@ import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/screen/common/dialog.dart';
 import 'package:work_on_time_game/screen/home/bed_room.dart';
 import 'package:work_on_time_game/screen/home/enter_way.dart';
+import 'package:work_on_time_game/screen/home/leave_result.dart';
 import 'package:work_on_time_game/screen/home/living_room.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
@@ -92,6 +95,27 @@ class HomeWorld extends World
     game.camera.moveTo(Vector2(0, 0));
   }
 
+  /// 將相機從左上改為中心
+  Function preZoomCameraAdjustment() {
+    // 保存原始錨點和位置
+    final originalAnchor = game.camera.viewfinder.anchor;
+    final originalPosition = game.camera.viewfinder.position.clone();
+
+    // 將錨點設為中心
+    game.camera.viewfinder.anchor = Anchor.center;
+    game.camera.setBounds(null);
+    // 重新填滿
+    final _tempVector = Vector2(game.size.x / 2, game.size.y / 2);
+    // 將相機位置設定為目標位置
+    game.camera.moveTo(_tempVector, speed: double.infinity);
+
+    //recover function
+    return () {
+      game.camera.viewfinder.anchor = originalAnchor;
+      game.camera.viewfinder.position = originalPosition;
+    };
+  }
+
   Future<bool> leaveWorld() async {
     game.overlays.remove('homeLevelInspector');
     final result = await game.router.pushAndWait(CommonDialog(
@@ -100,8 +124,62 @@ class HomeWorld extends World
 
     if (!result) {
       game.overlays.add('homeLevelInspector');
+      return result;
     }
 
+    final foreground = HomeForeground();
+    foreground.anchor = Anchor.topLeft;
+    foreground.position = Vector2(0, 0);
+    foreground.size = Vector2(game.size.x, game.size.y);
+    foreground.paint = Paint()
+      ..color = Color(0xFFFFFFFF)
+      ..style = PaintingStyle.fill;
+    foreground.makeTransparent();
+    foreground.add(
+      OpacityEffect.to(
+        1,
+        EffectController(duration: 1.5),
+      ),
+    );
+
+    // 只有在enter_way場景中才縮放門
+    if (currentScene == 'enter_way') {
+      // 直接通過ComponentKey查詢門組件
+      final doorComponent = game.findByKey(ComponentKey.named('item_door'));
+
+      if (doorComponent != null && doorComponent is SpriteComponent) {
+        // 計算門的中心位置
+
+        // 向門的中心位置縮放
+        final recover = preZoomCameraAdjustment();
+        game.camera.viewfinder.add(
+          ScaleEffect.to(
+            Vector2.all(1.5),
+            EffectController(duration: 2),
+            onComplete: () {
+              recover();
+              add(LeaveResult());
+            },
+          ),
+        );
+      }
+    }
+
+    add(foreground);
+
     return result;
+  }
+}
+
+class HomeForeground extends PositionComponent
+    with HasPaint, HasGameReference<WOTGame> {
+  HomeForeground();
+
+  @override
+  void render(Canvas canvas) {
+    canvas.drawRect(
+      Rect.fromLTWH(0, 0, size.x, size.y),
+      paint,
+    );
   }
 }
