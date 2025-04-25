@@ -18,9 +18,6 @@ class HomeWorld extends World
   late final SpriteComponent cutscene;
 
   final initialScene = 'bed_room';
-  final bedRoom = BedRoom();
-  final livingRoom = LivingRoom();
-  final enterWay = EnterWay();
   String currentScene = ''; // living_room, bed_room, enter_way
 
   double _cutsceneBlur = 10;
@@ -81,13 +78,13 @@ class HomeWorld extends World
 
     switch (scene) {
       case 'living_room':
-        add(livingRoom);
+        add(LivingRoom());
         break;
       case 'bed_room':
-        add(bedRoom);
+        add(BedRoom());
         break;
       case 'enter_way':
-        add(enterWay);
+        add(EnterWay());
         break;
     }
     currentScene = scene;

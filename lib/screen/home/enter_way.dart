@@ -56,8 +56,6 @@ class EnterWay extends Component
         action: onItemTapDown,
       ));
     }
-
-    children.register<ItemComponent>();
   }
 
   @override

@@ -67,8 +67,6 @@ class LivingRoom extends Component
         action: onItemTapDown,
       ));
     }
-
-    children.register<ItemComponent>();
   }
 
   @override

@@ -74,7 +74,7 @@ class _InventoryState extends ConsumerState<Inventory> {
                   const SizedBox(height: 20),
                   _buildInventoryHeader(),
                   const SizedBox(height: 24),
-                  _buildInventorySlots(inventory.items),
+                  _buildInventorySlots(inventory.items, inventory.capacity),
                   const SizedBox(height: 41),
                   _buildInventoryCloseButton(),
                 ],
@@ -110,7 +110,7 @@ class _InventoryState extends ConsumerState<Inventory> {
     );
   }
 
-  Widget _buildInventorySlots(List<String> inventoryItems) {
+  Widget _buildInventorySlots(List<String> inventoryItems, int capacity) {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 16,
@@ -120,26 +120,23 @@ class _InventoryState extends ConsumerState<Inventory> {
         crossAxisCount: 3,
         crossAxisSpacing: 9,
         mainAxisSpacing: 10,
-        children: [
-          InventorySlot(
-            itemName: inventoryItems.elementAtOrNull(0),
-            onItemTap: onItemTap,
-          ),
-          InventorySlot(
-            itemName: inventoryItems.elementAtOrNull(1),
-            onItemTap: onItemTap,
-          ),
-          InventorySlot(
-            itemName: inventoryItems.elementAtOrNull(2),
-            onItemTap: onItemTap,
-          ),
-          InventorySlot(active: false, onItemTap: onItemTap),
-          InventorySlot(active: false, onItemTap: onItemTap),
-          InventorySlot(active: false, onItemTap: onItemTap),
-          InventorySlot(active: false, onItemTap: onItemTap),
-          InventorySlot(active: false, onItemTap: onItemTap),
-          InventorySlot(active: false, onItemTap: onItemTap),
-        ],
+        children: List.generate(
+          9, // Always generate 9 slots total for the grid
+          (index) {
+            // If the index is within capacity, show active slot
+            if (index < capacity) {
+              return InventorySlot(
+                itemName: index < inventoryItems.length
+                    ? inventoryItems[index]
+                    : null,
+                onItemTap: onItemTap,
+              );
+            } else {
+              // Show inactive slot if index is beyond capacity
+              return InventorySlot(active: false, onItemTap: onItemTap);
+            }
+          },
+        ),
       ),
     );
   }

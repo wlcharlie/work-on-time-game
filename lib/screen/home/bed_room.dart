@@ -76,8 +76,6 @@ class BedRoom extends Component
         action: onItemTapDown,
       ));
     }
-
-    children.register<ItemComponent>();
   }
 
   @override

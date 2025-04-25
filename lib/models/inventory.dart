@@ -35,6 +35,11 @@ class Inventory {
 
   Inventory removeItem(String item) {
     final newInventory = Inventory.copy(this);
+    if (item == 'bag') {
+      newInventory._capacity = 3;
+      // 只留前面兩個
+      newInventory._items = newInventory._items.sublist(0, 2);
+    }
     newInventory._items.remove(item);
     return newInventory;
   }
