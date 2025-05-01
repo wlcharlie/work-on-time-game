@@ -150,13 +150,28 @@ class HomeWorld extends World
         // 向門的中心位置縮放
         final recover = preZoomCameraAdjustment();
         game.camera.viewfinder.add(
-          ScaleEffect.to(
-            Vector2.all(1.5),
-            EffectController(duration: 2),
-            onComplete: () {
-              recover();
-              add(LeaveResult());
-            },
+          SequenceEffect(
+            [
+              ScaleEffect.to(
+                Vector2.all(1.5),
+                EffectController(duration: 2),
+              ),
+              ScaleEffect.to(
+                Vector2.all(1),
+                EffectController(duration: 0.05),
+                onComplete: () {
+                  final currentSceneComponent =
+                      game.findByKey(ComponentKey.named(currentScene));
+                  if (currentSceneComponent != null) {
+                    remove(currentSceneComponent);
+                  }
+
+                  recover();
+
+                  add(LeaveResult());
+                },
+              ),
+            ],
           ),
         );
       }
