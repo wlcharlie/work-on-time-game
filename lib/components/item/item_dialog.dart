@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flame/effects.dart';
 import 'package:flutter/painting.dart';
+import 'dart:typed_data';
 
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
@@ -130,13 +131,18 @@ class ItemDialogComponent extends PositionComponent
     );
     anchor = Anchor.center;
     _bgImage = game.images.fromCache(images.itemDialogBg);
+
+    // Convert Float32List to Float64List
+    final matrix4Storage = Matrix4.identity().storage;
+    final Float64List float64Storage = Float64List.fromList(matrix4Storage);
+
     _bgPaint = Paint()
       ..color = Color(0xFFA9886C)
       ..shader = ImageShader(
         _bgImage,
         TileMode.repeated,
         TileMode.repeated,
-        (Matrix4.identity()).storage,
+        float64Storage,
       );
     setPaint(1, _bgPaint);
 

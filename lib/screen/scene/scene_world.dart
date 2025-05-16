@@ -11,7 +11,16 @@ class SceneWorld extends World with HasGameReference<WOTGame> {
 
     // 設定相機的其他屬性
     game.camera.viewfinder.anchor = Anchor.topLeft;
+  }
 
+  @override
+  void onMount() {
+    super.onMount();
     add(RainScene());
+  }
+
+  @override
+  void onRemove() {
+    super.onRemove();
   }
 }

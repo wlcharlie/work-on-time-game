@@ -2,8 +2,10 @@ import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/animation.dart'; // 导入Flutter的animation包来使用Curves
+import 'package:work_on_time_game/config/audio.dart';
 import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/wot_game.dart';
+import 'package:flame_audio/flame_audio.dart';
 
 // 场景状态枚举
 enum RainSceneState {
@@ -16,9 +18,11 @@ enum RainSceneState {
   rainingStarted // 开始下雨效果
 }
 
-class RainScene extends Component with HasGameRef<WOTGame> {
+class RainScene extends Component with HasGameReference<WOTGame> {
   // 场景当前状态
   RainSceneState _sceneState = RainSceneState.initial;
+
+  double sceneDuration = 0;
 
   // 计时器，用于状态间的延迟
   double _stateTimer = 0;
@@ -42,9 +46,16 @@ class RainScene extends Component with HasGameRef<WOTGame> {
   // 雨滴一开始应该是不可见的
   bool _rainVisible = false;
 
+  // 雨滴音量
+  double _rainVolume = 0;
+  double _rainSoundDelay = 2.0;
+  late final AudioPlayer _rainAudioPlayer;
+
   @override
   Future<void> onLoad() async {
     super.onLoad();
+    print('RainScene:onLoad');
+    _rainAudioPlayer = await FlameAudio.loop(audio.rain, volume: _rainVolume);
 
     final bgImage = await Flame.images.load(images.rainSceneBackground);
     final eventRightImage = await Flame.images.load(images.rainSceneEventRight);
@@ -107,8 +118,9 @@ class RainScene extends Component with HasGameRef<WOTGame> {
   }
 
   @override
-  void onMount() {
+  void onMount() async {
     super.onMount();
+    print('RainScene:onMount');
     // 倍數
     game.camera.viewfinder.zoom = 0.5;
 
@@ -128,6 +140,13 @@ class RainScene extends Component with HasGameRef<WOTGame> {
   @override
   void update(double dt) {
     super.update(dt);
+    sceneDuration += dt;
+
+    // 希望在一開始 0-4s 保持 0, 4s後持續 增加至1.0
+    if (sceneDuration > 5 && _rainVolume < 1.0) {
+      _rainVolume += dt * 0.5;
+      _rainAudioPlayer.setVolume(_rainVolume);
+    }
 
     // 根据当前状态执行不同的逻辑
     switch (_sceneState) {
@@ -187,7 +206,8 @@ class RainScene extends Component with HasGameRef<WOTGame> {
 
   @override
   void onRemove() {
-    resetScene();
+    print('RainScene:onRemove');
+    _rainAudioPlayer.dispose();
     super.onRemove();
   }
 
@@ -234,10 +254,7 @@ class RainScene extends Component with HasGameRef<WOTGame> {
   /// [duration] 动画持续时间（秒）
   /// [moveDistance] 向下移动的距离
   void _setupRainDropEffect(
-    SpriteComponent component,
-    double duration,
-    double moveDistance,
-  ) {
+      SpriteComponent component, double duration, double moveDistance) {
     // 移动效果
     component.add(
       MoveEffect.by(
@@ -315,68 +332,66 @@ class RainScene extends Component with HasGameRef<WOTGame> {
   /// 开始下雨效果
   void _startRainEffects() {
     // 为雨滴添加淡入效果
+    _setupRainDropEffect(
+      rainDrop01,
+      1.2,
+      150.0,
+    );
     rainDrop01.add(
       OpacityEffect.to(
         1.0,
         EffectController(
-          duration: 0.8,
+          duration: 1,
           curve: Curves.easeIn,
         ),
       ),
     );
-    _setupRainDropEffect(rainDrop01, 1.2, 150.0);
 
+    _setupRainDropEffect(
+      rainDrop02,
+      0.8,
+      200.0,
+    );
     rainDrop02.add(
       OpacityEffect.to(
         1.0,
         EffectController(
-          duration: 0.6,
+          duration: 1.5,
           curve: Curves.easeIn,
         ),
       ),
     );
-    _setupRainDropEffect(rainDrop02, 0.8, 200.0);
 
+    _setupRainDropEffect(
+      rainDrop03,
+      1.0,
+      180.0,
+    );
     rainDrop03.add(
       OpacityEffect.to(
         1.0,
         EffectController(
-          duration: 0.7,
+          duration: 1.8,
           curve: Curves.easeIn,
         ),
       ),
     );
-    _setupRainDropEffect(rainDrop03, 1.0, 180.0);
 
+    _setupRainDrop04Effect();
     // 雨滴04的特殊效果
     rainDrop04.add(
       OpacityEffect.to(
         1.0,
         EffectController(
-          duration: 0.5,
+          duration: 2,
           curve: Curves.easeIn,
         ),
       ),
     );
-    _setupRainDrop04Effect();
   }
 
   /// 重置场景到初始状态（可以被外部调用）
   void resetScene() {
-    // 重置位置
-    eventRight.position = eventRightStartPosition.clone();
-    eventLeft.position = eventLeftStartPosition.clone();
-
-    // 重置透明度
-    eventRight.opacity = 1.0;
-    eventLeft.opacity = 1.0;
-
-    // 隐藏雨滴
-    rainDrop01.opacity = 0;
-    rainDrop02.opacity = 0;
-    rainDrop03.opacity = 0;
-    rainDrop04.opacity = 0;
-
     // 重置状态
     _sceneState = RainSceneState.initial;
     _stateTimer = 0;
