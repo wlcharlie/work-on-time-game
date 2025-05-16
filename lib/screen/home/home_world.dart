@@ -41,6 +41,7 @@ class HomeWorld extends World
     await Flame.images.loadAll(images.allHomeLevelImages());
 
     game.camera.viewfinder.anchor = Anchor.topLeft;
+    game.camera.viewfinder.zoom = 1;
   }
 
   @override
@@ -48,6 +49,12 @@ class HomeWorld extends World
     super.onMount();
     switchScene(initialScene);
     add(cutscene);
+  }
+
+  @override
+  void onRemove() {
+    game.overlays.remove('homeLevelInspector');
+    super.onRemove();
   }
 
   @override

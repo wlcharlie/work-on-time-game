@@ -38,7 +38,7 @@ class WOTGame extends FlameGame
         // 大廳 初始畫面
         'lobby': WorldRoute(LobbyWorld.new),
         // 關卡 收集出門物品
-        'home': WorldRoute(HomeWorld.new),
+        'home': WorldRoute(HomeWorld.new, maintainState: false),
         'scene': WorldRoute(SceneWorld.new, maintainState: false),
       },
       initialRoute: 'lobby',
