@@ -79,6 +79,20 @@ class Images {
   final String weatherForecastRain = 'tv/weather_rain.png';
   final String weatherForecastCloudy = 'tv/weather_cloudy.png';
 
+  // rain-scene
+  final String rainSceneBackground = 'rain_scene/bg_city.png';
+  final String rainSceneEventLeft = 'rain_scene/event_left.png';
+  final String rainSceneEventRight = 'rain_scene/event_right.png';
+  final String rainSceneCharacter = 'rain_scene/rain_character.png';
+  final String rainSceneRainDrop01 = 'rain_scene/rain_drop_01.png';
+  final String rainSceneRainDrop02 = 'rain_scene/rain_drop_02.png';
+  final String rainSceneRainDrop03 = 'rain_scene/rain_drop_03.png';
+  final String rainSceneRainDrop04 = 'rain_scene/rain_drop_04.png';
+  final String rainSceneResultWithUmbrella =
+      'rain_scene/rain_result_with_umbrella.png';
+  final String rainSceneResultWithoutUmbrella =
+      'rain_scene/rain_result_without_umbrella.png';
+
   String getFullPath(String image) {
     return 'assets/images/$image';
   }

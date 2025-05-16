@@ -1,6 +1,7 @@
 import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:work_on_time_game/overlays/helper.dart';
 import 'package:work_on_time_game/overlays/home_level_inspector.dart';
 import 'package:work_on_time_game/overlays/inventory.dart';
 import 'package:work_on_time_game/overlays/lobby_tools.dart';
@@ -23,6 +24,7 @@ void main() {
               'lobbyTools': (_, game) => LobbyTools(game: game),
               'homeLevelInspector': (_, game) => HomeLevelInspector(game: game),
               'inventory': (_, game) => Inventory(game: game),
+              'helper': (_, game) => Helper(game: game),
             },
           ),
         ),

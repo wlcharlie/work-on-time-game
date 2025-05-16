@@ -7,6 +7,8 @@ import 'package:work_on_time_game/components/tap_circle.dart';
 import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/screen/home/home_world.dart';
 import 'package:work_on_time_game/screen/lobby/lobby_world.dart';
+import 'package:work_on_time_game/screen/scene/rain_scene.dart';
+import 'package:work_on_time_game/screen/scene/scene_world.dart';
 
 class WOTGame extends FlameGame
     with TapDetector, PanDetector, RiverpodGameMixin {
@@ -37,10 +39,13 @@ class WOTGame extends FlameGame
         'lobby': WorldRoute(LobbyWorld.new),
         // 關卡 收集出門物品
         'home': WorldRoute(HomeWorld.new),
+        'scene': WorldRoute(SceneWorld.new),
       },
       initialRoute: 'lobby',
     );
     add(router);
+
+    overlays.add('helper');
   }
 
   // - PanDetector

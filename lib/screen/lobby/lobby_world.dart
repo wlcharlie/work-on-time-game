@@ -18,6 +18,7 @@ class LobbyWorld extends World
   Future<void> onLoad() async {
     super.onLoad();
     game.camera.viewfinder.anchor = Anchor.topLeft;
+    game.camera.viewfinder.zoom = 1;
     final image = await Flame.images.load(images.lobbyBackground);
     final background = Sprite(image);
     final backgroundComponent = SpriteComponent()..sprite = background;
@@ -28,5 +29,11 @@ class LobbyWorld extends World
   void onMount() {
     super.onMount();
     game.overlays.add('lobbyTools');
+  }
+
+  @override
+  void onRemove() {
+    super.onRemove();
+    game.overlays.remove('lobbyTools');
   }
 }
