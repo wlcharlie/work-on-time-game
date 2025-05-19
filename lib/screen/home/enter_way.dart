@@ -47,7 +47,11 @@ class EnterWay extends Component
       position: Vector2(86, 253),
     ));
 
-    for (final item in ITEMS) {
+    final inventory = ref.read(inventoryNotifierProvider);
+    final itemNotInInventory = ITEMS
+        .where((element) => !inventory.items.contains(element.name))
+        .toList();
+    for (final item in itemNotInInventory) {
       add(ItemComponent(
         imagePath: item.imagePath,
         name: item.name,

@@ -58,7 +58,11 @@ class LivingRoom extends Component
     // 由於預設高度同遊戲視窗（裝置），所以可移動高度設為0
     game.camera.setBounds(Rectangle.fromLTWH(0, 0, size.x - game.size.x, 0));
 
-    for (final item in ITEMS) {
+    final inventory = ref.read(inventoryNotifierProvider);
+    final itemNotInInventory = ITEMS
+        .where((element) => !inventory.items.contains(element.name))
+        .toList();
+    for (final item in itemNotInInventory) {
       add(ItemComponent(
         imagePath: item.imagePath,
         name: item.name,
