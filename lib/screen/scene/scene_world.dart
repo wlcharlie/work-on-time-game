@@ -8,9 +8,6 @@ class SceneWorld extends World with HasGameReference<WOTGame> {
   @override
   FutureOr<void> onLoad() async {
     await super.onLoad();
-
-    // 設定相機的其他屬性
-    game.camera.viewfinder.anchor = Anchor.topLeft;
   }
 
   @override

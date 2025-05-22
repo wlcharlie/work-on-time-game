@@ -123,6 +123,8 @@ class RainScene extends Component with HasGameReference<WOTGame> {
     print('RainScene:onMount');
     // 倍數
     game.camera.viewfinder.zoom = 0.5;
+    game.camera.viewfinder.anchor = Anchor.topLeft;
+    game.camera.moveTo(Vector2(0, 0));
 
     add(bg);
     add(rainDrop01);

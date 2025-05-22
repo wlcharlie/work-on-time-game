@@ -225,33 +225,22 @@ class ItemDialogComponent extends PositionComponent
 
     if (noAnimation) return;
 
+    opacity = 0;
+
     // 加一點打開動畫～～
-    scale = Vector2.all(0.97);
+    scale = Vector2.all(0.95);
 
     add(
       ScaleEffect.to(
-        Vector2.all(1.06),
-        EffectController(duration: 0.1),
-        onComplete: () {
-          add(
-            ScaleEffect.to(
-              Vector2.all(1.0),
-              EffectController(duration: 0.12),
-            ),
-          );
-        },
+        Vector2.all(1.0),
+        EffectController(duration: 0.2),
       ),
     );
 
     add(
       OpacityEffect.to(
-        0,
-        EffectController(duration: 0),
-        onComplete: () {
-          add(
-            OpacityEffect.to(1, EffectController(duration: 0.12)),
-          );
-        },
+        1,
+        EffectController(duration: 0.1),
       ),
     );
   }
