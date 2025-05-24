@@ -51,7 +51,7 @@ class RainScene extends Component with HasGameReference<WOTGame> {
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    // 要直接對音檔進行淡入淡出，就不由程式碼控制音量...
+    // // 要直接對音檔進行淡入淡出，就不由程式碼控制音量...
     _rainAudioPlayer = await FlameAudio.loop(audio.rain);
     _rainAudioPlayer.pause();
 
@@ -113,15 +113,6 @@ class RainScene extends Component with HasGameReference<WOTGame> {
       characterImage,
       position: Vector2(156, 0.0 + bgImage.height - characterImage.height),
     );
-  }
-
-  @override
-  void onMount() async {
-    super.onMount();
-    // 倍數
-    game.camera.viewfinder.zoom = 0.5;
-    game.camera.viewfinder.anchor = Anchor.topLeft;
-    game.camera.moveTo(Vector2(0, 0));
 
     add(bg);
     add(rainDrop01);
@@ -134,6 +125,22 @@ class RainScene extends Component with HasGameReference<WOTGame> {
 
     // 初始化完成后设置为初始状态
     _sceneState = RainSceneState.initial;
+    print('RainScene:onLoad: $_sceneState');
+  }
+
+  @override
+  void onMount() async {
+    print('RainScene:onMount');
+    print('_sceneState: $_sceneState');
+    super.onMount();
+    // 倍數
+    game.camera.viewfinder.zoom = 0.5;
+    game.camera.viewfinder.anchor = Anchor.topLeft;
+    game.camera.moveTo(Vector2(0, 0));
+
+    if (_rainVisible) {
+      _rainAudioPlayer.resume();
+    }
   }
 
   @override
@@ -192,14 +199,15 @@ class RainScene extends Component with HasGameReference<WOTGame> {
       case RainSceneState.rainingStarted:
       case RainSceneState.allEntered:
         // 下雨已经开始，不需要额外处理
+        _rainVisible = true;
         break;
     }
   }
 
   @override
   void onRemove() {
+    print('RainScene:onRemove');
     _rainAudioPlayer.pause();
-    _rainAudioPlayer.dispose();
     super.onRemove();
   }
 
@@ -381,12 +389,5 @@ class RainScene extends Component with HasGameReference<WOTGame> {
         ),
       ),
     );
-  }
-
-  /// 重置场景到初始状态（可以被外部调用）
-  void resetScene() {
-    // 重置状态
-    _sceneState = RainSceneState.initial;
-    _stateTimer = 0;
   }
 }

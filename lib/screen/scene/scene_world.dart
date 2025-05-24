@@ -5,15 +5,19 @@ import 'package:work_on_time_game/screen/scene/rain_scene.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 class SceneWorld extends World with HasGameReference<WOTGame> {
+  late final RainScene rainScene;
+
   @override
   FutureOr<void> onLoad() async {
     await super.onLoad();
+
+    rainScene = RainScene();
   }
 
   @override
   void onMount() {
     super.onMount();
-    add(RainScene());
+    add(rainScene);
   }
 
   @override
