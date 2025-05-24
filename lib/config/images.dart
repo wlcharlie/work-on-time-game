@@ -93,6 +93,8 @@ class Images {
   final String rainSceneResultWithoutUmbrella =
       'rain_scene/rain_result_without_umbrella.png';
 
+  final String dialogBg = 'dialog_bg.png';
+
   String getFullPath(String image) {
     return 'assets/images/$image';
   }

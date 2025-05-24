@@ -1,6 +1,7 @@
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame_riverpod/flame_riverpod.dart';
+import 'package:work_on_time_game/components/common/dialog.dart';
 import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/screen/home/leave_result.dart';
 import 'package:work_on_time_game/wot_game.dart';
@@ -16,7 +17,6 @@ class LobbyWorld extends World
 
   @override
   Future<void> onLoad() async {
-    print('LobbyWorld:onLoad');
     super.onLoad();
     final image = await Flame.images.load(images.lobbyBackground);
     final background = Sprite(image);
@@ -26,7 +26,6 @@ class LobbyWorld extends World
 
   @override
   void onMount() {
-    print('LobbyWorld:onMount');
     super.onMount();
     game.camera.viewfinder.anchor = Anchor.topLeft;
     game.camera.viewfinder.zoom = 1;
@@ -35,7 +34,6 @@ class LobbyWorld extends World
 
   @override
   void onRemove() {
-    print('LobbyWorld:onRemove');
     game.overlays.remove('lobbyTools');
     super.onRemove();
   }

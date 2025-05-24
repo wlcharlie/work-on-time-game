@@ -38,7 +38,6 @@ class WeatherForecast extends PositionComponent
     size = game.size;
     // should follow the camera?
     position = game.camera.viewfinder.position;
-    print(position);
     _bg = RectangleComponent(
       size: game.size,
       paint: Paint()..color = const Color(0xFFDAECE1),

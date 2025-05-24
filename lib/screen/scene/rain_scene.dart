@@ -46,16 +46,14 @@ class RainScene extends Component with HasGameReference<WOTGame> {
   // 雨滴一开始应该是不可见的
   bool _rainVisible = false;
 
-  // 雨滴音量
-  double _rainVolume = 0;
-  double _rainSoundDelay = 2.0;
   late final AudioPlayer _rainAudioPlayer;
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    print('RainScene:onLoad');
-    _rainAudioPlayer = await FlameAudio.loop(audio.rain, volume: _rainVolume);
+    // 要直接對音檔進行淡入淡出，就不由程式碼控制音量...
+    _rainAudioPlayer = await FlameAudio.loop(audio.rain);
+    _rainAudioPlayer.pause();
 
     final bgImage = await Flame.images.load(images.rainSceneBackground);
     final eventRightImage = await Flame.images.load(images.rainSceneEventRight);
@@ -120,7 +118,6 @@ class RainScene extends Component with HasGameReference<WOTGame> {
   @override
   void onMount() async {
     super.onMount();
-    print('RainScene:onMount');
     // 倍數
     game.camera.viewfinder.zoom = 0.5;
     game.camera.viewfinder.anchor = Anchor.topLeft;
@@ -142,13 +139,6 @@ class RainScene extends Component with HasGameReference<WOTGame> {
   @override
   void update(double dt) {
     super.update(dt);
-    sceneDuration += dt;
-
-    // 希望在一開始 0-4s 保持 0, 4s後持續 增加至1.0
-    if (sceneDuration > 5 && _rainVolume < 1.0) {
-      _rainVolume += dt * 0.5;
-      _rainAudioPlayer.setVolume(_rainVolume);
-    }
 
     // 根据当前状态执行不同的逻辑
     switch (_sceneState) {
@@ -208,7 +198,7 @@ class RainScene extends Component with HasGameReference<WOTGame> {
 
   @override
   void onRemove() {
-    print('RainScene:onRemove');
+    _rainAudioPlayer.pause();
     _rainAudioPlayer.dispose();
     super.onRemove();
   }
@@ -333,6 +323,7 @@ class RainScene extends Component with HasGameReference<WOTGame> {
 
   /// 开始下雨效果
   void _startRainEffects() {
+    _rainAudioPlayer.resume();
     // 为雨滴添加淡入效果
     _setupRainDropEffect(
       rainDrop01,

@@ -183,10 +183,6 @@ class _HelperState extends ConsumerState<Helper> {
       title: Text(title),
       dense: true,
       onTap: () {
-        // 处理选单项点击事件
-        print('小工具選取: $title');
-        // 可以添加您的自定义处理逻辑
-
         // 点击后关闭选单
         setState(() {
           _isMenuOpen = false;

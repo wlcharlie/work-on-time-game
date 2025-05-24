@@ -1,16 +1,16 @@
-# work_on_time_game
+# Work On Time Game
 
-A new Flutter project.
+## Dirs
 
-## Getting Started
+lib/components 放置以 Flame Component 為單位
+lib/config 一些參數
+lib/models 資料模型
+lib/overlays 尤 Flame 定義的 overlay，會蓋過整個畫面，目前是用 material
+lib/providers State Management - riverpod
+lib/routes Flame 的路由設計
+lib/screen 場景
 
-This project is a starting point for a Flutter application.
+## General
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+`main.dart` 就是進入點
+`wot_game.dart` 是整個遊戲的 instance

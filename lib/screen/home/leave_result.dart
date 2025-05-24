@@ -27,7 +27,6 @@ class LeaveResult extends PositionComponent with HasGameReference<WOTGame> {
 
     add(ButtonComponent(
       onPressed: () {
-        print('onPressed');
         game.overlays.remove('homeLevelInspector');
         game.router.pushNamed('lobby');
       },
