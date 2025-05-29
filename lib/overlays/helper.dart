@@ -118,10 +118,11 @@ class _HelperState extends ConsumerState<Helper> {
                   // 这里是选单内容，您可以根据需要自行填充
                   _buildMenuItem(Icons.home, '首頁'),
                   _buildMenuItem(Icons.picture_in_picture, '下雨場景'),
+                  _buildMenuItem(Icons.traffic, '交通場景'),
                   Divider(height: 1),
-                  _buildMenuItem(Icons.settings, '设置'),
+                  _buildMenuItem(Icons.settings, '設定'),
                   Divider(height: 1),
-                  _buildMenuItem(Icons.info, '关于'),
+                  _buildMenuItem(Icons.info, '關於'),
                   // 可以根据需要添加更多选项
                 ],
               ),
@@ -194,6 +195,9 @@ class _HelperState extends ConsumerState<Helper> {
             break;
           case '下雨場景':
             widget.game.router.pushNamed('scene');
+            break;
+          case '交通場景':
+            widget.game.router.pushNamed('traffic');
             break;
           default:
             break;

@@ -9,6 +9,7 @@ import 'package:work_on_time_game/screen/home/home_world.dart';
 import 'package:work_on_time_game/screen/lobby/lobby_world.dart';
 import 'package:work_on_time_game/screen/scene/rain_scene.dart';
 import 'package:work_on_time_game/screen/scene/scene_world.dart';
+import 'package:work_on_time_game/screen/traffic/traffic_world.dart';
 
 class WOTGame extends FlameGame
     with TapDetector, PanDetector, RiverpodGameMixin {
@@ -40,6 +41,8 @@ class WOTGame extends FlameGame
         // 關卡 收集出門物品
         'home': WorldRoute(HomeWorld.new, maintainState: false),
         'scene': WorldRoute(SceneWorld.new),
+        // 交通場景
+        'traffic': WorldRoute(TrafficWorld.new),
       },
       initialRoute: 'lobby',
     );

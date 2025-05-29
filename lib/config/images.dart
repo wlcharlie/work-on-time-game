@@ -95,8 +95,48 @@ class Images {
 
   final String dialogBg = 'dialog_bg.png';
 
+  /// Traffic scene
+  final String trafficMRTSceneBackground = 'traffic_scene/mrt_bg.png';
+  // card, coffee, home, lucky, park, question
+  final String trafficPointCard = 'traffic_scene/point_card.png';
+  final String trafficPointCardCoffee = 'traffic_scene/point_coffee.png';
+  final String trafficPointCardHome = 'traffic_scene/point_home.png';
+  final String trafficPointCardLucky = 'traffic_scene/point_lucky.png';
+  final String trafficPointCardPark = 'traffic_scene/point_park.png';
+  final String trafficPointCardQuestion = 'traffic_scene/point_question.png';
+  final String anchor = 'traffic_scene/anchor.png';
+  final String walk = 'traffic_scene/walk.png';
+  final String dice = 'traffic_scene/dice.png';
+
+  final String diceRoll1 = 'traffic_scene/dice_1.png';
+  final String diceRoll2 = 'traffic_scene/dice_2.png';
+  final String diceRoll3 = 'traffic_scene/dice_3.png';
+  final String diceRoll4 = 'traffic_scene/dice_4.png';
+  final String diceRoll5 = 'traffic_scene/dice_5.png';
+  final String diceRoll6 = 'traffic_scene/dice_6.png';
+  final String diceRoll7 = 'traffic_scene/dice_7.png';
+  final String diceRoll8 = 'traffic_scene/dice_8.png';
+  final String diceRoll9 = 'traffic_scene/dice_9.png';
+
+  final String logo = 'logo.png';
+
   String getFullPath(String image) {
     return 'assets/images/$image';
+  }
+
+  List<String> allTrafficLevelImages() {
+    return [
+      trafficMRTSceneBackground,
+      trafficPointCard,
+      trafficPointCardCoffee,
+      trafficPointCardHome,
+      trafficPointCardLucky,
+      trafficPointCardPark,
+      trafficPointCardQuestion,
+      anchor,
+      walk,
+      dice,
+    ];
   }
 
   List<String> allHomeLevelImages() {
