@@ -150,6 +150,16 @@ class Images {
       anchor,
       walk,
       dice,
+      diceRoll1,
+      diceRoll2,
+      diceRoll3,
+      diceRoll4,
+      diceRoll5,
+      diceRoll6,
+      diceRoll7,
+      diceRoll8,
+      diceRoll9,
+      logo,
     ];
   }
 
