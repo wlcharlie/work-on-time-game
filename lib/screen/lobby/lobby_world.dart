@@ -1,9 +1,7 @@
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame_riverpod/flame_riverpod.dart';
-import 'package:work_on_time_game/components/common/dialog.dart';
 import 'package:work_on_time_game/config/images.dart';
-import 'package:work_on_time_game/screen/home/leave_result.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 class LobbyWorld extends World

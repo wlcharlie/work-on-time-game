@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:work_on_time_game/enums/character_status.dart';
+import 'package:work_on_time_game/providers/character_status.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 class Helper extends ConsumerStatefulWidget {
@@ -24,20 +26,6 @@ class _HelperState extends ConsumerState<Helper> {
   // 选单宽度和按钮半径
   final double _menuWidth = 200;
   final double _buttonRadius = 20; // 按钮半径为40/2
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // 获取屏幕尺寸并设置按钮的初始位置
-      _screenSize = MediaQuery.of(context).size;
-      setState(() {
-        _buttonPosition =
-            Offset(_screenSize.width * 0.85, _screenSize.height * 0.5);
-        _isInitialized = true;
-      });
-    });
-  }
 
   // 计算选单的位置，避免超出屏幕边界
   Offset _calculateMenuPosition() {
@@ -76,9 +64,42 @@ class _HelperState extends ConsumerState<Helper> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // 获取屏幕尺寸并设置按钮的初始位置
+      _screenSize = MediaQuery.of(context).size;
+      setState(() {
+        _buttonPosition =
+            Offset(_screenSize.width * 0.85, _screenSize.height * 0.5);
+        _isInitialized = true;
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final characterStatus = ref.watch(characterStatusNotifierProvider);
+
     return Stack(
       children: [
+        // 狀態
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Mind: ${characterStatus[CharacterStatus.mind]}'),
+              const SizedBox(width: 16),
+              Text('Saving: ${characterStatus[CharacterStatus.saving]}'),
+              const SizedBox(width: 16),
+              Text('Energy: ${characterStatus[CharacterStatus.energy]}'),
+            ],
+          ),
+        ),
+
         // 当选单打开时显示一个半透明背景，点击背景关闭选单
         if (_isMenuOpen)
           GestureDetector(

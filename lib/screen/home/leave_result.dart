@@ -3,8 +3,8 @@ import 'package:flame/events.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/painting.dart';
 import 'package:work_on_time_game/components/background/endless_background.dart';
-import 'package:work_on_time_game/components/status/exp_bar.dart';
-import 'package:work_on_time_game/components/status/status_meters.dart';
+import 'package:work_on_time_game/components/character_status/exp_bar.dart';
+import 'package:work_on_time_game/components/character_status/status_meters.dart';
 import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/config/typography.dart';
 import 'package:work_on_time_game/wot_game.dart';
@@ -55,28 +55,12 @@ class ResultSection extends PositionComponent with HasGameReference<WOTGame> {
       text: '都準備好了，出發吧',
       position: Vector2(68, 32),
       textRenderer: TextPaint(
-        style: typography.tp24.copyWith(
-          color: const Color(0xFF917156),
-          fontWeight: FontWeight.w600,
-          shadows: [
-            Shadow(
-              offset: Offset(-1, -1),
-              color: Color(0xFFFFFFFF),
+        style: typography.tp24
+            .withFontWeight(FontWeight.w600)
+            .withShadow()
+            .copyWith(
+              color: const Color(0xFF917156),
             ),
-            Shadow(
-              offset: Offset(1, -1),
-              color: Color(0xFFFFFFFF),
-            ),
-            Shadow(
-              offset: Offset(-1, 1),
-              color: Color(0xFFFFFFFF),
-            ),
-            Shadow(
-              offset: Offset(1, 1),
-              color: Color(0xFFFFFFFF),
-            ),
-          ],
-        ),
       ),
     ));
 
@@ -93,9 +77,9 @@ class ResultSection extends PositionComponent with HasGameReference<WOTGame> {
       paint: Paint()..color = const Color(0xFFAE866B),
     ));
 
-    add(MindMeter(position: Vector2(199, 133), meterLevel: 0.5));
-    add(SavingMeter(position: Vector2(250, 133), meterLevel: 0.8));
-    add(EnergyMeter(position: Vector2(301, 133), meterLevel: 1));
+    add(MindStatusMeter(position: Vector2(199, 133), meterLevel: 0.5));
+    add(SavingStatusMeter(position: Vector2(250, 133), meterLevel: 0.8));
+    add(EnergyStatusMeter(position: Vector2(301, 133), meterLevel: 1));
 
     // exp. bar
     add(ExpBar(value: 0.5)..position = Vector2(23, 206));

@@ -6,6 +6,7 @@ class StatusMeter extends PositionComponent with HasGameReference<WOTGame> {
   final String iconPath;
   final Color meterColor;
   final double meterLevel; // 0.0 to 1.0 representing the fill level
+  final int? deltaDirection; // -1, 1
 
   late final Sprite _iconSprite;
   late final Paint _borderPaint;
@@ -18,6 +19,7 @@ class StatusMeter extends PositionComponent with HasGameReference<WOTGame> {
     this.meterLevel = 0.5, // Default to half full
     Vector2? position,
     Vector2? size,
+    this.deltaDirection, // -1, 1
   }) {
     this.position = position ?? Vector2.zero();
     this.size = size ?? Vector2(40, 40);
@@ -30,6 +32,43 @@ class StatusMeter extends PositionComponent with HasGameReference<WOTGame> {
     _bgPaint = Paint()..color = const Color(0xFFFFFFFF);
 
     _meterPaint = Paint()..color = meterColor;
+  }
+
+  void _drawUpwardArrow(Canvas canvas) {
+    final arrowX = size.x + 16;
+    final arrowY = size.y / 2;
+
+    final arrowPlankPaint = Paint()
+      ..color = const Color(0xFFA9886C)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+
+    final arrowWingPaint = Paint()
+      ..color = const Color(0xFFA9886C)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+    // ..strokeCap = StrokeCap.round;
+
+    // 1. 繪製 Chevron 的左邊線
+    canvas.drawLine(
+      Offset(arrowX - 7, arrowY - 2), // 左端點
+      Offset(arrowX, arrowY - 12), // 頂點
+      arrowWingPaint,
+    );
+
+    // 2. 繪製 Chevron 的右邊線
+    canvas.drawLine(
+      Offset(arrowX, arrowY - 12), // 頂點
+      Offset(arrowX + 7, arrowY - 2), // 右端點
+      arrowWingPaint,
+    );
+
+    // 3. 繪製垂直橫杠
+    canvas.drawLine(
+      Offset(arrowX, arrowY - 12), // 橫杠頂端
+      Offset(arrowX, arrowY + 12), // 橫杠底端
+      arrowPlankPaint,
+    );
   }
 
   @override
@@ -70,6 +109,22 @@ class StatusMeter extends PositionComponent with HasGameReference<WOTGame> {
         size.y / 2 - _iconSprite.image.height / 2,
       ),
     );
+
+    // _drawUpwardArrow(canvas);
+
+    // Draw arrow based on deltaDirection
+    if (deltaDirection == 1) {
+      _drawUpwardArrow(canvas);
+    } else if (deltaDirection == -1) {
+      canvas.save();
+      final arrowX = size.x + 16;
+      final arrowY = size.y / 2;
+      canvas.translate(arrowX, arrowY);
+      canvas.rotate(3.14159); // 180 degrees in radians (π)
+      canvas.translate(-arrowX, -arrowY);
+      _drawUpwardArrow(canvas);
+      canvas.restore();
+    }
 
     // Draw border
     canvas.drawRRect(bgRRect, _borderPaint);

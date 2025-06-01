@@ -57,3 +57,30 @@ class Typography {
 }
 
 final typography = Typography();
+
+extension TextStyleExtension on TextStyle {
+  TextStyle withShadow() => copyWith(
+        shadows: [
+          Shadow(
+            offset: Offset(-1, -1),
+            color: Color(0xFFFFFFFF),
+          ),
+          Shadow(
+            offset: Offset(1, -1),
+            color: Color(0xFFFFFFFF),
+          ),
+          Shadow(
+            offset: Offset(-1, 1),
+            color: Color(0xFFFFFFFF),
+          ),
+          Shadow(
+            offset: Offset(1, 1),
+            color: Color(0xFFFFFFFF),
+          ),
+        ],
+      );
+
+  TextStyle withFontWeight(FontWeight weight) => copyWith(fontWeight: weight);
+
+  TextStyle withColor(Color color) => copyWith(color: color);
+}

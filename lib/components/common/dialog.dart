@@ -10,13 +10,17 @@ class Dialog extends PositionComponent with HasGameReference<WOTGame> {
   late Paint _bgPaint;
   late Paint _borderPaint;
   late RRect _rrect;
+  late List<Component> content;
 
   Dialog({
-    required Vector2 size,
-    required Vector2 position,
+    super.size,
+    super.position,
+    Vector2? scale,
+    required this.content,
   }) {
     this.size = size;
     this.position = position;
+    this.scale = scale ?? Vector2.all(1);
 
     _rrect = RRect.fromLTRBR(
       0,
@@ -51,6 +55,10 @@ class Dialog extends PositionComponent with HasGameReference<WOTGame> {
         float64Storage,
       )
       ..color = Color.fromRGBO(255, 255, 255, 0.85);
+
+    for (var child in content) {
+      add(child);
+    }
   }
 
   @override

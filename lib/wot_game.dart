@@ -28,7 +28,6 @@ class WOTGame extends FlameGame
     // sleep 3 seconds for the loading screen development
     await Future.delayed(const Duration(seconds: 1));
 
-    // 固定解析度(?) 看起來不用出兩倍圖了Ａ＿Ａ
     camera = CameraComponent.withFixedResolution(
       width: 393,
       height: 852,
