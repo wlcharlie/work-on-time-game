@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
@@ -60,8 +61,8 @@ class RainScene extends Component with HasGameReference<WOTGame> {
   late final Vector2 eventLeftStartPosition;
   late final Vector2 eventLeftTargetPosition;
 
-  // 選項Dialog
-  late final WithoutUmbrellaScene withoutUmbrellaScene;
+  // 選項Dialog - 改为可空类型，每次需要时创建新实例
+  WithoutUmbrellaScene? withoutUmbrellaScene;
 
   // 雨滴一开始应该是不可见的
   bool _rainVisible = false;
@@ -72,7 +73,128 @@ class RainScene extends Component with HasGameReference<WOTGame> {
   // 是否顯示過沒帶傘的流程
   bool _showWithoutUmbrellaBranch = false;
 
+  // 是否正在重置中（防止重置过程中的状态冲突）
+  bool _isResetting = false;
+
+  // 用于追踪和取消延时任务
+  Timer? _rainEffectTimer;
+  Timer? _stateTransitionTimer; // 新增：用于状态转换的计时器
+  Timer? _switchSceneTimer;
+
   late final AudioPlayer _rainAudioPlayer;
+
+  /// 重置场景到初始状态，用于重播功能
+  void reset() {
+    // 设置重置标志，防止 update 中的逻辑干扰
+    _isResetting = true;
+
+    // 1. 重置状态变量
+    _sceneState = RainSceneState.initial;
+    _stateTimer = 0;
+    sceneDuration = 0;
+    _rainVisible = false;
+    _bringUmbrella = false;
+    _showWithoutUmbrellaBranch = false;
+
+    // 2. 停止音频
+    _rainAudioPlayer.pause();
+
+    // 3. 取消所有延时任务
+    _rainEffectTimer?.stop();
+    _rainEffectTimer = null;
+    _stateTransitionTimer?.stop();
+    _stateTransitionTimer = null;
+    _switchSceneTimer?.stop();
+
+    // 4. 强制清除所有组件的效果（更彻底的清除方法）
+    _forceCleanAllEffects();
+
+    // 5. 重置组件位置和属性
+    _resetComponentProperties();
+
+    // 6. 完全重置 withoutUmbrellaScene
+    _resetWithoutUmbrellaScene();
+
+    // 重置完成，取消重置标志
+    _isResetting = false;
+  }
+
+  /// 简单清理 WithoutUmbrellaScene - 直接置空，下次创建新实例
+  void _resetWithoutUmbrellaScene() {
+    // 移除现有的 withoutUmbrellaScene（如果存在）
+    if (withoutUmbrellaScene != null &&
+        children.contains(withoutUmbrellaScene!)) {
+      remove(withoutUmbrellaScene!);
+    }
+
+    // 直接置空，下次需要时会创建全新实例
+    withoutUmbrellaScene = null;
+  }
+
+  /// 重播场景 - 重置后立即开始播放
+  void replay() {
+    reset();
+    // 重置完成后，场景会在下一个 update 循环中自动开始播放
+    // 因为状态已经设置为 RainSceneState.initial
+  }
+
+  /// 强制清除所有组件的效果（更彻底的方法）
+  void _forceCleanAllEffects() {
+    // 清除事件组件的所有效果
+    _forceRemoveEffects(eventRight);
+    _forceRemoveEffects(eventLeft);
+
+    // 清除雨滴组件的所有效果
+    _forceRemoveEffects(rainDrop01);
+    _forceRemoveEffects(rainDrop02);
+    _forceRemoveEffects(rainDrop03);
+    _forceRemoveEffects(rainDrop04);
+  }
+
+  /// 强制移除组件的所有效果
+  void _forceRemoveEffects(Component component) {
+    // 获取所有效果并移除
+    final effects = component.children.whereType<Effect>().toList();
+    for (final effect in effects) {
+      effect.removeFromParent();
+    }
+  }
+
+  /// 重置组件属性
+  void _resetComponentProperties() {
+    // 重置事件组件位置和透明度
+    eventRight.position = eventRightStartPosition.clone();
+    eventRight.opacity = 1.0;
+    eventRight.scale = Vector2.all(1.0); // 确保缩放也重置
+
+    eventLeft.position = eventLeftStartPosition.clone();
+    eventLeft.opacity = 1.0;
+    eventLeft.scale = Vector2.all(1.0); // 确保缩放也重置
+
+    // 重置雨滴组件位置和透明度
+    rainDrop01.position = Vector2.zero();
+    rainDrop01.opacity = 0;
+    rainDrop01.scale = Vector2.all(1.0);
+
+    rainDrop02.position = Vector2.zero();
+    rainDrop02.opacity = 0;
+    rainDrop02.scale = Vector2.all(1.0);
+
+    rainDrop03.position = Vector2.zero();
+    rainDrop03.opacity = 0;
+    rainDrop03.scale = Vector2.all(1.0);
+
+    rainDrop04.position = Vector2.zero();
+    rainDrop04.opacity = 0;
+    rainDrop04.scale = Vector2.all(1.0);
+
+    // 确保角色和背景也处于正确状态
+    character.opacity = 1.0;
+    character.scale = Vector2.all(1.0);
+
+    bg.opacity = 1.0;
+    bg.scale = Vector2.all(1.0);
+  }
 
   /// 触发右侧事件的滑入动画
   void _triggerEventRightAnimation() {
@@ -242,10 +364,6 @@ class RainScene extends Component with HasGameReference<WOTGame> {
     );
 
     _setupRainDrop04Effect();
-
-    Future.delayed(Duration(seconds: 3, milliseconds: 500), () {
-      _sceneState = RainSceneState.allEntered;
-    });
   }
 
   @override
@@ -314,7 +432,7 @@ class RainScene extends Component with HasGameReference<WOTGame> {
       position: Vector2(156, 0.0 + bgImage.height - characterImage.height),
     );
 
-    withoutUmbrellaScene = WithoutUmbrellaScene();
+    // withoutUmbrellaScene 现在按需创建，不在初始化时创建
 
     add(bg);
     add(rainDrop01);
@@ -327,13 +445,31 @@ class RainScene extends Component with HasGameReference<WOTGame> {
 
     // 初始化完成后设置为初始状态
     _sceneState = RainSceneState.initial;
-    print('RainScene:onLoad: $_sceneState');
+
+    // 3.5秒後切換到allEntered狀態
+    _switchSceneTimer = Timer(3.5, onTick: () {
+      _sceneState = RainSceneState.allEntered;
+    });
+
+    // dev
+    // reset button
+    ButtonComponent resetButton = ButtonComponent(
+      priority: 99999,
+      size: Vector2(100, 100),
+      position: Vector2(100, 100),
+      button: TextComponent(
+        text: 'replay',
+      ),
+      onPressed: () {
+        replay(); // 调用重播方法
+      },
+    );
+
+    add(resetButton);
   }
 
   @override
   void onMount() async {
-    print('RainScene:onMount');
-    print('_sceneState: $_sceneState');
     super.onMount();
     // 倍數
     game.camera.viewfinder.zoom = 0.5;
@@ -348,6 +484,11 @@ class RainScene extends Component with HasGameReference<WOTGame> {
   @override
   void update(double dt) {
     super.update(dt);
+
+    // 如果正在重置中，跳过所有状态逻辑
+    if (_isResetting) {
+      return;
+    }
 
     // 根据当前状态执行不同的逻辑
     switch (_sceneState) {
@@ -393,6 +534,7 @@ class RainScene extends Component with HasGameReference<WOTGame> {
         _stateTimer += dt;
         if (_stateTimer >= 1.0) {
           // 事件淡出完成，开始下雨
+          print('eventsFadingOut...ready to start rain');
           _sceneState = RainSceneState.rainingStarted;
           _startRainEffects();
         }
@@ -400,26 +542,33 @@ class RainScene extends Component with HasGameReference<WOTGame> {
 
       case RainSceneState.rainingStarted:
         _rainVisible = true;
+
+        final isRunning = _switchSceneTimer?.isRunning() ?? false;
+
+        if (isRunning) {
+          _switchSceneTimer?.update(dt);
+        } else {
+          _switchSceneTimer?.resume();
+        }
         break;
       case RainSceneState.allEntered:
         _sceneState = RainSceneState.idle;
+        add(withoutUmbrellaScene = WithoutUmbrellaScene());
         break;
       default:
         break;
-    }
-
-    if (_sceneState == RainSceneState.idle &&
-        !_bringUmbrella &&
-        !_showWithoutUmbrellaBranch) {
-      _showWithoutUmbrellaBranch = true;
-      add(withoutUmbrellaScene);
     }
   }
 
   @override
   void onRemove() {
-    print('RainScene:onRemove');
     _rainAudioPlayer.pause();
+
+    // 清理所有计时器
+    _rainEffectTimer?.stop();
+    _stateTransitionTimer?.stop();
+    _switchSceneTimer?.stop();
+
     super.onRemove();
   }
 }
@@ -429,7 +578,24 @@ class WithoutUmbrellaScene extends Component with HasGameReference<WOTGame> {
   late final PositionComponent withoutUmbrellaDialog;
   late final TextComponent titleComponent;
 
-  late final ResultDialog resultDialog;
+  late ResultDialog resultDialog;
+
+  /// 重置 WithoutUmbrellaScene 到初始状态
+  void reset() {
+    // 移除 resultDialog 如果存在
+    if (children.contains(resultDialog)) {
+      resultDialog.reset();
+      remove(resultDialog);
+    }
+
+    // 重新添加 withoutUmbrellaDialog 如果不存在
+    if (!children.contains(withoutUmbrellaDialog)) {
+      add(withoutUmbrellaDialog);
+    }
+
+    // 重新创建 resultDialog 实例以确保完全干净的状态
+    resultDialog = ResultDialog();
+  }
 
   void _handleChoice(String choice) {
     resultDialog.choice = choice;
@@ -476,7 +642,6 @@ class WithoutUmbrellaScene extends Component with HasGameReference<WOTGame> {
         text: '淋雨去公司',
       ),
       onPressed: () {
-        print('WithoutUmbrellaScene:buttonGoWithoutUmbrella: onPressed');
         _handleChoice('go');
       },
     );
@@ -490,7 +655,6 @@ class WithoutUmbrellaScene extends Component with HasGameReference<WOTGame> {
         text: '去超商買傘',
       ),
       onPressed: () {
-        print('WithoutUmbrellaScene:buttonBuyUmbrella: onPressed');
         _handleChoice('buy');
       },
     );
@@ -527,6 +691,16 @@ class ResultDialog extends Component
   String _choice = '';
 
   ResultDialog();
+
+  /// 重置 ResultDialog 到初始状态
+  void reset() {
+    _choice = '';
+
+    // 移除 resultDialog 如果存在
+    if (children.contains(resultDialog)) {
+      remove(resultDialog);
+    }
+  }
 
   set choice(String value) {
     _choice = value;
@@ -566,7 +740,6 @@ class ResultDialog extends Component
 
   @override
   Future<void> onMount() async {
-    print('ResultDialog:onLoad');
     super.onMount();
 
     final firstPoint = Vector2(93, 109);
