@@ -215,10 +215,10 @@ class _HelperState extends ConsumerState<Helper> {
             widget.game.router.pushNamed('lobby');
             break;
           case '下雨場景':
-            widget.game.router.pushNamed('scene');
+            widget.game.router.pushNamed('event_scene');
             break;
           case '交通場景':
-            widget.game.router.pushNamed('traffic');
+            widget.game.router.pushNamed('level_traffic');
             break;
           default:
             break;

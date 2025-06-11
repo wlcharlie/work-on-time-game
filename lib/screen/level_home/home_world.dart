@@ -8,13 +8,13 @@ import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/providers/inventory.dart';
 import 'package:work_on_time_game/screen/common/dialog.dart';
-import 'package:work_on_time_game/screen/home/bed_room.dart';
-import 'package:work_on_time_game/screen/home/enter_way.dart';
-import 'package:work_on_time_game/screen/home/leave_result.dart';
-import 'package:work_on_time_game/screen/home/living_room.dart';
+import 'package:work_on_time_game/screen/level_home/bed_room.dart';
+import 'package:work_on_time_game/screen/level_home/enter_way.dart';
+import 'package:work_on_time_game/screen/level_home/leave_result.dart';
+import 'package:work_on_time_game/screen/level_home/living_room.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
-class HomeWorld extends World
+class LevelHomeWorld extends World
     with HasGameReference<WOTGame>, RiverpodComponentMixin {
   late final SpriteComponent cutscene;
 
@@ -25,7 +25,7 @@ class HomeWorld extends World
   double _cutsceneSpeed = 3;
   bool _cutsceneOff = false;
 
-  static ComponentKey componentKey = ComponentKey.named("home_world");
+  static ComponentKey componentKey = ComponentKey.named("level_home_world");
 
   @override
   ComponentKey get key => componentKey;

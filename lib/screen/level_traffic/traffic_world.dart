@@ -8,7 +8,7 @@ import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
-class TrafficWorld extends World
+class LevelTrafficWorld extends World
     with HasGameReference<WOTGame>, RiverpodComponentMixin {
   late final SpriteComponent cutscene;
 

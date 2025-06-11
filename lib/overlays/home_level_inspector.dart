@@ -4,7 +4,7 @@ import 'package:work_on_time_game/config/icons.dart';
 import 'package:work_on_time_game/config/style.dart';
 import 'package:work_on_time_game/config/typography.dart';
 import 'package:work_on_time_game/providers/inventory.dart';
-import 'package:work_on_time_game/screen/home/home_world.dart';
+import 'package:work_on_time_game/screen/level_home/home_world.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 /// living_room 客廳
@@ -21,12 +21,13 @@ class HomeLevelInspector extends ConsumerStatefulWidget {
 class _HomeLevelInspectorState extends ConsumerState<HomeLevelInspector> {
   List<String> scenes = ['living_room', 'bed_room', 'enter_way'];
   String sceneText = '';
-  late HomeWorld homeWorld;
+  late LevelHomeWorld homeWorld;
 
   @override
   void initState() {
     super.initState();
-    homeWorld = widget.game.findByKey(HomeWorld.componentKey) as HomeWorld;
+    homeWorld =
+        widget.game.findByKey(LevelHomeWorld.componentKey) as LevelHomeWorld;
     sceneText = getSceneText();
   }
 

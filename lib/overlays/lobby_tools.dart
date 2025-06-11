@@ -33,7 +33,7 @@ class _LobbyToolsState extends ConsumerState<LobbyTools> {
   }
 
   void _onStartButtonTap() {
-    widget.game.router.pushNamed('home');
+    widget.game.router.pushNamed('level_home');
     widget.game.overlays.remove('lobbyTools');
   }
 

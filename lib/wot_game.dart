@@ -5,11 +5,11 @@ import 'package:flame/game.dart';
 import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:work_on_time_game/components/tap_circle.dart';
 import 'package:work_on_time_game/config/images.dart';
-import 'package:work_on_time_game/screen/home/home_world.dart';
+import 'package:work_on_time_game/screen/level_home/home_world.dart';
 import 'package:work_on_time_game/screen/lobby/lobby_world.dart';
-import 'package:work_on_time_game/screen/scene/rain_scene.dart';
-import 'package:work_on_time_game/screen/scene/scene_world.dart';
-import 'package:work_on_time_game/screen/traffic/traffic_world.dart';
+import 'package:work_on_time_game/screen/event_scene/rain_scene.dart';
+import 'package:work_on_time_game/screen/event_scene/scene_world.dart';
+import 'package:work_on_time_game/screen/level_traffic/traffic_world.dart';
 
 class WOTGame extends FlameGame
     with TapDetector, PanDetector, RiverpodGameMixin {
@@ -38,10 +38,13 @@ class WOTGame extends FlameGame
         // 大廳 初始畫面
         'lobby': WorldRoute(LobbyWorld.new),
         // 關卡 收集出門物品
-        'home': WorldRoute(HomeWorld.new, maintainState: false),
-        'scene': WorldRoute(SceneWorld.new),
-        // 交通場景
-        'traffic': WorldRoute(TrafficWorld.new),
+        'level_home': WorldRoute(LevelHomeWorld.new, maintainState: false),
+        // 關卡 交通場景
+        'level_traffic': WorldRoute(LevelTrafficWorld.new),
+        // 事件 場景管理入口
+        'event_scene': WorldRoute(EventSceneWorld.new),
+        // 互動 相機
+        // 'interaction_capture': WorldRoute(InteractionCaptureWorld.new),
       },
       initialRoute: 'lobby',
     );
@@ -57,7 +60,7 @@ class WOTGame extends FlameGame
     super.onPanUpdate(info);
     if (!isPannable) return;
     final currentRoute = router.currentRoute;
-    if (currentRoute.name == 'home') {
+    if (currentRoute.name == 'level_home') {
       camera.moveBy(Vector2(-info.delta.global.x, 0));
     }
   }

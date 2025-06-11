@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
-import 'package:work_on_time_game/screen/scene/rain_scene.dart';
+import 'package:work_on_time_game/screen/event_scene/rain_scene.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
-class SceneWorld extends World with HasGameReference<WOTGame> {
+class EventSceneWorld extends World with HasGameReference<WOTGame> {
   late final RainScene rainScene;
 
   @override

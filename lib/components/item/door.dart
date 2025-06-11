@@ -2,11 +2,14 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 
 import 'package:work_on_time_game/config/images.dart';
-import 'package:work_on_time_game/screen/home/home_world.dart';
+import 'package:work_on_time_game/screen/level_home/home_world.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 class Door extends SpriteComponent
-    with HasGameReference<WOTGame>, HasWorldReference<HomeWorld>, TapCallbacks {
+    with
+        HasGameReference<WOTGame>,
+        HasWorldReference<LevelHomeWorld>,
+        TapCallbacks {
   static final List<String> imagePaths = [
     images.doorClose,
     images.doorOpen,
