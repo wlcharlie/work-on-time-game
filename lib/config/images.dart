@@ -120,6 +120,20 @@ class Images {
 
   final String logo = 'logo.png';
 
+  // 相機 準心 邊界匡
+  final String cameraCrosshair1 = 'camera/crosshair_1.png';
+  final String cameraCrosshair2 = 'camera/crosshair_2.png';
+  final String cameraCrosshair3 = 'camera/crosshair_3.png';
+  final String cameraCrosshair4 = 'camera/crosshair_4.png';
+  final String cameraCrosshair5 = 'camera/crosshair_5.png';
+  final String cameraCrosshair6 = 'camera/crosshair_6.png';
+  final String framingCorner1 = 'camera/framing_corner_1.png';
+  final String framingCorner2 = 'camera/framing_corner_2.png';
+  final String framingCorner3 = 'camera/framing_corner_3.png';
+  final String framingCorner4 = 'camera/framing_corner_4.png';
+
+  final String penguin = 'animal/penguin.png';
+
   String getFullPath(String image) {
     return 'assets/images/$image';
   }

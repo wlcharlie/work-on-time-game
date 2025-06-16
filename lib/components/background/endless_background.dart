@@ -12,7 +12,7 @@ class EndlessBackground extends PositionComponent
   Vector2 _position = Vector2.zero();
 
   EndlessBackground({
-    required image,
+    required Image image,
     Vector2? speed,
   }) : speed = speed ?? Vector2(30, 12) {
     _sprite = Sprite(image);

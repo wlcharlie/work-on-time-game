@@ -140,6 +140,7 @@ class _HelperState extends ConsumerState<Helper> {
                   _buildMenuItem(Icons.home, '首頁'),
                   _buildMenuItem(Icons.picture_in_picture, '下雨場景'),
                   _buildMenuItem(Icons.traffic, '交通場景'),
+                  _buildMenuItem(Icons.camera, '互動場景(拍照企鵝)'),
                   Divider(height: 1),
                   _buildMenuItem(Icons.settings, '設定'),
                   Divider(height: 1),
@@ -219,6 +220,9 @@ class _HelperState extends ConsumerState<Helper> {
             break;
           case '交通場景':
             widget.game.router.pushNamed('level_traffic');
+            break;
+          case '互動場景(拍照企鵝)':
+            widget.game.router.pushNamed('interaction_capture');
             break;
           default:
             break;

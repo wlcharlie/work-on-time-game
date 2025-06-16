@@ -82,6 +82,8 @@ flutter:
     - assets/images/tv/
     - assets/images/rain_scene/
     - assets/images/traffic_scene/
+    - assets/images/camera/
+    - assets/images/animal/
     - assets/audio/
 
   # An image asset can refer to one or more resolution-specific "variants", see

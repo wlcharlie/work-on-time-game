@@ -42,7 +42,7 @@ class LevelHomeWorld extends World
     await Flame.images.loadAll(images.allHomeLevelImages());
 
     game.camera.viewfinder.anchor = Anchor.topLeft;
-    game.camera.viewfinder.zoom = 1;
+    game.camera.viewfinder.zoom = 2;
   }
 
   @override

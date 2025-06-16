@@ -5,6 +5,7 @@ import 'package:flame/game.dart';
 import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:work_on_time_game/components/tap_circle.dart';
 import 'package:work_on_time_game/config/images.dart';
+import 'package:work_on_time_game/screen/interaction_capture/caputre_world.dart';
 import 'package:work_on_time_game/screen/level_home/home_world.dart';
 import 'package:work_on_time_game/screen/lobby/lobby_world.dart';
 import 'package:work_on_time_game/screen/event_scene/rain_scene.dart';
@@ -29,8 +30,8 @@ class WOTGame extends FlameGame
     await Future.delayed(const Duration(seconds: 1));
 
     camera = CameraComponent.withFixedResolution(
-      width: 393,
-      height: 852,
+      width: 786,
+      height: 1704,
     );
 
     router = RouterComponent(
@@ -44,9 +45,9 @@ class WOTGame extends FlameGame
         // 事件 場景管理入口
         'event_scene': WorldRoute(EventSceneWorld.new),
         // 互動 相機
-        // 'interaction_capture': WorldRoute(InteractionCaptureWorld.new),
+        'interaction_capture': WorldRoute(InteractionCaptureWorld.new),
       },
-      initialRoute: 'lobby',
+      initialRoute: 'interaction_capture',
     );
     add(router);
 
