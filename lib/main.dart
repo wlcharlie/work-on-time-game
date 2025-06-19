@@ -5,6 +5,7 @@ import 'package:work_on_time_game/overlays/helper.dart';
 import 'package:work_on_time_game/overlays/home_level_inspector.dart';
 import 'package:work_on_time_game/overlays/inventory.dart';
 import 'package:work_on_time_game/overlays/lobby_tools.dart';
+import 'package:work_on_time_game/screen/level_traffic/traffic_screen.dart';
 import 'package:work_on_time_game/screen/loading.dart';
 import 'package:work_on_time_game/screen/event_scene/rain_scene.dart';
 import 'package:work_on_time_game/wot_game.dart';
@@ -17,7 +18,7 @@ void main() {
   runApp(
     ProviderScope(
       child: MaterialApp(
-        initialRoute: '/',
+        initialRoute: '/traffic',
         routes: {
           '/': (context) => Scaffold(
                 body: RiverpodAwareGameWidget<WOTGame>(
@@ -33,6 +34,7 @@ void main() {
                   },
                 ),
               ),
+          '/traffic': (context) => TrafficScreen(),
         },
       ),
     ),

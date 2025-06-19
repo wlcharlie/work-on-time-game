@@ -5,12 +5,12 @@ import 'dart:math';
 
 enum TrafficPointType { lucky, card, coffee, question, home, fallback }
 
-class TrafficBoard extends StatelessWidget {
+class TrafficBoard extends StatefulWidget {
   final int currentIndex;
   final int totalPoints;
   final double iconSize;
   final double maxWidth;
-  late final List<TrafficPointType> _points;
+  final List<TrafficPointType> _points;
 
   TrafficBoard({
     Key? key,
@@ -18,8 +18,18 @@ class TrafficBoard extends StatelessWidget {
     required this.totalPoints,
     this.iconSize = 36,
     this.maxWidth = 430,
-  })  : _points = _generateRandomPoints(totalPoints),
+    List<TrafficPointType>? points,
+  })  : _points = points ?? _generateRandomPoints(totalPoints),
         super(key: key);
+
+  List<TrafficPointType> get points => _points;
+
+  // 將 getPointType 移到 TrafficBoard 類別中
+  TrafficPointType getPointType(int index) {
+    if (index < 0) index = 0;
+    if (index >= _points.length) index = _points.length - 1;
+    return _points[index];
+  }
 
   static List<TrafficPointType> _generateRandomPoints(int count) {
     // 用 Map 設定每種格子的權重
@@ -48,6 +58,49 @@ class TrafficBoard extends StatelessWidget {
       }
     }
     return result;
+  }
+
+  @override
+  State<TrafficBoard> createState() => _TrafficBoardState();
+}
+
+class _TrafficBoardState extends State<TrafficBoard> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(TrafficBoard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // 當 currentIndex 改變時，自動滾動到該位置
+    if (oldWidget.currentIndex != widget.currentIndex) {
+      _scrollToCurrentIndex();
+    }
+  }
+
+  void _scrollToCurrentIndex() {
+    // 計算目標位置的偏移量
+    final itemWidth = widget.iconSize + 8.0; // iconSize + padding
+    final targetOffset = widget.currentIndex * itemWidth;
+
+    // 計算滾動位置，讓目標位置居中顯示
+    final containerWidth = widget.maxWidth - 8.0; // 減去 padding
+    final scrollOffset = targetOffset - (containerWidth / 2) + (itemWidth / 2);
+
+    // 確保滾動範圍在有效範圍內
+    final maxScrollExtent = (widget.totalPoints * itemWidth) - containerWidth;
+    final clampedOffset = scrollOffset.clamp(0.0, maxScrollExtent);
+
+    // 平滑滾動到目標位置
+    _scrollController.animateTo(
+      clampedOffset,
+      duration: const Duration(milliseconds: 800),
+      curve: Curves.easeInOut,
+    );
   }
 
   String? _getIcon(TrafficPointType type) {
@@ -84,14 +137,10 @@ class TrafficBoard extends StatelessWidget {
     }
   }
 
-  TrafficPointType getPointType(int index) {
-    return _points[index];
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: maxWidth,
+      width: widget.maxWidth,
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
       decoration: BoxDecoration(
         color: TrafficColors.background,
@@ -109,17 +158,18 @@ class TrafficBoard extends StatelessWidget {
         ],
       ),
       child: SingleChildScrollView(
+        controller: _scrollController,
         scrollDirection: Axis.horizontal,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(totalPoints, (index) {
-            final type = _points[index];
+          children: List.generate(widget.totalPoints, (index) {
+            final type = widget._points[index];
             final icon = _getIcon(type);
             final color = _getColor(type);
             final isQuestionOrFallback = (type == TrafficPointType.question ||
                 type == TrafficPointType.fallback);
             final double thisIconSize =
-                isQuestionOrFallback ? iconSize * 1.3 : iconSize;
+                isQuestionOrFallback ? widget.iconSize * 1.3 : widget.iconSize;
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4.0),
               child: Stack(
@@ -160,11 +210,12 @@ class TrafficBoard extends StatelessWidget {
                             ),
                           ),
                         ),
-                  if (index == currentIndex)
+                  if (index == widget.currentIndex)
                     Positioned(
                       right: -thisIconSize * 0.35,
                       bottom: -thisIconSize * 0.35,
-                      child: Container(
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 100),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
