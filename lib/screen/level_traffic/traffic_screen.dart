@@ -23,6 +23,8 @@ class _TrafficScreenState extends State<TrafficScreen>
   late Animation<double> _moveAnimation;
   int _startIndex = 0;
   int _targetIndex = 0;
+  double _startBgOffset = 0.0;
+  double _endBgOffset = 0.0;
   bool _isMoving = false;
   final List<String> pointIcons = [
     images.trafficPointCardLucky,
@@ -57,11 +59,9 @@ class _TrafficScreenState extends State<TrafficScreen>
 
     _moveAnimation.addListener(() {
       if (_isMoving) {
-        int currentAnimatedIndex = (_startIndex +
-                (_moveAnimation.value * (_targetIndex - _startIndex)))
-            .round()
-            .clamp(0, (_trafficBoard?.points.length ?? 1) - 1);
-        _jumpBgToPosition(currentAnimatedIndex);
+        final currentOffset = _startBgOffset +
+            (_endBgOffset - _startBgOffset) * _moveAnimation.value;
+        _bgScrollController.jumpTo(currentOffset);
       }
     });
 
@@ -101,6 +101,9 @@ class _TrafficScreenState extends State<TrafficScreen>
       // 使用 _trafficBoard!.points.length 確保目標索引在正確範圍內
       _targetIndex = (controller.currentIndex + totalSteps)
           .clamp(0, _trafficBoard!.points.length - 1);
+
+      _startBgOffset = _getBgOffsetForIndex(_startIndex);
+      _endBgOffset = _getBgOffsetForIndex(_targetIndex);
     });
 
     final int actualSteps = (_targetIndex - _startIndex).abs();
@@ -165,8 +168,8 @@ class _TrafficScreenState extends State<TrafficScreen>
     }
   }
 
-  void _jumpBgToPosition(int index) {
-    if (_trafficBoard == null || _trafficBoard!.points.length <= 1) return;
+  double _getBgOffsetForIndex(int index) {
+    if (_trafficBoard == null || _trafficBoard!.points.length <= 1) return 0.0;
 
     final double bgImgWidth = 1965.0; // 你的 mrt_bg.png 寬度
     final double screenWidth = MediaQuery.of(context).size.width;
@@ -176,9 +179,7 @@ class _TrafficScreenState extends State<TrafficScreen>
         (bgImgWidth - screenWidth) / (totalBoardPoints - 1);
     final double targetOffset = index * singleStep;
 
-    _bgScrollController.jumpTo(
-      targetOffset.clamp(0.0, bgImgWidth - screenWidth),
-    );
+    return targetOffset.clamp(0.0, bgImgWidth - screenWidth);
   }
 
   @override
