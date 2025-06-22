@@ -6,8 +6,6 @@ import 'traffic_status_bar.dart';
 import 'traffic_board.dart';
 import 'traffic_controller.dart';
 import 'package:work_on_time_game/config/colors.dart';
-import 'animated_dice.dart';
-import 'double_dice_widget.dart';
 import 'dice_overlay.dart';
 import 'package:rive/rive.dart' as rive;
 
@@ -41,7 +39,6 @@ class _TrafficScreenState extends State<TrafficScreen>
   late ScrollController _bgScrollController;
   rive.StateMachineController? _stateMachineController;
   rive.SMIInput<bool>? _isWalkingInput;
-  bool _hasPlayedEntry = false;
 
   @override
   void initState() {
@@ -64,9 +61,7 @@ class _TrafficScreenState extends State<TrafficScreen>
                 (_moveAnimation.value * (_targetIndex - _startIndex)))
             .round()
             .clamp(0, (_trafficBoard?.points.length ?? 1) - 1);
-        int steps = (_targetIndex - _startIndex).abs();
-        _scrollBgToIndex(currentAnimatedIndex, steps: steps);
-        setState(() {});
+        _jumpBgToPosition(currentAnimatedIndex);
       }
     });
 
@@ -96,35 +91,40 @@ class _TrafficScreenState extends State<TrafficScreen>
   }
 
   void _startSmoothMove(int totalSteps) async {
+    if (_isMoving) return; // 防止重複觸發移動
+
     _isWalkingInput?.value = true;
 
     setState(() {
       _isMoving = true;
       _startIndex = controller.currentIndex;
+      // 使用 _trafficBoard!.points.length 確保目標索引在正確範圍內
       _targetIndex = (controller.currentIndex + totalSteps)
-          .clamp(0, controller.totalPoints - 1);
+          .clamp(0, _trafficBoard!.points.length - 1);
     });
+
+    final int actualSteps = (_targetIndex - _startIndex).abs();
+    if (actualSteps == 0) {
+      setState(() {
+        _isMoving = false;
+        _isWalkingInput?.value = false;
+      });
+      return;
+    }
 
     // 計算動畫時間：每步 200ms
-    final int duration =
-        ((_targetIndex - _startIndex).abs() * 200).clamp(300, 3000);
+    final int duration = (actualSteps * 200).clamp(300, 3000);
 
     _moveAnimationController.duration = Duration(milliseconds: duration);
-    _moveAnimationController.reset();
-    _moveAnimationController.forward();
 
-    await Future.delayed(Duration(milliseconds: duration));
+    // 使用 controller 的 future 等待動畫結束，這比 Future.delayed 更精準
+    await _moveAnimationController.forward(from: 0.0).orCancel;
 
+    // 動畫完成後，才更新最終狀態並停止走路
     setState(() {
+      log('主動畫與背景已同步完成，停止走路');
       controller.currentIndex = _targetIndex;
       controller.steps = (controller.steps - 1).clamp(0, controller.maxSteps);
-    });
-
-    // 等背景滾動到位
-    await _scrollBgToIndex(_targetIndex,
-        steps: (_targetIndex - _startIndex).abs());
-
-    setState(() {
       _isMoving = false;
       _isWalkingInput?.value = false;
     });
@@ -165,18 +165,19 @@ class _TrafficScreenState extends State<TrafficScreen>
     }
   }
 
-  Future<void> _scrollBgToIndex(int index, {int steps = 1}) {
+  void _jumpBgToPosition(int index) {
+    if (_trafficBoard == null || _trafficBoard!.points.length <= 1) return;
+
     final double bgImgWidth = 1965.0; // 你的 mrt_bg.png 寬度
     final double screenWidth = MediaQuery.of(context).size.width;
-    final double singleStep = (bgImgWidth - screenWidth) / (20 - 1);
+    // 使用盤面的總格數來計算每一步的距離，確保同步
+    final int totalBoardPoints = _trafficBoard!.points.length;
+    final double singleStep =
+        (bgImgWidth - screenWidth) / (totalBoardPoints - 1);
     final double targetOffset = index * singleStep;
 
-    final int duration = (steps * 150).clamp(300, 1500);
-
-    return _bgScrollController.animateTo(
+    _bgScrollController.jumpTo(
       targetOffset.clamp(0.0, bgImgWidth - screenWidth),
-      duration: Duration(milliseconds: duration),
-      curve: Curves.linear,
     );
   }
 
@@ -184,22 +185,6 @@ class _TrafficScreenState extends State<TrafficScreen>
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    int currentAnimatedIndex = _isMoving
-        ? (_startIndex + (_moveAnimation.value * (_targetIndex - _startIndex)))
-            .round()
-            .clamp(0, (_trafficBoard?.points.length ?? 1) - 1)
-        : controller.currentIndex;
-
-    // 計算背景偏移量
-    double bgWidth = 393.0 * 5; // 5張圖，每張393px
-    double singleStep = (bgWidth - screenWidth) / (20 - 1); // 20格
-    double bgOffset = -currentAnimatedIndex * singleStep;
-
-    // 假設 screenWidth, screenHeight, bgOffset 都已經有
-    // 5 張圖，每張 393px
-    final int bgCount = 5;
-    final double bgImgWidth = 393.0;
-    final double bgTotalWidth = bgImgWidth * bgCount;
 
     return Scaffold(
       body: Stack(
@@ -296,9 +281,16 @@ class _TrafficScreenState extends State<TrafficScreen>
                     ? AnimatedBuilder(
                         animation: _moveAnimation,
                         builder: (context, child) {
+                          final currentAnimatedIndex = _isMoving
+                              ? (_startIndex +
+                                      (_moveAnimation.value *
+                                          (_targetIndex - _startIndex)))
+                                  .round()
+                                  .clamp(0, _trafficBoard!.points.length - 1)
+                              : controller.currentIndex;
                           return TrafficBoard(
                             currentIndex: currentAnimatedIndex,
-                            totalPoints: 20,
+                            totalPoints: _trafficBoard!.points.length,
                             iconSize: 36,
                             maxWidth: screenWidth > 430 ? 430 : screenWidth,
                             points: _trafficBoard!.points,
@@ -316,7 +308,7 @@ class _TrafficScreenState extends State<TrafficScreen>
               left: 0,
               right: 0,
               child: Container(
-                color: Colors.black.withOpacity(0.08),
+                color: Colors.black.withAlpha(8),
                 child: DiceOverlay(
                   onFinish: (total) {
                     setState(() {
