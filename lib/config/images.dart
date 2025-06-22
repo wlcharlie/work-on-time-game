@@ -133,6 +133,7 @@ class Images {
   final String framingCorner4 = 'camera/framing_corner_4.png';
 
   final String penguin = 'animal/penguin.png';
+  final String goose = 'card/goose.png';
 
   String getFullPath(String image) {
     return 'assets/images/$image';

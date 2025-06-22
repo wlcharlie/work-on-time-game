@@ -10,6 +10,9 @@ import 'traffic_controller.dart';
 import 'package:work_on_time_game/config/colors.dart';
 import 'dice_overlay.dart';
 import 'package:rive/rive.dart' as rive;
+import 'package:work_on_time_game/providers/card_provider.dart';
+import 'package:work_on_time_game/screen/level_traffic/card_selection_dialog.dart';
+import 'package:work_on_time_game/models/card_model.dart' as model;
 
 class TrafficScreen extends ConsumerStatefulWidget {
   const TrafficScreen({Key? key}) : super(key: key);
@@ -414,45 +417,47 @@ class _TrafficScreenState extends ConsumerState<TrafficScreen>
                     top: screenHeight * 0.6 + 30,
                     left: 0,
                     right: 0,
-                    child: Center(
-                      child: GestureDetector(
-                        onTap: _triggerDice,
-                        child: Container(
-                          width: screenWidth > 430 ? 430 : screenWidth,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 16),
-                          margin: const EdgeInsets.only(left: 20, right: 20),
-                          decoration: BoxDecoration(
-                            color: TrafficColors.tipBg.withOpacity(0.97),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                                color: TrafficColors.tipBorder, width: 2),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.04),
-                                blurRadius: 6,
-                                offset: Offset(0, 2),
-                              ),
-                            ],
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        children: [
+                          // 骰子前進按鈕
+                          Expanded(
+                            child: _buildActionButton(
+                              onTap: _triggerDice,
+                              label: '骰子前進',
+                              icon: Icons.casino_outlined,
+                            ),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '骰子前進',
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  color: TrafficColors.tipText,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.2,
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Icon(Icons.casino,
-                                  color: TrafficColors.tipIcon, size: 20),
-                            ],
+                          const SizedBox(width: 15),
+                          // 卡片前進按鈕
+                          Expanded(
+                            child: Consumer(
+                              builder: (context, ref, child) {
+                                final cards = ref.watch(cardProvider);
+                                return _buildActionButton(
+                                  onTap: () async {
+                                    if (cards.isNotEmpty) {
+                                      final selectedCard =
+                                          await showDialog<model.Card>(
+                                        context: context,
+                                        barrierColor: Colors.transparent,
+                                        builder: (_) =>
+                                            const CardSelectionDialog(),
+                                      );
+                                      if (selectedCard != null) {
+                                        _handleCardEffect(selectedCard);
+                                      }
+                                    }
+                                  },
+                                  label: '卡片前進 (${cards.length})',
+                                  icon: Icons.style,
+                                  enabled: cards.isNotEmpty,
+                                );
+                              },
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
                   ),
@@ -561,5 +566,58 @@ class _TrafficScreenState extends ConsumerState<TrafficScreen>
         ),
       ],
     );
+  }
+
+  Widget _buildActionButton({
+    required VoidCallback onTap,
+    required String label,
+    required IconData icon,
+    bool enabled = true,
+  }) {
+    return GestureDetector(
+      onTap: enabled ? onTap : null,
+      child: Opacity(
+        opacity: enabled ? 1.0 : 0.5,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          decoration: BoxDecoration(
+            color: TrafficColors.tipBg.withOpacity(0.97),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: TrafficColors.tipBorder, width: 2),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 6,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 17,
+                  color: TrafficColors.tipText,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.2,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Icon(icon, color: TrafficColors.tipIcon, size: 20),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _handleCardEffect(model.Card card) {
+    // 根據卡片效果執行對應邏輯
+    log('使用卡片: ${card.name}');
+    // 這裡可以根據 card.id 或 card.name 來判斷執行哪個效果
+    // 例如：移動到最近的公園
+    // _startSmoothMoveToNearestPark();
   }
 }

@@ -90,6 +90,7 @@ flutter:
     - assets/images/traffic_scene/
     - assets/images/camera/
     - assets/images/animal/
+    - assets/images/card/
     - assets/audio/
     - assets/rive/
 
