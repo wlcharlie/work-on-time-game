@@ -286,7 +286,7 @@ class _TrafficScreenState extends State<TrafficScreen>
             ),
           // 格子地圖
           Positioned(
-            top: screenHeight * 0.6 - 90,
+            top: screenHeight * 0.6 - 80,
             left: 0,
             right: 0,
             child: SizedBox(
@@ -329,7 +329,7 @@ class _TrafficScreenState extends State<TrafficScreen>
             ),
           // 骰子前進提示區塊（可點擊觸發骰子動畫）
           Positioned(
-            top: screenHeight * 0.6 + 10,
+            top: screenHeight * 0.6 + 30,
             left: 0,
             right: 0,
             child: Center(
@@ -339,6 +339,7 @@ class _TrafficScreenState extends State<TrafficScreen>
                   width: screenWidth > 430 ? 430 : screenWidth,
                   padding:
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  margin: const EdgeInsets.only(left: 20, right: 20),
                   decoration: BoxDecoration(
                     color: TrafficColors.tipBg.withOpacity(0.97),
                     borderRadius: BorderRadius.circular(8),
@@ -375,7 +376,7 @@ class _TrafficScreenState extends State<TrafficScreen>
           ),
           // 提示區塊
           Positioned(
-            top: screenHeight * 0.6 + 80,
+            top: screenHeight * 0.6 + 100,
             left: 0,
             right: 0,
             child: Center(
@@ -383,6 +384,7 @@ class _TrafficScreenState extends State<TrafficScreen>
                 width: screenWidth > 430 ? 430 : screenWidth,
                 padding:
                     const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+                margin: const EdgeInsets.only(left: 20, right: 20),
                 decoration: BoxDecoration(
                   color: TrafficColors.tipBg.withOpacity(0.97),
                   borderRadius: BorderRadius.circular(8),
