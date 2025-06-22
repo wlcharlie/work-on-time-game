@@ -32,14 +32,15 @@ class TrafficBoard extends StatefulWidget {
   }
 
   static List<TrafficPointType> _generateRandomPoints(int count) {
-    // 用 Map 設定每種格子的權重
+    // 用 Map 設定每種格子的權重（根據要求的機率）
+    // 總權重為 100，對應 100% 的機率
     final weights = {
-      TrafficPointType.home: 1,
-      TrafficPointType.lucky: 2,
-      TrafficPointType.coffee: 3,
-      TrafficPointType.question: 1,
-      TrafficPointType.card: 3,
-      TrafficPointType.fallback: 2,
+      TrafficPointType.card: 20, // 卡片事件 20%
+      TrafficPointType.lucky: 10, // 幸運事件 10%
+      TrafficPointType.coffee: 15, // 咖啡事件 15%
+      TrafficPointType.question: 15, // 問題事件 15%
+      TrafficPointType.home: 10, // 回家事件 10%
+      TrafficPointType.fallback: 30, // 一般事件 30%（其餘）
     };
     final rand = Random();
     final types = weights.keys.toList();

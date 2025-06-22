@@ -45,6 +45,7 @@ class _TrafficScreenState extends ConsumerState<TrafficScreen>
   rive.SMIInput<bool>? _isWalkingInput;
   double _transitionOpacity = 1.0;
   double _transitionScale = 1.0;
+  double _whiteOverlayOpacity = 0.0;
 
   @override
   void initState() {
@@ -153,18 +154,28 @@ class _TrafficScreenState extends ConsumerState<TrafficScreen>
         break;
       case TrafficPointType.lucky:
         log('觸發幸運事件');
+        ref.read(gameEventProvider.notifier).setEvent(GameEventType.lucky);
+        _smoothTransitionToEvent();
         break;
       case TrafficPointType.coffee:
         log('觸發咖啡事件');
+        ref.read(gameEventProvider.notifier).setEvent(GameEventType.coffee);
+        _smoothTransitionToEvent();
         break;
       case TrafficPointType.question:
         log('觸發問題事件');
+        ref.read(gameEventProvider.notifier).setEvent(GameEventType.question);
+        _smoothTransitionToEvent();
         break;
       case TrafficPointType.home:
         log('觸發回家事件');
+        ref.read(gameEventProvider.notifier).setEvent(GameEventType.home);
+        _smoothTransitionToEvent();
         break;
       default:
         log('觸發一般事件');
+        ref.read(gameEventProvider.notifier).setEvent(GameEventType.normal);
+        _smoothTransitionToEvent();
         break;
     }
   }
@@ -193,11 +204,21 @@ class _TrafficScreenState extends ConsumerState<TrafficScreen>
       curve: Curves.easeInOut,
     ));
 
+    // 創建白色覆蓋層動畫
+    final whiteOverlayAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: fadeController,
+      curve: Curves.easeInOut,
+    ));
+
     // 添加動畫監聽器來更新透明度和縮放
     fadeAnimation.addListener(() {
       setState(() {
         _transitionOpacity = fadeAnimation.value;
         _transitionScale = scaleAnimation.value;
+        _whiteOverlayOpacity = whiteOverlayAnimation.value;
       });
     });
 
@@ -240,285 +261,305 @@ class _TrafficScreenState extends ConsumerState<TrafficScreen>
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return Transform.scale(
-      scale: _transitionScale,
-      child: Opacity(
-        opacity: _transitionOpacity,
-        child: Scaffold(
-          body: Stack(
-            children: [
-              /// 背景地圖
-              Positioned(
-                top: 10,
-                left: 0,
-                right: 0,
-                child: SizedBox(
-                  width: screenWidth,
-                  height: screenHeight * 0.6,
-                  child: SingleChildScrollView(
-                    controller: _bgScrollController,
-                    scrollDirection: Axis.horizontal,
-                    physics: const NeverScrollableScrollPhysics(),
-                    child: Image.asset(
-                      'assets/images/traffic_scene/mrt_bg.png',
-                      width: 1965,
-                      height: screenHeight * 0.6,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
-
-              /// 狀態列
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: SafeArea(
-                  child: Center(
+    return Stack(
+      children: [
+        Transform.scale(
+          scale: _transitionScale,
+          child: Opacity(
+            opacity: _transitionOpacity,
+            child: Scaffold(
+              body: Stack(
+                children: [
+                  /// 背景地圖
+                  Positioned(
+                    top: 10,
+                    left: 0,
+                    right: 0,
                     child: SizedBox(
-                      width: screenWidth > 430 ? 430 : screenWidth,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                        child: TrafficStatusBar(
-                          steps: controller.steps,
-                          maxSteps: controller.maxSteps,
-                          heart: controller.heart,
-                          money: controller.money,
-                          energy: controller.energy,
+                      width: screenWidth,
+                      height: screenHeight * 0.6,
+                      child: SingleChildScrollView(
+                        controller: _bgScrollController,
+                        scrollDirection: Axis.horizontal,
+                        physics: const NeverScrollableScrollPhysics(),
+                        child: Image.asset(
+                          'assets/images/traffic_scene/mrt_bg.png',
+                          width: 1965,
+                          height: screenHeight * 0.6,
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
                   ),
-                ),
-              ),
 
-              /// 主角動畫（這裡放在 Stack 最外層，永遠以螢幕中央為基準）
-              if (_trafficBoard != null)
-                Positioned(
-                  // 直接用螢幕中央，不要跟背景寬度綁定
-                  top: screenHeight * 0.6 - 300,
-                  left: 0,
-                  right: 0,
-                  child: IgnorePointer(
-                    child: Center(
-                      child: SizedBox(
-                        width: 200,
-                        height: 200,
-                        child: rive.RiveAnimation.asset(
-                          'assets/rive/walk.riv',
-                          key: const ValueKey('main-character-rive'),
-                          fit: BoxFit.contain,
-                          stateMachines: const ['walkState'],
-                          onInit: (artboard) {
-                            _stateMachineController =
-                                rive.StateMachineController.fromArtboard(
-                              artboard,
-                              'walkState',
-                            );
-                            if (_stateMachineController != null) {
-                              artboard.addController(_stateMachineController!);
-                              _isWalkingInput = _stateMachineController!
-                                  .findInput('isWalking');
-                              _isWalkingInput?.value = _isMoving;
-                            }
-                            setState(() {});
+                  /// 狀態列
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: SafeArea(
+                      child: Center(
+                        child: SizedBox(
+                          width: screenWidth > 430 ? 430 : screenWidth,
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 6.0),
+                            child: TrafficStatusBar(
+                              steps: controller.steps,
+                              maxSteps: controller.maxSteps,
+                              heart: controller.heart,
+                              money: controller.money,
+                              energy: controller.energy,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  /// 主角動畫（這裡放在 Stack 最外層，永遠以螢幕中央為基準）
+                  if (_trafficBoard != null)
+                    Positioned(
+                      // 直接用螢幕中央，不要跟背景寬度綁定
+                      top: screenHeight * 0.6 - 300,
+                      left: 0,
+                      right: 0,
+                      child: IgnorePointer(
+                        child: Center(
+                          child: SizedBox(
+                            width: 200,
+                            height: 200,
+                            child: rive.RiveAnimation.asset(
+                              'assets/rive/walk.riv',
+                              key: const ValueKey('main-character-rive'),
+                              fit: BoxFit.contain,
+                              stateMachines: const ['walkState'],
+                              onInit: (artboard) {
+                                _stateMachineController =
+                                    rive.StateMachineController.fromArtboard(
+                                  artboard,
+                                  'walkState',
+                                );
+                                if (_stateMachineController != null) {
+                                  artboard
+                                      .addController(_stateMachineController!);
+                                  _isWalkingInput = _stateMachineController!
+                                      .findInput('isWalking');
+                                  _isWalkingInput?.value = _isMoving;
+                                }
+                                setState(() {});
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                  /// 格子地圖
+                  Positioned(
+                    top: screenHeight * 0.6 - 70,
+                    left: 0,
+                    right: 0,
+                    child: SizedBox(
+                      width: screenWidth > 430 ? 430 : screenWidth,
+                      child: Center(
+                        child: _trafficBoard != null
+                            ? AnimatedBuilder(
+                                animation: _moveAnimation,
+                                builder: (context, child) {
+                                  final currentAnimatedIndex = _isMoving
+                                      ? (_startIndex +
+                                              (_moveAnimation.value *
+                                                  (_targetIndex - _startIndex)))
+                                          .round()
+                                          .clamp(0,
+                                              _trafficBoard!.points.length - 1)
+                                      : controller.currentIndex;
+                                  return TrafficBoard(
+                                    currentIndex: currentAnimatedIndex,
+                                    totalPoints: _trafficBoard!.points.length,
+                                    iconSize: 36,
+                                    maxWidth:
+                                        screenWidth > 430 ? 430 : screenWidth,
+                                    points: _trafficBoard!.points,
+                                  );
+                                },
+                              )
+                            : const SizedBox(), // 載入中顯示空白
+                      ),
+                    ),
+                  ),
+
+                  /// 格子地圖上方骰子動畫（預設隱藏）
+                  if (showDiceOverlay)
+                    Positioned.fill(
+                      top: -150,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        color: Colors.black.withAlpha(8),
+                        child: DiceOverlay(
+                          onFinish: (total) {
+                            setState(() {
+                              showDiceOverlay = false;
+                            });
+                            _startSmoothMove(total);
                           },
                         ),
                       ),
                     ),
-                  ),
-                ),
 
-              /// 格子地圖
-              Positioned(
-                top: screenHeight * 0.6 - 70,
-                left: 0,
-                right: 0,
-                child: SizedBox(
-                  width: screenWidth > 430 ? 430 : screenWidth,
-                  child: Center(
-                    child: _trafficBoard != null
-                        ? AnimatedBuilder(
-                            animation: _moveAnimation,
-                            builder: (context, child) {
-                              final currentAnimatedIndex = _isMoving
-                                  ? (_startIndex +
-                                          (_moveAnimation.value *
-                                              (_targetIndex - _startIndex)))
-                                      .round()
-                                      .clamp(
-                                          0, _trafficBoard!.points.length - 1)
-                                  : controller.currentIndex;
-                              return TrafficBoard(
-                                currentIndex: currentAnimatedIndex,
-                                totalPoints: _trafficBoard!.points.length,
-                                iconSize: 36,
-                                maxWidth: screenWidth > 430 ? 430 : screenWidth,
-                                points: _trafficBoard!.points,
-                              );
-                            },
-                          )
-                        : const SizedBox(), // 載入中顯示空白
-                  ),
-                ),
-              ),
-
-              /// 格子地圖上方骰子動畫（預設隱藏）
-              if (showDiceOverlay)
-                Positioned.fill(
-                  top: -150,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    color: Colors.black.withAlpha(8),
-                    child: DiceOverlay(
-                      onFinish: (total) {
-                        setState(() {
-                          showDiceOverlay = false;
-                        });
-                        _startSmoothMove(total);
-                      },
-                    ),
-                  ),
-                ),
-
-              /// 骰子前進提示區塊（可點擊觸發骰子動畫）
-              Positioned(
-                top: screenHeight * 0.6 + 30,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: GestureDetector(
-                    onTap: _triggerDice,
-                    child: Container(
-                      width: screenWidth > 430 ? 430 : screenWidth,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 16),
-                      margin: const EdgeInsets.only(left: 20, right: 20),
-                      decoration: BoxDecoration(
-                        color: TrafficColors.tipBg.withOpacity(0.97),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                            color: TrafficColors.tipBorder, width: 2),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
-                            blurRadius: 6,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '骰子前進',
-                            style: TextStyle(
-                              fontSize: 17,
-                              color: TrafficColors.tipText,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1.2,
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Icon(Icons.casino,
-                              color: TrafficColors.tipIcon, size: 20),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              /// 提示區塊
-              Positioned(
-                top: screenHeight * 0.6 + 90,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: Container(
-                    width: screenWidth > 430 ? 430 : screenWidth,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 18, horizontal: 20),
-                    margin: const EdgeInsets.only(left: 20, right: 20),
-                    decoration: BoxDecoration(
-                      color: TrafficColors.tipBg.withOpacity(0.97),
-                      borderRadius: BorderRadius.circular(8),
-                      border:
-                          Border.all(color: TrafficColors.tipBorder, width: 2),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.04),
-                          blurRadius: 6,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          '骰子前進',
-                          style: TextStyle(
-                            fontSize: 17,
-                            color: TrafficColors.tipText,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.2,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          '還有${controller.steps}次前進機會，出發吧！',
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: TrafficColors.tipText,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.casino,
-                                color: TrafficColors.tipIcon, size: 20),
-                            const SizedBox(width: 6),
-                            Text(
-                              '點擊上方骰子前進',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: TrafficColors.tipText,
+                  /// 骰子前進提示區塊（可點擊觸發骰子動畫）
+                  Positioned(
+                    top: screenHeight * 0.6 + 30,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: GestureDetector(
+                        onTap: _triggerDice,
+                        child: Container(
+                          width: screenWidth > 430 ? 430 : screenWidth,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 16),
+                          margin: const EdgeInsets.only(left: 20, right: 20),
+                          decoration: BoxDecoration(
+                            color: TrafficColors.tipBg.withOpacity(0.97),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                                color: TrafficColors.tipBorder, width: 2),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.04),
+                                blurRadius: 6,
+                                offset: Offset(0, 2),
                               ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '骰子前進',
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  color: TrafficColors.tipText,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.2,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Icon(Icons.casino,
+                                  color: TrafficColors.tipIcon, size: 20),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  /// 提示區塊
+                  Positioned(
+                    top: screenHeight * 0.6 + 90,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: Container(
+                        width: screenWidth > 430 ? 430 : screenWidth,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 18, horizontal: 20),
+                        margin: const EdgeInsets.only(left: 20, right: 20),
+                        decoration: BoxDecoration(
+                          color: TrafficColors.tipBg.withOpacity(0.97),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                              color: TrafficColors.tipBorder, width: 2),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.04),
+                              blurRadius: 6,
+                              offset: Offset(0, 2),
                             ),
                           ],
                         ),
-                      ],
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '骰子前進',
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: TrafficColors.tipText,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.2,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              '還有${controller.steps}次前進機會，出發吧！',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: TrafficColors.tipText,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.casino,
+                                    color: TrafficColors.tipIcon, size: 20),
+                                const SizedBox(width: 6),
+                                Text(
+                                  '點擊上方骰子前進',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: TrafficColors.tipText,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
 
-              /// 最底部 logo
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  color: TrafficColors.bottomBar,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: Center(
-                    child: Image.asset(
-                      images.getFullPath(images.logo),
-                      width: 120,
-                      fit: BoxFit.contain,
+                  /// 最底部 logo
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      color: TrafficColors.bottomBar,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: Center(
+                        child: Image.asset(
+                          images.getFullPath(images.logo),
+                          width: 120,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
-      ),
+
+        // 白色覆蓋層
+        Positioned.fill(
+          child: IgnorePointer(
+            child: AnimatedOpacity(
+              opacity: _whiteOverlayOpacity,
+              duration: Duration.zero, // 使用手動控制，不使用 AnimatedOpacity 的動畫
+              child: Container(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

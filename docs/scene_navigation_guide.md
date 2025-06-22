@@ -42,7 +42,16 @@ routes: {
 #### 1. 定義事件類型
 ```dart
 // lib/providers/game_event_provider.dart
-enum GameEventType { none, rain, coffee, lucky, question, home }
+enum GameEventType { 
+  none, 
+  rain,      // 卡片事件
+  lucky,     // 幸運事件
+  coffee,    // 咖啡事件
+  question,  // 問題事件
+  home,      // 回家事件
+  normal,    // 一般事件
+  newEvent   // 新事件類型
+}
 
 class GameEvent {
   final GameEventType type;
@@ -51,6 +60,15 @@ class GameEvent {
   GameEvent({this.type = GameEventType.none, this.data});
 }
 ```
+
+#### 事件機率分配
+遊戲中的事件機率分配如下：
+- **卡片事件**：20% - 觸發 `GameEventType.rain`
+- **幸運事件**：10% - 觸發 `GameEventType.lucky`
+- **咖啡事件**：15% - 觸發 `GameEventType.coffee`
+- **問題事件**：15% - 觸發 `GameEventType.question`
+- **回家事件**：10% - 觸發 `GameEventType.home`
+- **一般事件**：30% - 觸發 `GameEventType.normal`
 
 #### 2. 觸發事件（帶平滑過渡）
 在任何地方（包括 Material UI 頁面）：
@@ -140,11 +158,21 @@ void _smoothTransitionToEvent() {
     curve: Curves.easeInOut,
   ));
 
+  // 白色覆蓋層動畫：從 0.0 到 1.0
+  final whiteOverlayAnimation = Tween<double>(
+    begin: 0.0,
+    end: 1.0,
+  ).animate(CurvedAnimation(
+    parent: fadeController,
+    curve: Curves.easeInOut,
+  ));
+
   // 更新 UI
   fadeAnimation.addListener(() {
     setState(() {
       _transitionOpacity = fadeAnimation.value;
       _transitionScale = scaleAnimation.value;
+      _whiteOverlayOpacity = whiteOverlayAnimation.value;
     });
   });
 
@@ -163,6 +191,7 @@ void _smoothTransitionToEvent() {
 ### 動畫效果
 - **淡出效果**：整個頁面透明度從 100% 降到 0%
 - **輕微縮放**：頁面大小從 100% 縮小到 95%
+- **白色覆蓋**：白色覆蓋層透明度從 0% 增加到 100%，創造白色淡出效果
 - **自然曲線**：使用 `Curves.easeInOut` 提供平滑的加速和減速
 - **適中時長**：800ms 的動畫時長，平衡流暢性和響應性
 
@@ -173,29 +202,97 @@ void _smoothTransitionToEvent() {
 // lib/screen/level_traffic/traffic_screen.dart
 void _handlePointEvent(TrafficPointType type) {
   log('觸發事件: $type');
-  
-  // 設定事件並執行平滑過渡
-  ref.read(gameEventProvider.notifier).setEvent(GameEventType.rain);
-  _smoothTransitionToEvent();
-  return;
 
-  // 以下是其他事件的處理邏輯（目前未使用）
   switch (type) {
     case TrafficPointType.card:
       log('觸發卡片事件');
+      ref.read(gameEventProvider.notifier).setEvent(GameEventType.rain);
+      _smoothTransitionToEvent();
       break;
     case TrafficPointType.lucky:
       log('觸發幸運事件');
+      ref.read(gameEventProvider.notifier).setEvent(GameEventType.lucky);
+      _smoothTransitionToEvent();
       break;
-    // ... 其他事件
+    case TrafficPointType.coffee:
+      log('觸發咖啡事件');
+      ref.read(gameEventProvider.notifier).setEvent(GameEventType.coffee);
+      _smoothTransitionToEvent();
+      break;
+    case TrafficPointType.question:
+      log('觸發問題事件');
+      ref.read(gameEventProvider.notifier).setEvent(GameEventType.question);
+      _smoothTransitionToEvent();
+      break;
+    case TrafficPointType.home:
+      log('觸發回家事件');
+      ref.read(gameEventProvider.notifier).setEvent(GameEventType.home);
+      _smoothTransitionToEvent();
+      break;
+    default:
+      log('觸發一般事件');
+      ref.read(gameEventProvider.notifier).setEvent(GameEventType.normal);
+      _smoothTransitionToEvent();
+      break;
   }
 }
 ```
 
-### 範例 2：添加新的事件類型
+### 範例 2：在 WOTGame 中處理不同事件類型
+```dart
+// lib/wot_game.dart
+@override
+void update(double dt) {
+  super.update(dt);
+  
+  // 自動檢查事件狀態變化
+  final currentEvent = ref.read(gameEventProvider);
+  if (currentEvent.type != GameEventType.none && 
+      currentEvent.type != _lastEventType) {
+    _lastEventType = currentEvent.type;
+    
+    // 根據事件類型切換到不同的場景
+    switch (currentEvent.type) {
+      case GameEventType.rain:
+        router.pushNamed('event_scene'); // 雨天場景
+        break;
+      case GameEventType.lucky:
+        router.pushNamed('lucky_scene'); // 幸運場景
+        break;
+      case GameEventType.coffee:
+        router.pushNamed('coffee_scene'); // 咖啡場景
+        break;
+      case GameEventType.question:
+        router.pushNamed('question_scene'); // 問題場景
+        break;
+      case GameEventType.home:
+        router.pushNamed('home_scene'); // 回家場景
+        break;
+      case GameEventType.normal:
+        router.pushNamed('normal_scene'); // 一般場景
+        break;
+      default:
+        break;
+    }
+    
+    ref.read(gameEventProvider.notifier).clearEvent();
+  }
+}
+```
+
+### 範例 3：添加新的事件類型
 ```dart
 // 1. 在 game_event_provider.dart 中添加新類型
-enum GameEventType { none, rain, coffee, lucky, question, home, newEvent }
+enum GameEventType { 
+  none, 
+  rain,      // 卡片事件
+  lucky,     // 幸運事件
+  coffee,    // 咖啡事件
+  question,  // 問題事件
+  home,      // 回家事件
+  normal,    // 一般事件
+  newEvent   // 新事件類型
+}
 
 // 2. 在 TrafficScreen 中觸發
 case TrafficPointType.coffee:
@@ -209,7 +306,7 @@ if (currentEvent.type == GameEventType.newEvent) {
 }
 ```
 
-### 範例 3：帶數據的事件
+### 範例 4：帶數據的事件
 ```dart
 // 觸發帶數據的事件
 ref.read(gameEventProvider.notifier).setEvent(
@@ -226,7 +323,7 @@ if (eventData != null) {
 }
 ```
 
-### 範例 4：自定義過渡動畫
+### 範例 5：自定義過渡動畫
 ```dart
 // 如果需要不同的過渡效果，可以創建自定義方法
 void _customTransitionToEvent() {

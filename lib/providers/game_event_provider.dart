@@ -1,7 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:work_on_time_game/providers/game_event_provider.dart';
 
-enum GameEventType { none, rain }
+enum GameEventType {
+  none,
+  rain, // 卡片事件
+  lucky, // 幸運事件
+  coffee, // 咖啡事件
+  question, // 問題事件
+  home, // 回家事件
+  normal // 一般事件
+}
 
 class GameEvent {
   final GameEventType type;
