@@ -5,6 +5,7 @@ import 'package:flame/game.dart';
 import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:work_on_time_game/components/tap_circle.dart';
 import 'package:work_on_time_game/config/images.dart';
+import 'package:work_on_time_game/providers/game_event_provider.dart';
 import 'package:work_on_time_game/screen/interaction_capture/caputre_world.dart';
 import 'package:work_on_time_game/screen/level_home/home_world.dart';
 import 'package:work_on_time_game/screen/lobby/lobby_world.dart';
@@ -15,6 +16,7 @@ import 'package:work_on_time_game/screen/level_traffic/traffic_world.dart';
 class WOTGame extends FlameGame
     with TapDetector, PanDetector, RiverpodGameMixin {
   late final RouterComponent router;
+  GameEventType? _lastEventType;
 
   bool isPannable = true; // for camera usage
 
@@ -52,6 +54,20 @@ class WOTGame extends FlameGame
     add(router);
 
     overlays.add('helper');
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+
+    // 手動檢查事件狀態變化
+    final currentEvent = ref.read(gameEventProvider);
+    if (currentEvent.type != GameEventType.none &&
+        currentEvent.type != _lastEventType) {
+      _lastEventType = currentEvent.type;
+      router.pushNamed('event_scene');
+      ref.read(gameEventProvider.notifier).clearEvent();
+    }
   }
 
   // - PanDetector

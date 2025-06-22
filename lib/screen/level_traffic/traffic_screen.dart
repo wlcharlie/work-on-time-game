@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:work_on_time_game/config/images.dart';
+import 'package:work_on_time_game/providers/game_event_provider.dart';
 import 'traffic_status_bar.dart';
 import 'traffic_board.dart';
 import 'traffic_controller.dart';
@@ -9,14 +11,14 @@ import 'package:work_on_time_game/config/colors.dart';
 import 'dice_overlay.dart';
 import 'package:rive/rive.dart' as rive;
 
-class TrafficScreen extends StatefulWidget {
+class TrafficScreen extends ConsumerStatefulWidget {
   const TrafficScreen({Key? key}) : super(key: key);
 
   @override
-  State<TrafficScreen> createState() => _TrafficScreenState();
+  ConsumerState<TrafficScreen> createState() => _TrafficScreenState();
 }
 
-class _TrafficScreenState extends State<TrafficScreen>
+class _TrafficScreenState extends ConsumerState<TrafficScreen>
     with TickerProviderStateMixin {
   late TrafficController controller;
   late AnimationController _moveAnimationController;
@@ -91,7 +93,7 @@ class _TrafficScreenState extends State<TrafficScreen>
   }
 
   void _startSmoothMove(int totalSteps) async {
-    if (_isMoving) return; // 防止重複觸發移動
+    if (_isMoving || _trafficBoard == null) return; // 防止重複觸發移動或盤面未初始化
 
     _isWalkingInput?.value = true;
 
@@ -133,14 +135,19 @@ class _TrafficScreenState extends State<TrafficScreen>
     });
 
     final type = _trafficBoard?.getPointType(controller.currentIndex);
-    _handlePointEvent(type);
+    if (type != null) {
+      _handlePointEvent(type);
+    }
   }
 
-  void _handlePointEvent(TrafficPointType? type) {
+  void _handlePointEvent(TrafficPointType type) {
+    log('觸發事件: $type');
+
     switch (type) {
       case TrafficPointType.card:
-        // 雨天GOGO
         log('觸發卡片事件');
+        ref.read(gameEventProvider.notifier).setEvent(GameEventType.rain);
+        Navigator.of(context).pop();
         break;
       case TrafficPointType.lucky:
         log('觸發幸運事件');
@@ -161,7 +168,7 @@ class _TrafficScreenState extends State<TrafficScreen>
   }
 
   void _triggerDice() {
-    if (!showDiceOverlay && controller.steps > 0) {
+    if (!showDiceOverlay && controller.steps > 0 && _trafficBoard != null) {
       setState(() {
         showDiceOverlay = true;
       });
@@ -190,9 +197,9 @@ class _TrafficScreenState extends State<TrafficScreen>
     return Scaffold(
       body: Stack(
         children: [
-          // 背景地圖
+          /// 背景地圖
           Positioned(
-            top: 0,
+            top: 10,
             left: 0,
             right: 0,
             child: SizedBox(
@@ -211,7 +218,8 @@ class _TrafficScreenState extends State<TrafficScreen>
               ),
             ),
           ),
-          // 狀態列
+
+          /// 狀態列
           Positioned(
             top: 0,
             left: 0,
@@ -234,7 +242,8 @@ class _TrafficScreenState extends State<TrafficScreen>
               ),
             ),
           ),
-          // 主角動畫（這裡放在 Stack 最外層，永遠以螢幕中央為基準）
+
+          /// 主角動畫（這裡放在 Stack 最外層，永遠以螢幕中央為基準）
           if (_trafficBoard != null)
             Positioned(
               // 直接用螢幕中央，不要跟背景寬度綁定
@@ -270,9 +279,10 @@ class _TrafficScreenState extends State<TrafficScreen>
                 ),
               ),
             ),
-          // 格子地圖
+
+          /// 格子地圖
           Positioned(
-            top: screenHeight * 0.6 - 80,
+            top: screenHeight * 0.6 - 70,
             left: 0,
             right: 0,
             child: SizedBox(
@@ -302,7 +312,8 @@ class _TrafficScreenState extends State<TrafficScreen>
               ),
             ),
           ),
-          // 格子地圖上方骰子動畫（預設隱藏）
+
+          /// 格子地圖上方骰子動畫（預設隱藏）
           if (showDiceOverlay)
             Positioned.fill(
               top: -150,
@@ -320,7 +331,8 @@ class _TrafficScreenState extends State<TrafficScreen>
                 ),
               ),
             ),
-          // 骰子前進提示區塊（可點擊觸發骰子動畫）
+
+          /// 骰子前進提示區塊（可點擊觸發骰子動畫）
           Positioned(
             top: screenHeight * 0.6 + 30,
             left: 0,
@@ -367,9 +379,10 @@ class _TrafficScreenState extends State<TrafficScreen>
               ),
             ),
           ),
-          // 提示區塊
+
+          /// 提示區塊
           Positioned(
-            top: screenHeight * 0.6 + 100,
+            top: screenHeight * 0.6 + 90,
             left: 0,
             right: 0,
             child: Center(
@@ -432,7 +445,8 @@ class _TrafficScreenState extends State<TrafficScreen>
               ),
             ),
           ),
-          // 最底部 logo
+
+          /// 最底部 logo
           Positioned(
             left: 0,
             right: 0,
