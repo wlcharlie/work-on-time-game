@@ -10,6 +10,60 @@ class Typography {
   static const medium = FontWeight.w500;
   static const regular = FontWeight.w400;
 
+  TextStyle get tp64 => TextStyle(
+        fontSize: 64,
+        fontWeight: regular,
+        fontFamily: 'TaiwanPearl',
+        height: 1,
+        letterSpacing: 0,
+        color: Color(0xFF887768),
+      );
+
+  TextStyle get tp56 => TextStyle(
+        fontSize: 56,
+        fontWeight: regular,
+        fontFamily: 'TaiwanPearl',
+        height: 1,
+        letterSpacing: 0,
+        color: Color(0xFF887768),
+      );
+
+  TextStyle get tp48 => TextStyle(
+        fontSize: 48,
+        fontWeight: regular,
+        fontFamily: 'TaiwanPearl',
+        height: 1,
+        letterSpacing: 0,
+        color: Color(0xFF887768),
+      );
+
+  TextStyle get tp40 => TextStyle(
+        fontSize: 40,
+        fontWeight: regular,
+        fontFamily: 'TaiwanPearl',
+        height: 1,
+        letterSpacing: 0,
+        color: Color(0xFF887768),
+      );
+
+  TextStyle get tp36 => TextStyle(
+        fontSize: 36,
+        fontWeight: regular,
+        fontFamily: 'TaiwanPearl',
+        height: 1,
+        letterSpacing: 0,
+        color: Color(0xFF887768),
+      );
+
+  TextStyle get tp32 => TextStyle(
+        fontSize: 32,
+        fontWeight: regular,
+        fontFamily: 'TaiwanPearl',
+        height: 1,
+        letterSpacing: 0,
+        color: Color(0xFF887768),
+      );
+
   TextStyle get tp24 => TextStyle(
         fontSize: 24,
         fontWeight: regular,

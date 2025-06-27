@@ -134,6 +134,8 @@ class Images {
 
   final String penguin = 'animal/penguin.png';
 
+  final String star = 'star.png';
+
   String getFullPath(String image) {
     return 'assets/images/$image';
   }

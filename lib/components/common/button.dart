@@ -26,7 +26,7 @@ class Button extends PositionComponent {
       0,
       size.x,
       size.y,
-      Radius.circular(6),
+      Radius.circular(20),
     );
 
     final textComponent = TextBoxComponent(
@@ -37,7 +37,7 @@ class Button extends PositionComponent {
         maxWidth: size.x,
       ),
       textRenderer: TextPaint(
-        style: typography.tp20
+        style: typography.tp40
             .withFontWeight(FontWeight.w600)
             .withColor(Color(0xFFFFFFFF)),
       ),

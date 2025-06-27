@@ -1,6 +1,9 @@
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:flame/flame.dart';
+import 'package:work_on_time_game/config/images.dart';
+import 'package:work_on_time_game/config/typography.dart';
 import 'glint_effect.dart';
 
 var frameSize = Vector2(666, 899);
@@ -96,25 +99,68 @@ class PhotoInstax extends PositionComponent {
   late final PhotoFrontFrame photoFrontFrame;
   late final PhotoContent photoContent;
   late final SpriteComponent Function(Vector2 size) subjectBuilder;
+  late final TextComponent title;
+  late final SpriteComponent star1;
+  late final SpriteComponent star2;
+  late final SpriteComponent star3;
 
   PhotoInstax({required this.subjectBuilder}) {
     size = frameSize;
     photoBackFrame = PhotoBackFrame();
     photoFrontFrame = PhotoFrontFrame();
     photoContent = PhotoContent();
-
   }
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
+
     add(photoBackFrame);
     final subject = subjectBuilder((photoContent.size - Vector2(50, 50)));
     subject.anchor = Anchor.center;
     subject.position = Vector2(photoContent.size.x / 2 + 26, photoContent.size.y / 2 + 31);
+    
     add(subject);
     add(photoContent);
     add(photoFrontFrame);
+
+    title = TextBoxComponent(
+      text: "企鵝走走",
+      textRenderer: TextPaint(
+        style: typography.tp48,
+      ),
+      boxConfig: TextBoxConfig(
+        maxWidth: 666,
+      ),
+      align: Anchor.center,
+    );
+    title.anchor = Anchor.topLeft;
+    title.position = Vector2(0,735);
+    add(title);
+
+    // final starImage = await Flame.images.load(images.star);
+    // star = SpriteComponent.fromImage(starImage);
+    // star.anchor = Anchor.center;
+    // star.position = Vector2(237, 735);
+    // add(star);
+
+    // 3 stars
+    // 241,804 | 301,804 | 365,804
+    final starImage = await Flame.images.load(images.star);
+    star1 = SpriteComponent.fromImage(starImage);
+    star1.anchor = Anchor.topLeft;
+    star1.position = Vector2(241, 804);
+    add(star1);
+
+    star2 = SpriteComponent.fromImage(starImage);
+    star2.anchor = Anchor.topLeft;
+    star2.position = Vector2(301, 804);
+    add(star2);
+
+    star3 = SpriteComponent.fromImage(starImage);
+    star3.anchor = Anchor.topLeft;
+    star3.position = Vector2(365, 804);
+    add(star3);
   }
 
   @override

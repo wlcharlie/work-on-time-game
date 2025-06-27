@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
+import 'package:flame/input.dart';
 import 'package:flutter/animation.dart';
 
 import 'package:flame/components.dart';
@@ -9,8 +10,10 @@ import 'package:flame/events.dart';
 import 'package:work_on_time_game/components/animal/penguin.dart';
 import 'package:work_on_time_game/components/background/endless_background.dart';
 import 'package:work_on_time_game/components/camera/framing_crosshair.dart';
+import 'package:work_on_time_game/components/common/button.dart';
 import 'package:work_on_time_game/components/photo_instax.dart';
 import 'package:work_on_time_game/config/images.dart';
+import 'package:work_on_time_game/config/typography.dart';
 import 'package:work_on_time_game/extension/position.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
@@ -51,18 +54,26 @@ class FlashEffect extends RectangleComponent with HasGameReference<WOTGame> {
 
 class InteractionCaptureWorld extends World
     with HasGameReference<WOTGame>, HasCollisionDetection, TapCallbacks {
-  late final SnapshotComponent _snapshotComponent;
-
+  // common
   late final EndlessBackground _bg;
+  late final ButtonComponent _okButton;
+
+  // 第一階段 拍照元件
+  late final SnapshotComponent _snapshotComponent;
   late final FramingCrosshair _framingCrosshair;
   late final SpriteComponent _movingPenguin;
-
   late final TimerComponent _penguinRandomPositionTimerComponent;
   Vector2 _penguinNextRandomPosition = Vector2(0, 0);
+
+  // 第二階段 顯示拍照結果元件
+  late final NewTag _newTag;
+  late final PhotoInstax _photoInstax;
+  late final FinishBanner _finishBanner;
 
   // state
   bool _canCapture = true;
 
+  // 未來換不同動物可能取名就跟著改？
   void _updatePenguinRandomPosition() {
     // Generate new random position
 
@@ -82,22 +93,50 @@ class InteractionCaptureWorld extends World
     _movingPenguin.add(moveEffect);
   }
 
+  void _seeResult() {
+    _okButton.onPressed = null;
+    // remove phase 2
+    remove(_newTag);
+    remove(_photoInstax);
+    remove(_finishBanner);
+  }
+
   @override
   Future<void> onLoad() async {
     super.onLoad();
-
+    // common
     final image = await game.images.load(images.greenDotBackground);
-
     _bg = EndlessBackground(image: image);
+    _okButton = ButtonComponent(
+      size: Vector2(570, 90),
+      position: Vector2(109, 1531),
+      button: Button(
+        size: Vector2(570, 90),
+        text: "ＯＫ",
+      ),
+    );
+
+    // 第一階段 拍照元件
     _framingCrosshair = FramingCrosshair();
-
     _movingPenguin = Penguin();
-
     _penguinRandomPositionTimerComponent = TimerComponent(
       period: 2,
       onTick: _updatePenguinRandomPosition,
       repeat: true,
     );
+
+    // 第二階段 顯示拍照結果元件
+    _newTag = NewTag();
+    _photoInstax = PhotoInstax(
+        subjectBuilder: (size) => Penguin(withHitbox: false)..size = size);
+    _photoInstax.anchor = Anchor.topLeft;
+    _photoInstax.position = Vector2(60, 243);
+
+    _finishBanner = FinishBanner();
+    _finishBanner.anchor = Anchor.topLeft;
+    _finishBanner.position = Vector2(0, 1258);
+
+    // 第三階段 顯示事件結果元件
   }
 
   @override
@@ -105,15 +144,15 @@ class InteractionCaptureWorld extends World
     super.onMount();
     game.camera.viewfinder.anchor = Anchor.topLeft;
     game.camera.viewfinder.zoom = 1;
+    add(_bg);
 
+    // 第一階段 拍照元件
     _movingPenguin.position = Vector2(0, 0);
     _movingPenguin.anchor = Anchor.center;
-
     _snapshotComponent = SnapshotComponent()
       ..size = Vector2(300, 300)
       ..position = Vector2(game.size.x / 2 - 150, game.size.y / 2 - 150)
       ..add(_movingPenguin);
-    add(_bg);
     add(_snapshotComponent);
     add(_penguinRandomPositionTimerComponent);
     add(_framingCrosshair);
@@ -126,22 +165,19 @@ class InteractionCaptureWorld extends World
     if (!_canCapture) return;
     _canCapture = false;
 
-    _snapshotComponent.takeSnapshot();
-
-    final image = _snapshotComponent.snapshotAsImage(
-      300, // width
-      300, // height
-    );
-
-    final imageContainer = RectangleComponent();
-    // white bg
-    imageContainer.paint = Paint()..color = const Color(0xFFFFFFFF);
-    imageContainer.size = Vector2(300, 300);
-    final imageComponent = SpriteComponent.fromImage(image);
-    imageContainer.add(imageComponent);
-    imageContainer.position = Vector2(100, 1200);
-
-    add(imageContainer);
+    // 截圖ㄉ 之後可以拿來顯示玩家拍到什麼
+    // _snapshotComponent.takeSnapshot();
+    // final image = _snapshotComponent.snapshotAsImage(
+    //   300,
+    //   300,
+    // );
+    // final imageContainer = RectangleComponent();
+    // imageContainer.paint = Paint()..color = const Color(0xFFFFFFFF);
+    // imageContainer.size = Vector2(300, 300);
+    // final imageComponent = SpriteComponent.fromImage(image);
+    // imageContainer.add(imageComponent);
+    // imageContainer.position = Vector2(100, 1200);
+    // add(imageContainer);
 
     // remove 拍照元素
     remove(_framingCrosshair);
@@ -152,16 +188,73 @@ class InteractionCaptureWorld extends World
     add(
       FlashEffect(
         onComplete: () {
-          // 拍照完成
-
-          final photoInstax = PhotoInstax(
-              subjectBuilder: (size) =>
-                  Penguin(withHitbox: false)..size = size);
-          photoInstax.anchor = Anchor.topLeft;
-          photoInstax.position = Vector2(60, 243);
-          add(photoInstax);
+          add(_newTag);
+          add(_photoInstax);
+          add(_finishBanner);
+          _okButton.onPressed = () {
+            _seeResult();
+          };
+          add(_okButton);
         },
       ),
     );
+  }
+}
+
+// temp 暫時放在這裡
+class NewTag extends PositionComponent {
+  @override
+  Future<void> onLoad() async {
+    super.onLoad();
+
+    // Background rectangle
+    final background = RectangleComponent(
+      size: Vector2(151, 58),
+      paint: Paint()..color = const Color(0xFFE9D686),
+    )
+      ..anchor = Anchor.topLeft
+      ..position = Vector2(60, 160);
+    add(background);
+
+    // Text component
+    final text = TextComponent(
+      text: "new",
+      textRenderer: TextPaint(
+        style: typography.tp48.withColor(Color(0xFFFFFFFF)),
+      ),
+    );
+    text.anchor = Anchor.center;
+    text.position =
+        Vector2(60 + 151 / 2, 160 + 58 / 2); // Center text on background
+    add(text);
+  }
+}
+
+class FinishBanner extends PositionComponent with HasGameReference<WOTGame> {
+  @override
+  Future<void> onLoad() async {
+    super.onLoad();
+    // full width, 157 height, bg #BE936B
+    // with "完成拍照" tp64 color white
+
+    position = Vector2(0, 1258);
+
+    final background = RectangleComponent(
+      size: Vector2(game.size.x, 157),
+      paint: Paint()..color = const Color(0xFFBE936B),
+    )
+      ..anchor = Anchor.topLeft
+      ..position = Vector2(0, 0);
+    add(background);
+
+    final text = TextComponent(
+      text: "完成拍照",
+      textRenderer: TextPaint(
+        style: typography.tp64.withColor(Color(0xFFFFFFFF)),
+      ),
+    );
+    text.anchor = Anchor.center;
+    text.position = Vector2(game.size.x / 2, 157 / 2);
+    add(text);
   }
 }
