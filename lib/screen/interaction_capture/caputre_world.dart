@@ -10,8 +10,12 @@ import 'package:flame/events.dart';
 import 'package:work_on_time_game/components/animal/penguin.dart';
 import 'package:work_on_time_game/components/background/endless_background.dart';
 import 'package:work_on_time_game/components/camera/framing_crosshair.dart';
+import 'package:work_on_time_game/components/character/attribute.dart';
+import 'package:work_on_time_game/components/character/status_meters.dart';
 import 'package:work_on_time_game/components/common/button.dart';
+import 'package:work_on_time_game/components/common/dialog.dart';
 import 'package:work_on_time_game/components/photo_instax.dart';
+import 'package:work_on_time_game/config/colors.dart';
 import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/config/typography.dart';
 import 'package:work_on_time_game/extension/position.dart';
@@ -70,6 +74,10 @@ class InteractionCaptureWorld extends World
   late final PhotoInstax _photoInstax;
   late final FinishBanner _finishBanner;
 
+  // 第三階段 顯示事件結果元件
+  late final Dialog _dialog;
+  late final EventResultDialog _eventResultDialog;
+
   // state
   bool _canCapture = true;
 
@@ -99,6 +107,10 @@ class InteractionCaptureWorld extends World
     remove(_newTag);
     remove(_photoInstax);
     remove(_finishBanner);
+
+    // add phase 3
+    add(_dialog);
+    add(_eventResultDialog);
   }
 
   @override
@@ -137,6 +149,13 @@ class InteractionCaptureWorld extends World
     _finishBanner.position = Vector2(0, 1258);
 
     // 第三階段 顯示事件結果元件
+    _dialog = Dialog.title(
+      title: "事件結算",
+      size: Vector2(657, 100),
+      position: Vector2(62, 112),
+    );
+
+    _eventResultDialog = EventResultDialog();
   }
 
   @override
@@ -256,5 +275,57 @@ class FinishBanner extends PositionComponent with HasGameReference<WOTGame> {
     text.anchor = Anchor.center;
     text.position = Vector2(game.size.x / 2, 157 / 2);
     add(text);
+  }
+}
+
+class EventResultDialog extends PositionComponent
+    with HasGameReference<WOTGame> {
+  late final Dialog _dialog;
+  late final TextComponent _title;
+  late final TextComponent _subTitle;
+  late final MindStatusMeter _mindStatusMeter;
+
+  @override
+  Future<void> onLoad() async {
+    super.onLoad();
+
+    _dialog = Dialog(
+      size: Vector2(660, 323),
+      position: Vector2(63, 639),
+      content: [],
+    );
+
+    _title = TextComponent(
+      text: "企鵝幫忙",
+      textRenderer: TextPaint(
+        style: typography.tp40.withColor(AppColors.brown700),
+      ),
+      position: Vector2(250, 71),
+    );
+
+    _subTitle = TextComponent(
+      text: "真是太好了 ...",
+      textRenderer: TextPaint(
+        style: typography.tp32.withColor(AppColors.brown500),
+      ),
+      position: Vector2(240, 134),
+    );
+
+    _mindStatusMeter = MindStatusMeter(
+      size: Vector2(80, 80),
+      position: Vector2(184, 209),
+      meterLevel: 0.5,
+      deltaDirection: 1,
+    );
+    _dialog.content.add(_mindStatusMeter);
+    _dialog.content.add(Attribute(
+      text: "自信",
+      position: Vector2(348, 229),
+      deltaDirection: 1,
+    ));
+
+    _dialog.content.add(_title);
+    _dialog.content.add(_subTitle);
+    add(_dialog);
   }
 }

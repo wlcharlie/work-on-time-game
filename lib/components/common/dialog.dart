@@ -2,7 +2,9 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:work_on_time_game/config/colors.dart';
 import 'package:work_on_time_game/config/images.dart';
+import 'package:work_on_time_game/config/typography.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 class Dialog extends PositionComponent with HasGameReference<WOTGame> {
@@ -29,6 +31,32 @@ class Dialog extends PositionComponent with HasGameReference<WOTGame> {
       size.y,
       Radius.circular(6),
     );
+  }
+
+  Dialog.title({
+    super.size,
+    super.position,
+    required String title,
+    Vector2? scale,
+  }) {
+    _rrect = RRect.fromLTRBR(
+      0,
+      0,
+      size.x,
+      size.y,
+      Radius.circular(40),
+    );
+
+    content = [
+      TextComponent(
+        text: title,
+        textRenderer: TextPaint(
+          style: typography.tp48.withColor(AppColors.brown500),
+        ),
+        position: size / 2,
+        anchor: Anchor.center,
+      ),
+    ];
   }
 
   @override

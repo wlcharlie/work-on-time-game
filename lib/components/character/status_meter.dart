@@ -1,4 +1,6 @@
 import 'package:flame/components.dart';
+import 'package:flame/extensions.dart';
+import 'package:work_on_time_game/config/colors.dart';
 import 'dart:ui';
 import 'package:work_on_time_game/wot_game.dart';
 
@@ -25,7 +27,7 @@ class StatusMeter extends PositionComponent with HasGameReference<WOTGame> {
     this.size = size ?? Vector2(40, 40);
 
     _borderPaint = Paint()
-      ..color = const Color(0xFFAE866B)
+      ..color = AppColors.brown500
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
 
@@ -39,12 +41,12 @@ class StatusMeter extends PositionComponent with HasGameReference<WOTGame> {
     final arrowY = size.y / 2;
 
     final arrowPlankPaint = Paint()
-      ..color = const Color(0xFFA9886C)
+      ..color = AppColors.brown500
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
 
     final arrowWingPaint = Paint()
-      ..color = const Color(0xFFA9886C)
+      ..color = AppColors.brown500
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
     // ..strokeCap = StrokeCap.round;
@@ -78,6 +80,7 @@ class StatusMeter extends PositionComponent with HasGameReference<WOTGame> {
       await game.images.load(iconPath);
     }
     final image = game.images.fromCache(iconPath);
+
     _iconSprite = Sprite(image);
   }
 
@@ -104,9 +107,14 @@ class StatusMeter extends PositionComponent with HasGameReference<WOTGame> {
     // Draw icon on top
     _iconSprite.render(
       canvas,
+      anchor: Anchor.center,
+      size: Vector2(
+        size.x / 1.5,
+        (size.y / 1.5) * _iconSprite.image.height / _iconSprite.image.width,
+      ),
       position: Vector2(
-        size.x / 2 - _iconSprite.image.width / 2,
-        size.y / 2 - _iconSprite.image.height / 2,
+        size.x / 2,
+        size.y / 2,
       ),
     );
 

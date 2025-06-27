@@ -12,7 +12,7 @@ import 'package:flutter/animation.dart'; // 导入Flutter的animation包来使�
 import 'package:flutter/painting.dart';
 import 'package:work_on_time_game/components/common/button.dart';
 import 'package:work_on_time_game/components/common/dialog.dart';
-import 'package:work_on_time_game/components/character_status/status_meters.dart';
+import 'package:work_on_time_game/components/character/status_meters.dart';
 import 'package:work_on_time_game/config/audio.dart';
 import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/config/typography.dart';

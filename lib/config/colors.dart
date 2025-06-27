@@ -21,3 +21,14 @@ class TrafficColors {
   static const Color diceDotMain = Color(0xFFFC7B64); // 主色
   static const Color diceDotSub = Color(0xFF525252); // 副色
 }
+
+class AppColors {
+  /// #BE936B
+  static const Color brown300 = Color(0xFFBE936B);
+
+  /// #907054
+  static const Color brown500 = Color(0xFF907054);
+
+  /// #644C3B
+  static const Color brown700 = Color(0xFF644C3B);
+}

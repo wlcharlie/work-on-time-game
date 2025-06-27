@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:work_on_time_game/components/character_status/status_meter.dart';
+import 'package:work_on_time_game/components/character/status_meter.dart';
 import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/enums/character_status.dart';
 
