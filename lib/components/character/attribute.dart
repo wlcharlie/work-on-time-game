@@ -4,6 +4,7 @@ import 'package:flutter/painting.dart';
 import 'package:work_on_time_game/config/colors.dart';
 import 'package:work_on_time_game/config/typography.dart';
 import 'package:work_on_time_game/wot_game.dart';
+import 'package:work_on_time_game/components/character/arrow.dart';
 
 class Attribute extends PositionComponent with HasGameReference<WOTGame> {
   final String text;
@@ -11,6 +12,7 @@ class Attribute extends PositionComponent with HasGameReference<WOTGame> {
   final int? deltaDirection; // -1, 1
 
   late final TextPaint _textPaint;
+  Arrow? _arrow;
 
   Attribute({
     required this.text,
@@ -27,41 +29,18 @@ class Attribute extends PositionComponent with HasGameReference<WOTGame> {
     );
   }
 
-  void _drawUpwardArrow(Canvas canvas) {
-    final arrowX = size.x + 16;
-    final arrowY = size.y / 2;
+  @override
+  Future<void> onLoad() async {
+    super.onLoad();
 
-    final arrowPlankPaint = Paint()
-      ..color = AppColors.brown500
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-
-    final arrowWingPaint = Paint()
-      ..color = AppColors.brown500
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-    // ..strokeCap = StrokeCap.round;
-
-    // 1. 繪製 Chevron 的左邊線
-    canvas.drawLine(
-      Offset(arrowX - 7, arrowY - 2), // 左端點
-      Offset(arrowX, arrowY - 12), // 頂點
-      arrowWingPaint,
-    );
-
-    // 2. 繪製 Chevron 的右邊線
-    canvas.drawLine(
-      Offset(arrowX, arrowY - 12), // 頂點
-      Offset(arrowX + 7, arrowY - 2), // 右端點
-      arrowWingPaint,
-    );
-
-    // 3. 繪製垂直橫杠
-    canvas.drawLine(
-      Offset(arrowX, arrowY - 12), // 橫杠頂端
-      Offset(arrowX, arrowY + 12), // 橫杠底端
-      arrowPlankPaint,
-    );
+    // Add arrow if deltaDirection is specified
+    if (deltaDirection != null) {
+      _arrow = Arrow(
+        direction: deltaDirection!,
+        position: Vector2(size.x + 1, size.y / 2 - 12),
+      );
+      add(_arrow!);
+    }
   }
 
   @override
@@ -72,19 +51,5 @@ class Attribute extends PositionComponent with HasGameReference<WOTGame> {
     final textPainter = _textPaint.toTextPainter(text);
     textPainter.layout();
     textPainter.paint(canvas, Offset.zero);
-
-    // Draw arrow based on deltaDirection
-    if (deltaDirection == 1) {
-      _drawUpwardArrow(canvas);
-    } else if (deltaDirection == -1) {
-      canvas.save();
-      final arrowX = size.x + 8;
-      final arrowY = size.y / 2;
-      canvas.translate(arrowX, arrowY);
-      canvas.rotate(3.14159); // 180 degrees
-      canvas.translate(-arrowX, -arrowY);
-      _drawUpwardArrow(canvas);
-      canvas.restore();
-    }
   }
 }

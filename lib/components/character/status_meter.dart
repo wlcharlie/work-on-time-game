@@ -3,6 +3,7 @@ import 'package:flame/extensions.dart';
 import 'package:work_on_time_game/config/colors.dart';
 import 'dart:ui';
 import 'package:work_on_time_game/wot_game.dart';
+import 'package:work_on_time_game/components/character/arrow.dart';
 
 class StatusMeter extends PositionComponent with HasGameReference<WOTGame> {
   final String iconPath;
@@ -14,6 +15,7 @@ class StatusMeter extends PositionComponent with HasGameReference<WOTGame> {
   late final Paint _borderPaint;
   late final Paint _bgPaint;
   late final Paint _meterPaint;
+  Arrow? _arrow;
 
   StatusMeter({
     required this.iconPath,
@@ -36,43 +38,6 @@ class StatusMeter extends PositionComponent with HasGameReference<WOTGame> {
     _meterPaint = Paint()..color = meterColor;
   }
 
-  void _drawUpwardArrow(Canvas canvas) {
-    final arrowX = size.x + 16;
-    final arrowY = size.y / 2;
-
-    final arrowPlankPaint = Paint()
-      ..color = AppColors.brown500
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-
-    final arrowWingPaint = Paint()
-      ..color = AppColors.brown500
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-    // ..strokeCap = StrokeCap.round;
-
-    // 1. 繪製 Chevron 的左邊線
-    canvas.drawLine(
-      Offset(arrowX - 7, arrowY - 2), // 左端點
-      Offset(arrowX, arrowY - 12), // 頂點
-      arrowWingPaint,
-    );
-
-    // 2. 繪製 Chevron 的右邊線
-    canvas.drawLine(
-      Offset(arrowX, arrowY - 12), // 頂點
-      Offset(arrowX + 7, arrowY - 2), // 右端點
-      arrowWingPaint,
-    );
-
-    // 3. 繪製垂直橫杠
-    canvas.drawLine(
-      Offset(arrowX, arrowY - 12), // 橫杠頂端
-      Offset(arrowX, arrowY + 12), // 橫杠底端
-      arrowPlankPaint,
-    );
-  }
-
   @override
   Future<void> onLoad() async {
     super.onLoad();
@@ -82,6 +47,15 @@ class StatusMeter extends PositionComponent with HasGameReference<WOTGame> {
     final image = game.images.fromCache(iconPath);
 
     _iconSprite = Sprite(image);
+
+    // Add arrow if deltaDirection is specified
+    if (deltaDirection != null) {
+      _arrow = Arrow(
+        direction: deltaDirection!,
+        position: Vector2(size.x + 9, size.y / 2 - 12),
+      );
+      add(_arrow!);
+    }
   }
 
   @override
@@ -117,22 +91,6 @@ class StatusMeter extends PositionComponent with HasGameReference<WOTGame> {
         size.y / 2,
       ),
     );
-
-    // _drawUpwardArrow(canvas);
-
-    // Draw arrow based on deltaDirection
-    if (deltaDirection == 1) {
-      _drawUpwardArrow(canvas);
-    } else if (deltaDirection == -1) {
-      canvas.save();
-      final arrowX = size.x + 16;
-      final arrowY = size.y / 2;
-      canvas.translate(arrowX, arrowY);
-      canvas.rotate(3.14159); // 180 degrees in radians (π)
-      canvas.translate(-arrowX, -arrowY);
-      _drawUpwardArrow(canvas);
-      canvas.restore();
-    }
 
     // Draw border
     canvas.drawRRect(bgRRect, _borderPaint);
