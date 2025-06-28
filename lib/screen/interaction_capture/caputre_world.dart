@@ -11,6 +11,7 @@ import 'package:work_on_time_game/components/animal/penguin.dart';
 import 'package:work_on_time_game/components/background/endless_background.dart';
 import 'package:work_on_time_game/components/camera/framing_crosshair.dart';
 import 'package:work_on_time_game/components/character/attribute.dart';
+import 'package:work_on_time_game/components/character/attribute_meter.dart';
 import 'package:work_on_time_game/components/character/status_meters.dart';
 import 'package:work_on_time_game/components/common/button.dart';
 import 'package:work_on_time_game/components/common/dialog.dart';
@@ -77,6 +78,7 @@ class InteractionCaptureWorld extends World
   // 第三階段 顯示事件結果元件
   late final Dialog _dialog;
   late final EventResultDialog _eventResultDialog;
+  late final AttributeMeter _attributeMeter;
 
   // state
   bool _canCapture = true;
@@ -111,6 +113,7 @@ class InteractionCaptureWorld extends World
     // add phase 3
     add(_dialog);
     add(_eventResultDialog);
+    add(_attributeMeter);
   }
 
   @override
@@ -156,6 +159,11 @@ class InteractionCaptureWorld extends World
     );
 
     _eventResultDialog = EventResultDialog();
+    _attributeMeter = AttributeMeter(
+      attributeName: "自信",
+      value: 0.5,
+      position: Vector2(350, 1008),
+    );
   }
 
   @override
