@@ -43,9 +43,10 @@ class WOTGame extends FlameGame
         // 關卡 交通場景
         'level_traffic': WorldRoute(LevelTrafficWorld.new),
         // 事件 場景管理入口
-        'event_scene': WorldRoute(EventSceneWorld.new),
+        'event_scene': WorldRoute(EventSceneWorld.new, maintainState: false),
         // 互動 相機
-        'interaction_capture': WorldRoute(InteractionCaptureWorld.new),
+        'interaction_capture':
+            WorldRoute(InteractionCaptureWorld.new, maintainState: false),
       },
       initialRoute: 'interaction_capture',
     );

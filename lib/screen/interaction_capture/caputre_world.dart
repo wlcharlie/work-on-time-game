@@ -22,41 +22,6 @@ import 'package:work_on_time_game/config/typography.dart';
 import 'package:work_on_time_game/extension/position.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
-class SnapshotComponent extends PositionComponent
-    with HasGameReference<WOTGame>, Snapshot {
-  SnapshotComponent() {
-    renderSnapshot = false;
-  }
-}
-
-class FlashEffect extends RectangleComponent with HasGameReference<WOTGame> {
-  late final VoidCallback onComplete;
-
-  FlashEffect({required this.onComplete}) {
-    position = Vector2.zero();
-    paint = Paint()..color = const Color(0xFFFFFFFF);
-    opacity = 1.0;
-  }
-
-  @override
-  void onMount() {
-    super.onMount();
-
-    size = game.size;
-
-    add(
-      SequenceEffect(
-        [
-          OpacityEffect.to(
-              0.0, EffectController(duration: 2.0, startDelay: 0.5)),
-          RemoveEffect(),
-        ],
-        onComplete: onComplete,
-      ),
-    );
-  }
-}
-
 class InteractionCaptureWorld extends World
     with HasGameReference<WOTGame>, HasCollisionDetection, TapCallbacks {
   // common
@@ -64,7 +29,7 @@ class InteractionCaptureWorld extends World
   late final ButtonComponent _okButton;
 
   // 第一階段 拍照元件
-  late final SnapshotComponent _snapshotComponent;
+  SnapshotComponent? _snapshotComponent;
   late final FramingCrosshair _framingCrosshair;
   late final SpriteComponent _movingPenguin;
   late final TimerComponent _penguinRandomPositionTimerComponent;
@@ -169,6 +134,7 @@ class InteractionCaptureWorld extends World
   @override
   void onMount() {
     super.onMount();
+    _canCapture = true;
     game.camera.viewfinder.anchor = Anchor.topLeft;
     game.camera.viewfinder.zoom = 1;
     add(_bg);
@@ -176,11 +142,13 @@ class InteractionCaptureWorld extends World
     // 第一階段 拍照元件
     _movingPenguin.position = Vector2(0, 0);
     _movingPenguin.anchor = Anchor.center;
+
     _snapshotComponent = SnapshotComponent()
       ..size = Vector2(300, 300)
       ..position = Vector2(game.size.x / 2 - 150, game.size.y / 2 - 150)
       ..add(_movingPenguin);
-    add(_snapshotComponent);
+
+    add(_snapshotComponent!);
     add(_penguinRandomPositionTimerComponent);
     add(_framingCrosshair);
   }
@@ -208,7 +176,7 @@ class InteractionCaptureWorld extends World
 
     // remove 拍照元素
     remove(_framingCrosshair);
-    remove(_snapshotComponent);
+    remove(_snapshotComponent!);
     remove(_penguinRandomPositionTimerComponent);
 
     // 閃白
@@ -229,6 +197,41 @@ class InteractionCaptureWorld extends World
 }
 
 // temp 暫時放在這裡
+class SnapshotComponent extends PositionComponent
+    with HasGameReference<WOTGame>, Snapshot {
+  SnapshotComponent() {
+    renderSnapshot = false;
+  }
+}
+
+class FlashEffect extends RectangleComponent with HasGameReference<WOTGame> {
+  late final VoidCallback onComplete;
+
+  FlashEffect({required this.onComplete}) {
+    position = Vector2.zero();
+    paint = Paint()..color = const Color(0xFFFFFFFF);
+    opacity = 1.0;
+  }
+
+  @override
+  void onMount() {
+    super.onMount();
+
+    size = game.size;
+
+    add(
+      SequenceEffect(
+        [
+          OpacityEffect.to(
+              0.0, EffectController(duration: 2.0, startDelay: 0.5)),
+          RemoveEffect(),
+        ],
+        onComplete: onComplete,
+      ),
+    );
+  }
+}
+
 class NewTag extends PositionComponent {
   @override
   Future<void> onLoad() async {
