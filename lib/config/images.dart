@@ -95,6 +95,12 @@ class Images {
 
   final String dialogBg = 'dialog_bg.png';
 
+  // mrt-scene
+  final String mrtSceneBackground = 'mrt_scene/bg_mrt.png';
+  final String mrtSceneEventLeft = 'mrt_scene/event_left.png';
+  final String mrtSceneEventRight = 'mrt_scene/event_right.png';
+  final String mrtSceneCharacters = 'mrt_scene/characters.png';
+
   /// Traffic scene
   final String trafficMRTSceneBackground = 'traffic_scene/mrt_bg.png';
   // card, coffee, home, lucky, park, question

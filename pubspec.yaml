@@ -81,6 +81,7 @@ flutter:
     - assets/images/status/
     - assets/images/tv/
     - assets/images/rain_scene/
+    - assets/images/mrt_scene/
     - assets/images/traffic_scene/
     - assets/images/camera/
     - assets/images/animal/
