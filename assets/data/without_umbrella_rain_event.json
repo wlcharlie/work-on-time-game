@@ -1,6 +1,6 @@
 {
-  "id": "rain_morning_event",
-  "name": "Morning Rain Event",
+  "id": "without_umbrella_rain_event",
+  "name": "Without Umbrella Rain Event",
   "preconditions": [],
   "flow": [
     {
@@ -21,8 +21,8 @@
             {
               "conditions": [],
               "effects": [
-                {"type": "character_status", "status": "mind", "delta": -10},
-                {"type": "character_status", "status": "energy", "delta": -10}
+                { "type": "character_status", "status": "mind", "delta": -10 },
+                { "type": "character_status", "status": "energy", "delta": -10 }
               ],
               "result": {
                 "title": "淋雨去公司",
@@ -45,8 +45,8 @@
             {
               "conditions": [],
               "effects": [
-                {"type": "character_status", "status": "mind", "delta": -10},
-                {"type": "character_status", "status": "saving", "delta": -10}
+                { "type": "character_status", "status": "mind", "delta": -10 },
+                { "type": "character_status", "status": "saving", "delta": -10 }
               ],
               "result": {
                 "title": "去超商買傘",

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
@@ -6,16 +7,20 @@ import 'package:flame/flame.dart';
 import 'package:flame/input.dart';
 import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/services.dart';
 import 'package:work_on_time_game/components/common/button.dart';
 import 'package:work_on_time_game/components/common/dialog.dart';
 import 'package:work_on_time_game/components/character/status_meters.dart';
 import 'package:work_on_time_game/components/scene/base_scene.dart';
 import 'package:work_on_time_game/components/scene/scene_element.dart';
+import 'package:work_on_time_game/components/event/event_flow_controller.dart';
+import 'package:work_on_time_game/components/event/event_dialog.dart';
 import 'package:work_on_time_game/config/audio.dart';
 import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/config/typography.dart';
 import 'package:work_on_time_game/enums/character_status.dart';
 import 'package:work_on_time_game/models/effect_character_status.dart';
+import 'package:work_on_time_game/models/event_data.dart';
 import 'package:work_on_time_game/providers/character_status.dart';
 import 'package:work_on_time_game/wot_game.dart';
 import 'package:flame_audio/flame_audio.dart';
@@ -31,8 +36,9 @@ class RainScene extends BaseScene {
   // 场景状态 - 暂时保留，可能后续会用到
   // RainSceneState _rainSceneState = RainSceneState.waitingToStart;
 
-  // 選項Dialog
-  WithoutUmbrellaScene? withoutUmbrellaScene;
+  // Event system
+  EventFlowController? eventController;
+  EventDialog? eventDialog;
 
   // 是否正在下雨
   bool _rainVisible = false;
@@ -181,12 +187,12 @@ class RainScene extends BaseScene {
   @override
   void onSceneCompleted() {
     super.onSceneCompleted();
-    // 场景完成，音频已经在雨滴动画开始时播放
-
-    // 3.5秒后显示对话框
-    _switchSceneTimer = Timer(3.5, onTick: () {
-      add(withoutUmbrellaScene = WithoutUmbrellaScene());
-    });
+    print('onSceneCompleted called, creating timer');
+    
+    // Create timer using Flame's pattern - no callback, check finished in update
+    _switchSceneTimer = Timer(3.5);
+    
+    print('Timer created: ${_switchSceneTimer != null}');
   }
 
   /// 重置场景到初始状态，用于重播功能
@@ -204,8 +210,8 @@ class RainScene extends BaseScene {
     _switchSceneTimer?.stop();
     _switchSceneTimer = null;
 
-    // 重置对话框
-    _resetWithoutUmbrellaScene();
+    // 重置事件对话框
+    _resetEventDialog();
   }
 
   /// 重播场景 - 重置后立即开始播放
@@ -215,16 +221,93 @@ class RainScene extends BaseScene {
     super.replay();
   }
 
-  /// 简单清理 WithoutUmbrellaScene - 直接置空，下次创建新实例
-  void _resetWithoutUmbrellaScene() {
-    // 移除现有的 withoutUmbrellaScene（如果存在）
-    if (withoutUmbrellaScene != null &&
-        children.contains(withoutUmbrellaScene!)) {
-      remove(withoutUmbrellaScene!);
+  /// 简单清理 EventDialog - 直接置空，下次创建新实例
+  void _resetEventDialog() {
+    // 移除现有的 eventDialog（如果存在）
+    if (eventDialog != null && children.contains(eventDialog!)) {
+      remove(eventDialog!);
+    }
+
+    // 移除现有的 eventController（如果存在）
+    if (eventController != null && children.contains(eventController!)) {
+      remove(eventController!);
     }
 
     // 直接置空，下次需要时会创建全新实例
-    withoutUmbrellaScene = null;
+    eventDialog = null;
+    eventController = null;
+  }
+
+  /// 加载和显示事件
+  Future<void> _loadAndShowEvent() async {
+    try {
+      // 加载事件JSON数据
+      final String jsonString = await rootBundle.loadString(
+        'assets/data/without_umbrella_rain_event.json',
+      );
+      final Map<String, dynamic> jsonData = json.decode(jsonString);
+      final EventData eventData = EventData.fromJson(jsonData);
+
+      print('Loaded event: ${eventData.name}');
+
+      // 创建事件控制器
+      eventController = EventFlowController(
+        eventData: eventData,
+        onEventCompleted: (result) {
+          print('Event completed: ${result.title}');
+          _showFinalResult(result);
+        },
+        onStepChanged: () {
+          print('Event step changed');
+          _updateEventDialog();
+        },
+      );
+      add(eventController!);
+
+      // 显示初始对话框
+      _updateEventDialog();
+    } catch (e) {
+      print('Error loading event: $e');
+    }
+  }
+
+  /// 更新事件对话框
+  void _updateEventDialog() {
+    // 移除现有对话框
+    if (eventDialog != null && children.contains(eventDialog!)) {
+      remove(eventDialog!);
+    }
+
+    if (eventController == null) return;
+
+    // 创建新对话框
+    eventDialog = EventDialog(
+      text: eventController!.currentStep.text,
+      choices: eventController!.getVisibleChoices(),
+      onChoiceSelected: (choice) {
+        eventController!.selectChoice(choice);
+      },
+      isChoiceAvailable: (choice) {
+        return eventController!.isChoiceAvailable(choice);
+      },
+      getDisabledText: (choice) {
+        return choice.availability.disabledText ?? choice.text;
+      },
+    );
+
+    add(eventDialog!);
+  }
+
+  /// 显示最终结果
+  void _showFinalResult(ResultData result) {
+    // 移除事件对话框
+    if (eventDialog != null && children.contains(eventDialog!)) {
+      remove(eventDialog!);
+    }
+
+    // TODO: 显示结果对话框，然后返回主游戏
+    // 现在暂时只打印结果
+    print('Final result: ${result.title} - ${result.description}');
   }
 
   @override
@@ -280,15 +363,25 @@ class RainScene extends BaseScene {
     if (_rainVisible) {
       _rainAudioPlayer.resume();
     }
+
+    // Timer will be created in onSceneCompleted
   }
 
   @override
-  void updateScene(double dt) {
-    super.updateScene(dt);
+  void update(double dt) {
+    super.update(dt);
 
-    // 更新场景完成计时器
-    if (_switchSceneTimer?.isRunning() == true) {
+    // 更新场景完成计时器（即使在completed状态也要更新）
+    if (_switchSceneTimer != null && !_switchSceneTimer!.finished) {
       _switchSceneTimer!.update(dt);
+      print('Timer updating: ${_switchSceneTimer!.current.toStringAsFixed(1)}s / 3.5s');
+      
+      // 检查是否完成
+      if (_switchSceneTimer!.finished) {
+        print('Timer finished! Loading event');
+        _loadAndShowEvent();
+        _switchSceneTimer = null; // 清理定时器
+      }
     }
   }
 
