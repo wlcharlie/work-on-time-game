@@ -1,0 +1,61 @@
+{
+  "id": "rain_morning_event",
+  "name": "Morning Rain Event",
+  "preconditions": [],
+  "flow": [
+    {
+      "id": "rain_question",
+      "text": "天空突然下起了傾盆大雨",
+      "choices": [
+        {
+          "id": "go_without_umbrella",
+          "text": "淋雨去公司",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": -10},
+                {"type": "character_status", "status": "energy", "delta": -10}
+              ],
+              "result": {
+                "title": "淋雨去公司",
+                "description": "頭髮衣服都濕透了..."
+              }
+            }
+          ]
+        },
+        {
+          "id": "buy_umbrella",
+          "text": "去超商買傘",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": -10},
+                {"type": "character_status", "status": "saving", "delta": -10}
+              ],
+              "result": {
+                "title": "去超商買傘",
+                "description": "又花錢買傘了..."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

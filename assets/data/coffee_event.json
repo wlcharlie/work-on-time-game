@@ -1,0 +1,441 @@
+{
+  "id": "coffee_morning_event",
+  "name": "Morning Coffee Decision",
+  "preconditions": [],
+  "flow": [
+    {
+      "id": "coffee_shop",
+      "text": "路過咖啡店，要買咖啡嗎？",
+      "choices": [
+        {
+          "id": "buy_expensive",
+          "text": "買高級咖啡 ($20)",
+          "visibility": {
+            "conditions": [
+              {"type": "status_min", "status": "mind", "value": 10}
+            ]
+          },
+          "availability": {
+            "conditions": [
+              {"type": "status_min", "status": "saving", "value": 20}
+            ],
+            "disabled_text": "買高級咖啡 (錢不夠)"
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [
+                {"type": "status_min", "status": "saving", "value": 20}
+              ],
+              "effects": [
+                {"type": "character_status", "status": "saving", "delta": -20},
+                {"type": "character_status", "status": "mind", "delta": 15}
+              ],
+              "goto": "expensive_coffee_success"
+            }
+          ]
+        },
+        {
+          "id": "buy_regular",
+          "text": "買普通咖啡 ($10)",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": [
+              {"type": "status_min", "status": "saving", "value": 10}
+            ],
+            "disabled_text": "買普通咖啡 (錢不夠)"
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "saving", "delta": -10},
+                {"type": "character_status", "status": "mind", "delta": 8}
+              ],
+              "goto": "regular_coffee"
+            }
+          ]
+        },
+        {
+          "id": "wait_for_discount",
+          "text": "等等看有沒有折扣",
+          "visibility": {
+            "conditions": [
+              {"type": "inventory_has", "item": "phone"}
+            ]
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 3.0,
+          "outcomes": [
+            {
+              "conditions": [
+                {"type": "random_chance", "percentage": 60}
+              ],
+              "goto": "discount_appears"
+            },
+            {
+              "conditions": [],
+              "goto": "no_discount"
+            }
+          ]
+        },
+        {
+          "id": "ask_friend_money",
+          "text": "打電話借錢",
+          "visibility": {
+            "conditions": [
+              {"type": "inventory_has", "item": "phone"},
+              {"type": "status_max", "status": "saving", "value": 19}
+            ]
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 2.0,
+          "outcomes": [
+            {
+              "conditions": [
+                {"type": "status_min", "status": "mind", "value": 15}
+              ],
+              "effects": [
+                {"type": "character_status", "status": "saving", "delta": 15}
+              ],
+              "goto": "borrowed_money"
+            },
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": -10}
+              ],
+              "result": {
+                "title": "被拒絕",
+                "description": "朋友也沒錢借你..."
+              }
+            }
+          ]
+        },
+        {
+          "id": "leave",
+          "text": "直接離開",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "result": {
+                "title": "離開",
+                "description": "算了，不喝咖啡了"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "expensive_coffee_success",
+      "text": "享受了高級咖啡，遇到老闆也在這家店",
+      "choices": [
+        {
+          "id": "chat_boss",
+          "text": "主動跟老闆打招呼",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": [
+              {"type": "status_min", "status": "mind", "value": 20}
+            ],
+            "disabled_text": "主動打招呼 (心情不夠好)"
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": 10}
+              ],
+              "result": {
+                "title": "好印象",
+                "description": "老闆對你印象更好了，還誇獎你的品味"
+              }
+            }
+          ]
+        },
+        {
+          "id": "avoid_boss",
+          "text": "假裝沒看到",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "result": {
+                "title": "低調",
+                "description": "安全度過，但沒有額外收穫"
+              }
+            }
+          ]
+        },
+        {
+          "id": "observe_boss",
+          "text": "偷偷觀察老闆",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 1.5,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": 5}
+              ],
+              "result": {
+                "title": "學到經驗",
+                "description": "觀察到老闆的生活習慣，對未來工作有幫助"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "regular_coffee",
+      "text": "喝著普通咖啡，看到同事在排隊",
+      "choices": [
+        {
+          "id": "invite_colleague",
+          "text": "邀請同事一起坐",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": 8}
+              ],
+              "result": {
+                "title": "社交",
+                "description": "和同事聊得很開心，了解到一些公司八卦"
+              }
+            }
+          ]
+        },
+        {
+          "id": "sit_alone",
+          "text": "自己安靜喝咖啡",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": 5}
+              ],
+              "result": {
+                "title": "獨處",
+                "description": "享受寧靜的早晨，思考今天的工作計畫"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "discount_appears",
+      "text": "太好了！店員宣布現在買咖啡打8折",
+      "choices": [
+        {
+          "id": "buy_discounted_expensive",
+          "text": "買打折的高級咖啡 ($16)",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": [
+              {"type": "status_min", "status": "saving", "value": 16}
+            ],
+            "disabled_text": "買打折高級咖啡 (還是太貴)"
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "saving", "delta": -16},
+                {"type": "character_status", "status": "mind", "delta": 12}
+              ],
+              "result": {
+                "title": "撿到便宜",
+                "description": "用便宜價格享受高級咖啡，超划算！"
+              }
+            }
+          ]
+        },
+        {
+          "id": "buy_discounted_regular",
+          "text": "買打折的普通咖啡 ($8)",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": [
+              {"type": "status_min", "status": "saving", "value": 8}
+            ],
+            "disabled_text": "買打折普通咖啡 (錢不夠)"
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "saving", "delta": -8},
+                {"type": "character_status", "status": "mind", "delta": 10}
+              ],
+              "result": {
+                "title": "小確幸",
+                "description": "省錢又喝到咖啡，心情很好"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "no_discount",
+      "text": "等了一會兒，沒有任何折扣活動",
+      "choices": [
+        {
+          "id": "disappointed_buy",
+          "text": "失望地買普通咖啡",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": [
+              {"type": "status_min", "status": "saving", "value": 10}
+            ],
+            "disabled_text": "買普通咖啡 (錢不夠)"
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "saving", "delta": -10},
+                {"type": "character_status", "status": "mind", "delta": 3}
+              ],
+              "result": {
+                "title": "平淡",
+                "description": "沒撿到便宜，但至少有咖啡喝"
+              }
+            }
+          ]
+        },
+        {
+          "id": "give_up_disappointed",
+          "text": "失望地離開",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": -5}
+              ],
+              "result": {
+                "title": "失望",
+                "description": "浪費時間等待，什麼都沒得到"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "borrowed_money",
+      "text": "朋友答應借你錢，現在你有錢買咖啡了",
+      "choices": [
+        {
+          "id": "buy_with_borrowed_money",
+          "text": "用借來的錢買高級咖啡",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "saving", "delta": -20},
+                {"type": "character_status", "status": "mind", "delta": 5}
+              ],
+              "result": {
+                "title": "愧疚的享受",
+                "description": "咖啡很香，但想到是借錢買的就有點愧疚"
+              }
+            }
+          ]
+        },
+        {
+          "id": "save_borrowed_money",
+          "text": "決定不花借來的錢",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": 8}
+              ],
+              "result": {
+                "title": "理性",
+                "description": "雖然沒喝到咖啡，但做了正確的決定"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

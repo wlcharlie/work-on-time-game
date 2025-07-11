@@ -20,8 +20,8 @@ class EventSceneWorld extends World with HasGameReference<WOTGame> {
   @override
   void onMount() {
     super.onMount();
-    // add(rainScene);
-    add(mrtScene);
+    add(rainScene);
+    // add(mrtScene);
   }
 
   @override

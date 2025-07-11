@@ -38,7 +38,9 @@ abstract class BaseScene extends Component with HasGameReference<WOTGame> {
   List<SceneElement> defineSceneElements();
 
   /// 子类可选择重写：场景完成后的回调
-  void onSceneCompleted() {}
+  void onSceneCompleted() {
+    print('场景完成');
+  }
 
   /// 子类可选择重写：自定义场景逻辑
   void updateScene(double dt) {}
@@ -115,6 +117,9 @@ abstract class BaseScene extends Component with HasGameReference<WOTGame> {
   /// 应用动画效果
   void _applyAnimation(SpriteComponent sprite, SceneAnimation animation) {
     void executeAnimation() {
+      // 调用onStart回调
+      animation.onStart?.call();
+      
       switch (animation.type) {
         case SceneAnimationType.slideIn:
           _applySlideInAnimation(sprite, animation);
@@ -210,8 +215,12 @@ abstract class BaseScene extends Component with HasGameReference<WOTGame> {
           duration: animation.duration,
           infinite: animation.infinite,
           onMax: () {
-            // 重置位置
-            sprite.position -= animation.moveDistance!;
+            // 重置位置：如果指定了resetPosition就使用，否则使用默认行为
+            if (animation.resetPosition != null) {
+              sprite.position = animation.resetPosition!.clone();
+            } else {
+              sprite.position -= animation.moveDistance!;
+            }
           },
         ),
       ),

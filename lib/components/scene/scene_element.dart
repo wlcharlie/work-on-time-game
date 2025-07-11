@@ -18,8 +18,10 @@ class SceneAnimation {
   final double? startOpacity;
   final double? targetOpacity;
   final Vector2? moveDistance;
+  final Vector2? resetPosition;
   final bool infinite;
   final double delay;
+  final void Function()? onStart;
 
   const SceneAnimation({
     required this.type,
@@ -29,8 +31,10 @@ class SceneAnimation {
     this.startOpacity,
     this.targetOpacity,
     this.moveDistance,
+    this.resetPosition,
     this.infinite = false,
     this.delay = 0,
+    this.onStart,
   });
 
   /// 滑入动画
@@ -54,6 +58,7 @@ class SceneAnimation {
     double delay = 0,
     double startOpacity = 0.0,
     double targetOpacity = 1.0,
+    void Function()? onStart,
   }) =>
       SceneAnimation(
         type: SceneAnimationType.fadeIn,
@@ -61,6 +66,7 @@ class SceneAnimation {
         startOpacity: startOpacity,
         targetOpacity: targetOpacity,
         delay: delay,
+        onStart: onStart,
       );
 
   /// 淡出动画
@@ -83,13 +89,17 @@ class SceneAnimation {
     required Vector2 moveDistance,
     double duration = 1.0,
     double delay = 0,
+    Vector2? resetPosition,
+    void Function()? onStart,
   }) =>
       SceneAnimation(
         type: SceneAnimationType.moveLoop,
         duration: duration,
         moveDistance: moveDistance,
+        resetPosition: resetPosition,
         infinite: true,
         delay: delay,
+        onStart: onStart,
       );
 
   /// 透明度循环动画
@@ -98,6 +108,7 @@ class SceneAnimation {
     double delay = 0,
     double startOpacity = 0.0,
     double targetOpacity = 1.0,
+    void Function()? onStart,
   }) =>
       SceneAnimation(
         type: SceneAnimationType.opacityLoop,
@@ -106,6 +117,7 @@ class SceneAnimation {
         targetOpacity: targetOpacity,
         infinite: true,
         delay: delay,
+        onStart: onStart,
       );
 }
 
