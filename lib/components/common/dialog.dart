@@ -102,10 +102,7 @@ class Dialog extends PositionComponent with HasGameReference<WOTGame> {
   @override
   void onMount() {
     super.onMount();
-    position = Vector2(
-      (game.size.x - dialogWidth) / 2,
-      1200.0,
-    );
+    position = Vector2((game.size.x - dialogWidth) / 2, position.y);
   }
 
   @override

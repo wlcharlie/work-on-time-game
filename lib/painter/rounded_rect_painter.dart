@@ -8,7 +8,11 @@ class RoundedRectPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     final rect = Rect.fromLTWH(0, 0, size.width, size.height);
-    final rrect = RRect.fromRectAndRadius(rect, const Radius.circular(12));
+    final rrect = RRect.fromRectAndCorners(
+      rect,
+      topLeft: const Radius.circular(12),
+      bottomLeft: const Radius.circular(12),
+    );
 
     canvas.drawRRect(rrect, paint);
   }

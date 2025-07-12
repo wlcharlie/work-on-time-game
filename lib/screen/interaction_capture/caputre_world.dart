@@ -10,17 +10,15 @@ import 'package:flame/events.dart';
 import 'package:work_on_time_game/components/animal/penguin.dart';
 import 'package:work_on_time_game/components/background/endless_background.dart';
 import 'package:work_on_time_game/components/camera/framing_crosshair.dart';
-import 'package:work_on_time_game/components/character/attribute.dart';
 import 'package:work_on_time_game/components/character/attribute_meter.dart';
-import 'package:work_on_time_game/components/character/status_meters.dart';
 import 'package:work_on_time_game/components/common/button.dart';
 import 'package:work_on_time_game/components/common/dialog.dart';
 import 'package:work_on_time_game/components/photo_instax.dart';
-import 'package:work_on_time_game/config/colors.dart';
 import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/config/typography.dart';
-import 'package:work_on_time_game/extension/position.dart';
 import 'package:work_on_time_game/wot_game.dart';
+import 'package:work_on_time_game/components/event/event_result_dialog.dart';
+import 'package:work_on_time_game/models/event_data.dart';
 
 class InteractionCaptureWorld extends World
     with HasGameReference<WOTGame>, HasCollisionDetection, TapCallbacks {
@@ -123,7 +121,27 @@ class InteractionCaptureWorld extends World
       position: Vector2(62, 112),
     );
 
-    _eventResultDialog = EventResultDialog();
+    // Create result data for the event
+    final resultData = ResultData(
+      title: "企鵝幫忙",
+      description: "真是太好了 ...",
+    );
+
+    // Create effect data for mind status increase
+    final appliedEffects = [
+      EffectData(
+        type: 'character_status',
+        status: 'mind',
+        delta: 10, // Positive delta for increase
+      ),
+    ];
+
+    _eventResultDialog = EventResultDialog(
+      result: resultData,
+      appliedEffects: appliedEffects,
+      position: Vector2(0, 639),
+    );
+
     _attributeMeter = AttributeMeter(
       attributeName: "自信",
       value: 0.5,
@@ -286,57 +304,5 @@ class FinishBanner extends PositionComponent with HasGameReference<WOTGame> {
     text.anchor = Anchor.center;
     text.position = Vector2(game.size.x / 2, 157 / 2);
     add(text);
-  }
-}
-
-class EventResultDialog extends PositionComponent
-    with HasGameReference<WOTGame> {
-  late final Dialog _dialog;
-  late final TextComponent _title;
-  late final TextComponent _subTitle;
-  late final MindStatusMeter _mindStatusMeter;
-
-  @override
-  Future<void> onLoad() async {
-    super.onLoad();
-
-    _dialog = Dialog(
-      size: Vector2(660, 323),
-      position: Vector2(63, 639),
-      content: [],
-    );
-
-    _title = TextComponent(
-      text: "企鵝幫忙",
-      textRenderer: TextPaint(
-        style: typography.tp40.withColor(AppColors.brown700),
-      ),
-      position: Vector2(250, 71),
-    );
-
-    _subTitle = TextComponent(
-      text: "真是太好了 ...",
-      textRenderer: TextPaint(
-        style: typography.tp32.withColor(AppColors.brown500),
-      ),
-      position: Vector2(240, 134),
-    );
-
-    _mindStatusMeter = MindStatusMeter(
-      size: Vector2(80, 80),
-      position: Vector2(184, 209),
-      meterLevel: 0.5,
-      deltaDirection: 1,
-    );
-    _dialog.content.add(_mindStatusMeter);
-    _dialog.content.add(Attribute(
-      text: "自信",
-      position: Vector2(348, 229),
-      deltaDirection: 1,
-    ));
-
-    _dialog.content.add(_title);
-    _dialog.content.add(_subTitle);
-    add(_dialog);
   }
 }

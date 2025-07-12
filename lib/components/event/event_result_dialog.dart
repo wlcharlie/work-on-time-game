@@ -6,6 +6,9 @@ import 'package:work_on_time_game/config/colors.dart';
 import 'package:work_on_time_game/config/typography.dart';
 import 'package:work_on_time_game/models/event_data.dart';
 
+const double dialogWidth = 660.0;
+const double dialogHeight = 330.0;
+
 class EventResultDialog extends PositionComponent {
   final ResultData result;
   final List<EffectData> appliedEffects;
@@ -17,7 +20,7 @@ class EventResultDialog extends PositionComponent {
     Vector2? position,
     Vector2? scale,
   }) {
-    this.position = position ?? Vector2.zero();
+    this.position = position ?? Vector2(0, 1200);
     this.scale = scale ?? Vector2.all(1);
   }
 
@@ -40,7 +43,7 @@ class EventResultDialog extends PositionComponent {
         maxWidth: 600, // Fixed width for consistent layout
         margins: EdgeInsets.zero,
       ),
-      position: Vector2(330, 117), // Center horizontally
+      position: Vector2(dialogWidth / 2, 100), // Center horizontally
       anchor: Anchor.center,
       align: Anchor.center,
     );
@@ -58,13 +61,16 @@ class EventResultDialog extends PositionComponent {
         maxWidth: 600, // Fixed width for consistent layout
         margins: EdgeInsets.zero,
       ),
-      position: Vector2(330, 176), // Center horizontally
+      position: Vector2(dialogWidth / 2, 152), // Center horizontally
       anchor: Anchor.center,
       align: Anchor.center,
     );
 
     // Create the dialog with all content
     _dialog = Dialog(
+      size: Vector2(dialogWidth, dialogHeight),
+      position:
+          Vector2.zero(), // Position is relative to parent EventResultDialog
       content: [
         titleComponent,
         descriptionComponent,
@@ -91,12 +97,12 @@ class EventResultDialog extends PositionComponent {
       final deltaDirection = effect.delta! > 0 ? 1 : -1;
 
       // 计算位置 - 在对话框中央下方排列
-      final baseX = 330.0; // 对话框中央
+      final baseX = dialogWidth / 2; // 对话框中央
       final spacing = 130.0; // 状态表之间的间距
       final totalWidth = (statusEffects.length - 1) * spacing;
       final startX = baseX - (totalWidth / 2);
       final positionX = startX + (i * spacing);
-      final positionY = 260.0; // 在文本下方
+      final positionY = 200.0; // 在文本下方
 
       Component? statusMeter;
 
