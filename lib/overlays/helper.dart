@@ -25,7 +25,7 @@ class _HelperState extends ConsumerState<Helper> {
 
   // 选单宽度和按钮半径
   final double _menuWidth = 200;
-  final double _buttonRadius = 20; // 按钮半径为40/2
+  final double _buttonRadius = 10; // 按钮半径为40/2
 
   // 计算选单的位置，避免超出屏幕边界
   Offset _calculateMenuPosition() {
@@ -91,11 +91,20 @@ class _HelperState extends ConsumerState<Helper> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Mind: ${characterStatus[CharacterStatus.mind]}'),
+              Text(
+                'Mind: ${characterStatus[CharacterStatus.mind]}',
+                style: TextStyle(color: Colors.black.withOpacity(0.1)),
+              ),
               const SizedBox(width: 16),
-              Text('Saving: ${characterStatus[CharacterStatus.saving]}'),
+              Text(
+                'Saving: ${characterStatus[CharacterStatus.saving]}',
+                style: TextStyle(color: Colors.black.withOpacity(0.1)),
+              ),
               const SizedBox(width: 16),
-              Text('Energy: ${characterStatus[CharacterStatus.energy]}'),
+              Text(
+                'Energy: ${characterStatus[CharacterStatus.energy]}',
+                style: TextStyle(color: Colors.black.withOpacity(0.1)),
+              ),
             ],
           ),
         ),
@@ -176,7 +185,7 @@ class _HelperState extends ConsumerState<Helper> {
                 width: _buttonRadius * 2,
                 height: _buttonRadius * 2,
                 decoration: BoxDecoration(
-                  color: Color(0xFFFAC7A0),
+                  color: Color.fromARGB(255, 73, 66, 114),
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
@@ -189,7 +198,8 @@ class _HelperState extends ConsumerState<Helper> {
                 child: Center(
                   child: Icon(
                     Icons.drag_handle,
-                    color: Color(0xFFAE886C),
+                    size: 15,
+                    color: Color.fromARGB(255, 241, 237, 246),
                   ),
                 ),
               ),
