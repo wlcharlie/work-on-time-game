@@ -19,7 +19,7 @@ class PaperBall extends SpriteComponent
   final void Function(TapDownEvent event)? onTapDownCallback;
 
   final double gravity = 15;
-  final double jumpSpeed = 600;
+  final double jumpSpeed = 610;
   final double terminalVelocity = 150;
 
   // 可調整下降加速的參數
@@ -32,8 +32,8 @@ class PaperBall extends SpriteComponent
   final Random _random = Random(); // 隨機數生成器
 
   // 降落範圍
-  final double minLandingY = 677.0; // 最小降落高度
-  final double maxLandingY = 760.0; // 最大降落高度
+  final double minLandingY = 677.0 * 2; // 最小降落高度
+  final double maxLandingY = 760.0 * 2; // 最大降落高度
   double _targetLandingY = 0; // 當前目標降落高度
 
   bool hasJumped = false;

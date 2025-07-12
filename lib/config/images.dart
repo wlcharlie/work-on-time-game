@@ -3,7 +3,7 @@ class Images {
   factory Images() => _instance;
   Images._internal();
 
-  final String loading = 'loading.png';
+  final String loading = 'loading@2x.png';
   final String lobbyBackground = 'home_bg.png';
 
   final String statusMindIcon = 'status/mind.png';
@@ -40,6 +40,7 @@ class Images {
   final String painting = 'bed_room/painting.png';
   final String paperBall = 'bed_room/paper_ball.png';
   final String phone = 'bed_room/phone.png';
+  final String table = 'bed_room/table.png';
   // 房間找東西關卡
   final String enterWay = 'enter_way/bg.png';
   final String boots = 'enter_way/boots.png';
@@ -184,6 +185,7 @@ class Images {
       painting,
       paperBall,
       phone,
+      table,
       enterWay,
       boots,
       doorClose,

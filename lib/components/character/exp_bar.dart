@@ -14,11 +14,11 @@ class ExpBar extends PositionComponent {
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    final bgRect = Rect.fromLTWH(0, 0, 196, 16);
+    final bgRect = Rect.fromLTWH(0, 0, 196 * 2, 16 * 2);
     final bgRRect = RRect.fromRectAndRadius(bgRect, const Radius.circular(6));
     canvas.drawRRect(bgRRect, Paint()..color = const Color(0xFFFFFFFF));
 
-    final borderRect = Rect.fromLTWH(0, 0, 196, 16);
+    final borderRect = Rect.fromLTWH(0, 0, 196 * 2, 16 * 2);
     final borderRRect =
         RRect.fromRectAndRadius(borderRect, const Radius.circular(6));
     canvas.drawRRect(
@@ -28,7 +28,7 @@ class ExpBar extends PositionComponent {
           ..style = PaintingStyle.stroke
           ..strokeWidth = 2);
 
-    final valueRect = Rect.fromLTWH(4, 3, 188 * value, 10);
+    final valueRect = Rect.fromLTWH(8, 6, 188 * value * 2, 10 * 2);
     final valueRRect =
         RRect.fromRectAndRadius(valueRect, const Radius.circular(4));
     canvas.drawRRect(valueRRect, Paint()..color = const Color(0xFF8B7160));

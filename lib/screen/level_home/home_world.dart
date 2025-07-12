@@ -22,7 +22,7 @@ class LevelHomeWorld extends World
   String currentScene = ''; // living_room, bed_room, enter_way
 
   double _cutsceneBlur = 10;
-  double _cutsceneSpeed = 3;
+  double _cutsceneSpeed = 5;
   bool _cutsceneOff = false;
 
   static ComponentKey componentKey = ComponentKey.named("level_home_world");
@@ -40,9 +40,6 @@ class LevelHomeWorld extends World
     );
     cutscene.decorator = PaintDecorator.blur(_cutsceneBlur);
     await Flame.images.loadAll(images.allHomeLevelImages());
-
-    game.camera.viewfinder.anchor = Anchor.topLeft;
-    game.camera.viewfinder.zoom = 2;
   }
 
   @override

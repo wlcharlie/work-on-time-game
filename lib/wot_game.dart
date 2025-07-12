@@ -48,7 +48,7 @@ class WOTGame extends FlameGame
         'interaction_capture':
             WorldRoute(InteractionCaptureWorld.new, maintainState: false),
       },
-      initialRoute: 'interaction_capture',
+      initialRoute: 'lobby',
     );
     add(router);
 
@@ -63,7 +63,7 @@ class WOTGame extends FlameGame
     if (!isPannable) return;
     final currentRoute = router.currentRoute;
     if (currentRoute.name == 'level_home') {
-      camera.moveBy(Vector2(-info.delta.global.x, 0));
+      camera.moveBy(Vector2(-info.delta.global.x * 2, 0));
     }
   }
 

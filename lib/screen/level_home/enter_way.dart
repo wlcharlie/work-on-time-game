@@ -44,7 +44,7 @@ class EnterWay extends Component
     game.camera.setBounds(Rectangle.fromLTWH(0, 0, _size.x - game.size.x, 0));
 
     add(Door(
-      position: Vector2(86, 253),
+      position: Vector2(86, 253) * 2,
     ));
 
     final inventory = ref.read(inventoryNotifierProvider);
@@ -55,7 +55,7 @@ class EnterWay extends Component
       add(ItemComponent(
         imagePath: item.imagePath,
         name: item.name,
-        position: item.position,
+        position: item.position * 2,
         priority: item.priority,
         action: onItemTapDown,
       ));

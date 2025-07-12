@@ -26,7 +26,7 @@ class StatusMeter extends PositionComponent with HasGameReference<WOTGame> {
     this.deltaDirection, // -1, 1
   }) {
     this.position = position ?? Vector2.zero();
-    this.size = size ?? Vector2(40, 40);
+    this.size = size ?? Vector2(80, 80);
 
     _borderPaint = Paint()
       ..color = AppColors.brown500

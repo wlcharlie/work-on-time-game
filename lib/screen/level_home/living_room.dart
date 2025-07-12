@@ -66,7 +66,7 @@ class LivingRoom extends Component
       add(ItemComponent(
         imagePath: item.imagePath,
         name: item.name,
-        position: item.position,
+        position: item.position * 2,
         priority: item.priority,
         action: onItemTapDown,
       ));

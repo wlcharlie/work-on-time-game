@@ -8,6 +8,15 @@ final List<Item> items = [
   // 臥室物品
   // 紙球跟棉被另外獨立刻了
   Item(
+    name: 'table',
+    imagePath: images.table,
+    imagePathLg: null,
+    title: null,
+    description: null,
+    position: Vector2(534, 644),
+    sceneName: 'bed_room',
+  ),
+  Item(
     name: 'bag',
     imagePath: images.bag,
     imagePathLg: images.bagLg,
@@ -32,6 +41,7 @@ final List<Item> items = [
     title: '離子夾',
     description: '要換個造型嗎？',
     position: Vector2(7, 659),
+    priority: 1,
     sceneName: 'bed_room',
   ),
   Item(

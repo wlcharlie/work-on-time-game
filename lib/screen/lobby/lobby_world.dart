@@ -27,7 +27,7 @@ class LobbyWorld extends World
     super.onMount();
 
     game.camera.viewfinder.anchor = Anchor.topLeft;
-    game.camera.viewfinder.zoom = 2;
+    game.camera.viewfinder.zoom = 1;
     game.camera.viewfinder.position = Vector2(0, 0);
     game.overlays.add('lobbyTools');
   }

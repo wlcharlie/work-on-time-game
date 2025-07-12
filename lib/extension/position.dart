@@ -2,6 +2,7 @@ import 'package:flame/components.dart';
 
 extension Vector2Extension on Vector2 {
   Vector2 get center => Vector2(x / 2, y / 2);
+  Vector2 get doubled => Vector2(x * 2, y * 2);
 
   /// 計算在此尺寸容器中央的位置
   Vector2 centerPosition(Vector2 objectSize, {Vector2? offset}) {

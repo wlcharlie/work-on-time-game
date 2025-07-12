@@ -13,6 +13,7 @@ import 'package:work_on_time_game/models/item.dart';
 import 'package:work_on_time_game/providers/inventory.dart';
 import 'package:work_on_time_game/screen/level_home/mirror.dart';
 import 'package:work_on_time_game/wot_game.dart';
+import 'package:work_on_time_game/extension/position.dart';
 
 final List<Item> ITEMS =
     items.where((element) => element.sceneName == 'bed_room').toList();
@@ -58,13 +59,13 @@ class BedRoom extends Component
     game.camera.setBounds(Rectangle.fromLTWH(0, 0, size.x - game.size.x, 0));
 
     add(Blanket(
-      position: Vector2(438, 483),
+      position: Vector2(438, 483).doubled,
       onTapDownCallback: (event) async {
         print('I am Blanket!!');
       },
     ));
     add(PaperBall(
-      position: Vector2(264, 677),
+      position: Vector2(264, 677).doubled,
     ));
 
     final inventory = ref.read(inventoryNotifierProvider);
@@ -75,7 +76,7 @@ class BedRoom extends Component
       add(ItemComponent(
         imagePath: item.imagePath,
         name: item.name,
-        position: item.position,
+        position: item.position.doubled,
         priority: item.priority,
         action: onItemTapDown,
       ));
