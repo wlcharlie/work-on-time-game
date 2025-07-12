@@ -19,7 +19,7 @@ class WOTGame extends FlameGame
   bool isPannable = true; // for camera usage
 
   @override
-  bool debugMode = true;
+  bool debugMode = const bool.fromEnvironment('DEBUG', defaultValue: false);
 
   @override
   void onLoad() async {
@@ -48,7 +48,7 @@ class WOTGame extends FlameGame
         'interaction_capture':
             WorldRoute(InteractionCaptureWorld.new, maintainState: false),
       },
-      initialRoute: 'lobby',
+      initialRoute: 'event_scene',
     );
     add(router);
 

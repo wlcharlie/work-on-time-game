@@ -39,7 +39,7 @@ class Typography {
 
   TextStyle get tp40 => TextStyle(
         fontSize: 40,
-        fontWeight: regular,
+        fontWeight: bold,
         fontFamily: 'TaiwanPearl',
         height: 1,
         letterSpacing: 0,

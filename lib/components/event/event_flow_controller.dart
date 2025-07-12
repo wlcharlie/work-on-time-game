@@ -13,7 +13,7 @@ class EventFlowController extends Component with RiverpodComponentMixin {
   final Map<String, FlowStepData> flowSteps = {};
   
   // Callback when event is completed
-  final void Function(ResultData result)? onEventCompleted;
+  final void Function(ResultData result, List<EffectData> appliedEffects)? onEventCompleted;
   final void Function()? onStepChanged;
 
   EventFlowController({
@@ -64,7 +64,7 @@ class EventFlowController extends Component with RiverpodComponentMixin {
     if (outcome.goto != null) {
       _navigateToStep(outcome.goto!);
     } else if (outcome.result != null) {
-      _showResult(outcome.result!);
+      _showResult(outcome.result!, outcome.effects);
     }
   }
 
@@ -78,9 +78,9 @@ class EventFlowController extends Component with RiverpodComponentMixin {
     }
   }
 
-  void _showResult(ResultData result) {
+  void _showResult(ResultData result, List<EffectData> appliedEffects) {
     print('Event completed with result: ${result.title}');
-    onEventCompleted?.call(result);
+    onEventCompleted?.call(result, appliedEffects);
   }
 
   bool _checkConditions(List<ConditionData> conditions) {

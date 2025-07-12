@@ -7,6 +7,9 @@ import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/config/typography.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
+const double dialogWidth = 660.0;
+const double dialogHeight = 440.0;
+
 class Dialog extends PositionComponent with HasGameReference<WOTGame> {
   late Image _bgImage;
   late Paint _bgPaint;
@@ -15,35 +18,39 @@ class Dialog extends PositionComponent with HasGameReference<WOTGame> {
   late List<Component> content;
 
   Dialog({
-    super.size,
-    super.position,
+    Vector2? size,
+    Vector2? position,
     Vector2? scale,
     required this.content,
   }) {
-    this.size = size;
-    this.position = position;
+    this.size = size ?? Vector2(dialogWidth, dialogHeight);
+    this.position = position ?? Vector2(64, 1060);
     this.scale = scale ?? Vector2.all(1);
 
     _rrect = RRect.fromLTRBR(
       0,
       0,
-      size.x,
-      size.y,
+      this.size.x,
+      this.size.y,
       Radius.circular(6),
     );
   }
 
   Dialog.title({
-    super.size,
-    super.position,
+    Vector2? size,
+    Vector2? position,
     required String title,
     Vector2? scale,
   }) {
+    this.size = size ?? Vector2(dialogWidth, dialogHeight);
+    this.position = position ?? Vector2(64, 1060);
+    this.scale = scale ?? Vector2.all(1);
+
     _rrect = RRect.fromLTRBR(
       0,
       0,
-      size.x,
-      size.y,
+      this.size.x,
+      this.size.y,
       Radius.circular(40),
     );
 
@@ -53,7 +60,7 @@ class Dialog extends PositionComponent with HasGameReference<WOTGame> {
         textRenderer: TextPaint(
           style: typography.tp48.withColor(AppColors.brown500),
         ),
-        position: size / 2,
+        position: Vector2(this.size.x / 2, this.size.y / 2),
         anchor: Anchor.center,
       ),
     ];
@@ -62,6 +69,9 @@ class Dialog extends PositionComponent with HasGameReference<WOTGame> {
   @override
   Future<void> onLoad() async {
     super.onLoad();
+
+    size = Vector2(dialogWidth, dialogHeight);
+
     await game.images.load(images.dialogBg);
     _bgImage = game.images.fromCache(images.dialogBg);
 
@@ -92,6 +102,10 @@ class Dialog extends PositionComponent with HasGameReference<WOTGame> {
   @override
   void onMount() {
     super.onMount();
+    position = Vector2(
+      (game.size.x - dialogWidth) / 2,
+      1200.0,
+    );
   }
 
   @override

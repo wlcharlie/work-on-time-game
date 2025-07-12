@@ -15,7 +15,9 @@ import 'package:work_on_time_game/components/scene/base_scene.dart';
 import 'package:work_on_time_game/components/scene/scene_element.dart';
 import 'package:work_on_time_game/components/event/event_flow_controller.dart';
 import 'package:work_on_time_game/components/event/event_dialog.dart';
+import 'package:work_on_time_game/components/event/event_result_dialog.dart';
 import 'package:work_on_time_game/config/audio.dart';
+import 'package:work_on_time_game/config/colors.dart';
 import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/config/typography.dart';
 import 'package:work_on_time_game/enums/character_status.dart';
@@ -39,6 +41,7 @@ class RainScene extends BaseScene {
   // Event system
   EventFlowController? eventController;
   EventDialog? eventDialog;
+  SpriteComponent? rainResultImage;
 
   // 是否正在下雨
   bool _rainVisible = false;
@@ -188,10 +191,10 @@ class RainScene extends BaseScene {
   void onSceneCompleted() {
     super.onSceneCompleted();
     print('onSceneCompleted called, creating timer');
-    
+
     // Create timer using Flame's pattern - no callback, check finished in update
-    _switchSceneTimer = Timer(3.5);
-    
+    _switchSceneTimer = Timer(2);
+
     print('Timer created: ${_switchSceneTimer != null}');
   }
 
@@ -233,9 +236,15 @@ class RainScene extends BaseScene {
       remove(eventController!);
     }
 
+    // 移除雨中结果图像（如果存在）
+    if (rainResultImage != null && children.contains(rainResultImage!)) {
+      remove(rainResultImage!);
+    }
+
     // 直接置空，下次需要时会创建全新实例
     eventDialog = null;
     eventController = null;
+    rainResultImage = null;
   }
 
   /// 加载和显示事件
@@ -253,9 +262,9 @@ class RainScene extends BaseScene {
       // 创建事件控制器
       eventController = EventFlowController(
         eventData: eventData,
-        onEventCompleted: (result) {
+        onEventCompleted: (result, appliedEffects) {
           print('Event completed: ${result.title}');
-          _showFinalResult(result);
+          _showFinalResult(result, appliedEffects);
         },
         onStepChanged: () {
           print('Event step changed');
@@ -263,6 +272,9 @@ class RainScene extends BaseScene {
         },
       );
       add(eventController!);
+
+      // 显示雨中结果图像
+      _showRainResultImage();
 
       // 显示初始对话框
       _updateEventDialog();
@@ -298,17 +310,35 @@ class RainScene extends BaseScene {
     add(eventDialog!);
   }
 
+  /// 显示雨中结果图像
+  Future<void> _showRainResultImage() async {
+    final rainResultSprite =
+        await Sprite.load(images.rainSceneResultWithoutUmbrella);
+    rainResultImage = SpriteComponent(
+      sprite: rainResultSprite,
+      position: Vector2.zero(),
+    );
+    add(rainResultImage!);
+  }
+
   /// 显示最终结果
-  void _showFinalResult(ResultData result) {
+  void _showFinalResult(ResultData result, List<EffectData> appliedEffects) {
     // 移除事件对话框
     if (eventDialog != null && children.contains(eventDialog!)) {
       remove(eventDialog!);
     }
 
-    // TODO: 显示结果对话框，然后返回主游戏
-    // 现在暂时只打印结果
+    // 创建结果对话框
+    final resultDialog = EventResultDialog(
+      result: result,
+      appliedEffects: appliedEffects,
+    );
+
+    add(resultDialog);
+
     print('Final result: ${result.title} - ${result.description}');
   }
+
 
   @override
   Future<void> onLoad() async {
@@ -374,8 +404,9 @@ class RainScene extends BaseScene {
     // 更新场景完成计时器（即使在completed状态也要更新）
     if (_switchSceneTimer != null && !_switchSceneTimer!.finished) {
       _switchSceneTimer!.update(dt);
-      print('Timer updating: ${_switchSceneTimer!.current.toStringAsFixed(1)}s / 3.5s');
-      
+      print(
+          'Timer updating: ${_switchSceneTimer!.current.toStringAsFixed(1)}s / 2s');
+
       // 检查是否完成
       if (_switchSceneTimer!.finished) {
         print('Timer finished! Loading event');
@@ -396,246 +427,246 @@ class RainScene extends BaseScene {
   }
 }
 
-class WithoutUmbrellaScene extends Component with HasGameReference<WOTGame> {
-  late final SpriteComponent withoutUmbrellaBg;
-  late final PositionComponent withoutUmbrellaDialog;
-  late final TextComponent titleComponent;
+// class WithoutUmbrellaScene extends Component with HasGameReference<WOTGame> {
+//   late final SpriteComponent withoutUmbrellaBg;
+//   late final PositionComponent withoutUmbrellaDialog;
+//   late final TextComponent titleComponent;
 
-  late ResultDialog resultDialog;
+//   late ResultDialog resultDialog;
 
-  /// 重置 WithoutUmbrellaScene 到初始状态
-  void reset() {
-    // 移除 resultDialog 如果存在
-    if (children.contains(resultDialog)) {
-      resultDialog.reset();
-      remove(resultDialog);
-    }
+//   /// 重置 WithoutUmbrellaScene 到初始状态
+//   void reset() {
+//     // 移除 resultDialog 如果存在
+//     if (children.contains(resultDialog)) {
+//       resultDialog.reset();
+//       remove(resultDialog);
+//     }
 
-    // 重新添加 withoutUmbrellaDialog 如果不存在
-    if (!children.contains(withoutUmbrellaDialog)) {
-      add(withoutUmbrellaDialog);
-    }
+//     // 重新添加 withoutUmbrellaDialog 如果不存在
+//     if (!children.contains(withoutUmbrellaDialog)) {
+//       add(withoutUmbrellaDialog);
+//     }
 
-    // 重新创建 resultDialog 实例以确保完全干净的状态
-    resultDialog = ResultDialog();
-  }
+//     // 重新创建 resultDialog 实例以确保完全干净的状态
+//     resultDialog = ResultDialog();
+//   }
 
-  void _handleChoice(String choice) {
-    resultDialog.choice = choice;
-    add(resultDialog);
-    remove(withoutUmbrellaDialog);
-  }
+//   void _handleChoice(String choice) {
+//     resultDialog.choice = choice;
+//     add(resultDialog);
+//     remove(withoutUmbrellaDialog);
+//   }
 
-  @override
-  Future<void> onLoad() async {
-    super.onLoad();
+//   @override
+//   Future<void> onLoad() async {
+//     super.onLoad();
 
-    final withoutUmbrellaBgImage =
-        await Flame.images.load(images.rainSceneResultWithoutUmbrella);
+//     final withoutUmbrellaBgImage =
+//         await Flame.images.load(images.rainSceneResultWithoutUmbrella);
 
-    withoutUmbrellaBg = SpriteComponent.fromImage(
-      withoutUmbrellaBgImage,
-      position: Vector2.zero(),
-    );
+//     withoutUmbrellaBg = SpriteComponent.fromImage(
+//       withoutUmbrellaBgImage,
+//       position: Vector2.zero(),
+//     );
 
-    titleComponent = TextBoxComponent(
-      text: '天空突然下起了傾盆大雨',
-      position: Vector2(0, 35),
-      align: Anchor.center,
-      boxConfig: TextBoxConfig(
-        margins: EdgeInsets.zero,
-        maxWidth: 330,
-      ),
-      textRenderer: TextPaint(
-        style: typography.tp20
-            .withFontWeight(FontWeight.w600)
-            .withShadow()
-            .copyWith(
-              color: const Color(0xFF644C3B),
-            ),
-      ),
-    );
+//     titleComponent = TextBoxComponent(
+//       text: '天空突然下起了傾盆大雨',
+//       position: Vector2(0, 35),
+//       align: Anchor.center,
+//       boxConfig: TextBoxConfig(
+//         margins: EdgeInsets.zero,
+//         maxWidth: 330,
+//       ),
+//       textRenderer: TextPaint(
+//         style: typography.tp20
+//             .withFontWeight(FontWeight.w600)
+//             .withShadow()
+//             .copyWith(
+//               color: const Color(0xFF644C3B),
+//             ),
+//       ),
+//     );
 
-    // 沒帶傘按鈕選項A
-    ButtonComponent buttonGoWithoutUmbrella = ButtonComponent(
-      size: Vector2(285, 45),
-      position: Vector2(22, 86),
-      button: Button(
-        size: Vector2(285, 45),
-        text: '淋雨去公司',
-      ),
-      onPressed: () {
-        _handleChoice('go');
-      },
-    );
+//     // 沒帶傘按鈕選項A
+//     ButtonComponent buttonGoWithoutUmbrella = ButtonComponent(
+//       size: Vector2(285, 45),
+//       position: Vector2(22, 86),
+//       button: Button(
+//         size: Vector2(285, 45),
+//         text: '淋雨去公司',
+//       ),
+//       onPressed: () {
+//         _handleChoice('go');
+//       },
+//     );
 
-    // 沒帶傘按鈕選項B
-    ButtonComponent buttonBuyUmbrella = ButtonComponent(
-      position: Vector2(22, 140),
-      size: Vector2(285, 45),
-      button: Button(
-        size: Vector2(285, 45),
-        text: '去超商買傘',
-      ),
-      onPressed: () {
-        _handleChoice('buy');
-      },
-    );
+//     // 沒帶傘按鈕選項B
+//     ButtonComponent buttonBuyUmbrella = ButtonComponent(
+//       position: Vector2(22, 140),
+//       size: Vector2(285, 45),
+//       button: Button(
+//         size: Vector2(285, 45),
+//         text: '去超商買傘',
+//       ),
+//       onPressed: () {
+//         _handleChoice('buy');
+//       },
+//     );
 
-    withoutUmbrellaDialog = Dialog(
-      size: Vector2(330, 220),
-      position: Vector2(64, 1060),
-      scale: Vector2.all(2),
-      content: [
-        titleComponent,
-        buttonGoWithoutUmbrella,
-        buttonBuyUmbrella,
-      ],
-    );
+//     withoutUmbrellaDialog = Dialog(
+//       size: Vector2(330, 220),
+//       position: Vector2(64, 1060),
+//       scale: Vector2.all(2),
+//       content: [
+//         titleComponent,
+//         buttonGoWithoutUmbrella,
+//         buttonBuyUmbrella,
+//       ],
+//     );
 
-    resultDialog = ResultDialog();
+//     resultDialog = ResultDialog();
 
-    add(withoutUmbrellaBg);
-    add(withoutUmbrellaDialog);
-  }
-}
+//     add(withoutUmbrellaBg);
+//     add(withoutUmbrellaDialog);
+//   }
+// }
 
-class ResultDialog extends Component
-    with HasGameReference<WOTGame>, RiverpodComponentMixin {
-  late final Dialog resultDialog;
+// class ResultDialog extends Component
+//     with HasGameReference<WOTGame>, RiverpodComponentMixin {
+//   late final Dialog resultDialog;
 
-  late final Component mindMeter;
-  late final Component savingMeter;
-  late final Component energyMeter;
+//   late final Component mindMeter;
+//   late final Component savingMeter;
+//   late final Component energyMeter;
 
-  late final TextBoxComponent titleComponent;
-  late final TextComponent subTitleComponent;
+//   late final TextBoxComponent titleComponent;
+//   late final TextComponent subTitleComponent;
 
-  String _choice = '';
+//   String _choice = '';
 
-  ResultDialog();
+//   ResultDialog();
 
-  /// 重置 ResultDialog 到初始状态
-  void reset() {
-    _choice = '';
+//   /// 重置 ResultDialog 到初始状态
+//   void reset() {
+//     _choice = '';
 
-    // 移除 resultDialog 如果存在
-    if (children.contains(resultDialog)) {
-      remove(resultDialog);
-    }
-  }
+//     // 移除 resultDialog 如果存在
+//     if (children.contains(resultDialog)) {
+//       remove(resultDialog);
+//     }
+//   }
 
-  set choice(String value) {
-    _choice = value;
-  }
+//   set choice(String value) {
+//     _choice = value;
+//   }
 
-  String get choiceTitle => switch (_choice) {
-        'go' => '淋雨去公司',
-        'buy' => '去超商買傘',
-        _ => '',
-      };
+//   String get choiceTitle => switch (_choice) {
+//         'go' => '淋雨去公司',
+//         'buy' => '去超商買傘',
+//         _ => '',
+//       };
 
-  String get choiceSubTitle => switch (_choice) {
-        'go' => '頭髮衣服都濕透了...',
-        'buy' => '又花錢買傘了...',
-        _ => '',
-      };
+//   String get choiceSubTitle => switch (_choice) {
+//         'go' => '頭髮衣服都濕透了...',
+//         'buy' => '又花錢買傘了...',
+//         _ => '',
+//       };
 
-  List<EffectCharacterStatus> get effectMeters {
-    final characterStatusNotifier =
-        ref.read(characterStatusNotifierProvider.notifier);
-    return switch (_choice) {
-      'go' => [
-          characterStatusNotifier.effectCharacterStatus(
-              CharacterStatus.mind, -10),
-          characterStatusNotifier.effectCharacterStatus(
-              CharacterStatus.energy, -10),
-        ],
-      'buy' => [
-          characterStatusNotifier.effectCharacterStatus(
-              CharacterStatus.mind, -10),
-          characterStatusNotifier.effectCharacterStatus(
-              CharacterStatus.saving, -10),
-        ],
-      _ => [],
-    };
-  }
+//   List<EffectCharacterStatus> get effectMeters {
+//     final characterStatusNotifier =
+//         ref.read(characterStatusNotifierProvider.notifier);
+//     return switch (_choice) {
+//       'go' => [
+//           characterStatusNotifier.effectCharacterStatus(
+//               CharacterStatus.mind, -10),
+//           characterStatusNotifier.effectCharacterStatus(
+//               CharacterStatus.energy, -10),
+//         ],
+//       'buy' => [
+//           characterStatusNotifier.effectCharacterStatus(
+//               CharacterStatus.mind, -10),
+//           characterStatusNotifier.effectCharacterStatus(
+//               CharacterStatus.saving, -10),
+//         ],
+//       _ => [],
+//     };
+//   }
 
-  @override
-  Future<void> onMount() async {
-    super.onMount();
+//   @override
+//   Future<void> onMount() async {
+//     super.onMount();
 
-    final firstPoint = Vector2(93, 109);
-    final secondPoint = Vector2(167, 109);
+//     final firstPoint = Vector2(93, 109);
+//     final secondPoint = Vector2(167, 109);
 
-    mindMeter = MindStatusMeter(position: Vector2.zero());
-    savingMeter = SavingStatusMeter(position: Vector2.zero());
-    energyMeter = EnergyStatusMeter(position: Vector2.zero());
+//     mindMeter = MindStatusMeter(position: Vector2.zero());
+//     savingMeter = SavingStatusMeter(position: Vector2.zero());
+//     energyMeter = EnergyStatusMeter(position: Vector2.zero());
 
-    titleComponent = TextBoxComponent(
-      text: choiceTitle,
-      position: Vector2(0, 35),
-      align: Anchor.center,
-      boxConfig: TextBoxConfig(
-        margins: EdgeInsets.zero,
-        maxWidth: 330,
-      ),
-      textRenderer: TextPaint(
-        style: typography.tp20
-            .withFontWeight(FontWeight.w600)
-            .withShadow()
-            .copyWith(
-              color: const Color(0xFF644C3B),
-            ),
-      ),
-    );
+//     titleComponent = TextBoxComponent(
+//       text: choiceTitle,
+//       position: Vector2(0, 35),
+//       align: Anchor.center,
+//       boxConfig: TextBoxConfig(
+//         margins: EdgeInsets.zero,
+//         maxWidth: 330,
+//       ),
+//       textRenderer: TextPaint(
+//         style: typography.tp20
+//             .withFontWeight(FontWeight.w600)
+//             .withShadow()
+//             .copyWith(
+//               color: const Color(0xFF644C3B),
+//             ),
+//       ),
+//     );
 
-    subTitleComponent = TextBoxComponent(
-      text: choiceSubTitle,
-      position: Vector2(0, 70),
-      align: Anchor.center,
-      boxConfig: TextBoxConfig(
-        margins: EdgeInsets.zero,
-        maxWidth: 330,
-      ),
-      textRenderer: TextPaint(
-        style: typography.tp16m
-            .withFontWeight(FontWeight.w600)
-            .withShadow()
-            .copyWith(
-              color: const Color(0xFF907054),
-            ),
-      ),
-    );
+//     subTitleComponent = TextBoxComponent(
+//       text: choiceSubTitle,
+//       position: Vector2(0, 70),
+//       align: Anchor.center,
+//       boxConfig: TextBoxConfig(
+//         margins: EdgeInsets.zero,
+//         maxWidth: 330,
+//       ),
+//       textRenderer: TextPaint(
+//         style: typography.tp16m
+//             .withFontWeight(FontWeight.w600)
+//             .withShadow()
+//             .copyWith(
+//               color: const Color(0xFF907054),
+//             ),
+//       ),
+//     );
 
-    final meters = effectMeters.mapIndexed((index, effectMeter) {
-      Vector2 position = switch (index) {
-        0 => firstPoint,
-        1 => secondPoint,
-        _ => Vector2.zero(),
-      };
+//     final meters = effectMeters.mapIndexed((index, effectMeter) {
+//       Vector2 position = switch (index) {
+//         0 => firstPoint,
+//         1 => secondPoint,
+//         _ => Vector2.zero(),
+//       };
 
-      return switch (effectMeter.statusType) {
-        CharacterStatus.mind => MindStatusMeter(
-            position: position, deltaDirection: effectMeter.deltaDirection),
-        CharacterStatus.saving => SavingStatusMeter(
-            position: position, deltaDirection: effectMeter.deltaDirection),
-        CharacterStatus.energy => EnergyStatusMeter(
-            position: position, deltaDirection: effectMeter.deltaDirection),
-      };
-    }).toList();
+//       return switch (effectMeter.statusType) {
+//         CharacterStatus.mind => MindStatusMeter(
+//             position: position, deltaDirection: effectMeter.deltaDirection),
+//         CharacterStatus.saving => SavingStatusMeter(
+//             position: position, deltaDirection: effectMeter.deltaDirection),
+//         CharacterStatus.energy => EnergyStatusMeter(
+//             position: position, deltaDirection: effectMeter.deltaDirection),
+//       };
+//     }).toList();
 
-    resultDialog = Dialog(
-      size: Vector2(330, 220),
-      position: Vector2(64, 1060),
-      scale: Vector2.all(2),
-      content: [
-        titleComponent,
-        subTitleComponent,
-        ...meters,
-      ],
-    );
+//     resultDialog = Dialog(
+//       size: Vector2(330, 220),
+//       position: Vector2(64, 1060),
+//       scale: Vector2.all(2),
+//       content: [
+//         titleComponent,
+//         subTitleComponent,
+//         ...meters,
+//       ],
+//     );
 
-    add(resultDialog);
-  }
-}
+//     add(resultDialog);
+//   }
+// }
