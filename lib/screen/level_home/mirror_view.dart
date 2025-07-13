@@ -10,7 +10,7 @@ import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/config/typography.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
-class Mirror extends PositionComponent
+class MirrorView extends PositionComponent
     with HasGameReference<WOTGame>, TapCallbacks, HasPaint {
   late EndlessBackground _bg;
   late SpriteComponent _character;
@@ -20,7 +20,7 @@ class Mirror extends PositionComponent
 
   final void Function() onTap;
 
-  Mirror({required this.onTap});
+  MirrorView({required this.onTap});
 
   @override
   void onLoad() {
@@ -35,7 +35,7 @@ class Mirror extends PositionComponent
     final characterSprite = Sprite(characterImage);
     _character = SpriteComponent(
       sprite: characterSprite,
-      position: Vector2(79, 73),
+      position: Vector2(79, 73) * 2,
     );
 
     _dialog = Dialog(onTap: () {});
@@ -88,20 +88,21 @@ class Dialog extends PositionComponent with HasGameReference<WOTGame> {
   @override
   void onLoad() {
     super.onLoad();
-    size = Vector2(345, 68);
-    position = Vector2(24, 755);
+    size = Vector2(690, 136);
+    position = Vector2(48, 1510);
     anchor = Anchor.topLeft;
 
     // text
     final text = TextBoxComponent(
         text: "今天的裝扮感覺很不錯！",
         textRenderer: TextPaint(
-          style: typography.tp20,
+          style: typography.tp40,
         ),
         align: Anchor.center,
         anchor: Anchor.center,
         position: Vector2(size.x / 2, size.y / 2),
         boxConfig: TextBoxConfig(
+          maxWidth: 690,
           timePerChar: 0.05,
         ));
     add(text);

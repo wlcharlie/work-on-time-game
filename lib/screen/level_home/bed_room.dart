@@ -9,9 +9,10 @@ import 'package:work_on_time_game/components/item/item_dialog.dart';
 import 'package:work_on_time_game/components/item/paper_ball.dart';
 import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/config/items.dart';
+import 'package:work_on_time_game/config/priority.dart';
 import 'package:work_on_time_game/models/item.dart';
 import 'package:work_on_time_game/providers/inventory.dart';
-import 'package:work_on_time_game/screen/level_home/mirror.dart';
+import 'package:work_on_time_game/screen/level_home/mirror_view.dart';
 import 'package:work_on_time_game/wot_game.dart';
 import 'package:work_on_time_game/extension/position.dart';
 
@@ -88,12 +89,13 @@ class BedRoom extends Component
     if (name == 'mirror') {
       // remove the overlay
       game.overlays.remove('homeLevelInspector');
-      late final Mirror mirror;
-      mirror = Mirror(onTap: () {
+      late final MirrorView mirrorView;
+      mirrorView = MirrorView(onTap: () {
         game.overlays.add('homeLevelInspector');
-        mirror.removeFromParent();
+        mirrorView.removeFromParent();
       });
-      add(mirror);
+      mirrorView.priority = Priority.dialog;
+      add(mirrorView);
       return;
     }
 

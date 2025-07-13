@@ -46,7 +46,7 @@ class WeatherForecast extends PositionComponent
     final hostSprite = Sprite(host);
     _character = SpriteComponent(
       sprite: hostSprite,
-      position: Vector2(12, 405),
+      position: Vector2(12, 405) * 2,
     );
 
     final weatherImagePath = switch (_weatherType) {
@@ -65,7 +65,7 @@ class WeatherForecast extends PositionComponent
     final weatherSprite = Sprite(weather);
     _weather = SpriteComponent(
       sprite: weatherSprite,
-      position: Vector2(game.size.x / 2, 380),
+      position: Vector2(game.size.x / 2, 760),
       anchor: Anchor.center,
       scale: Vector2(0, 0),
     );
@@ -138,20 +138,21 @@ class Dialog extends PositionComponent with HasGameReference<WOTGame> {
   @override
   void onLoad() {
     super.onLoad();
-    size = Vector2(345, 68);
-    position = Vector2(24, 755);
+    size = Vector2(345, 68) * 2;
+    position = Vector2(24, 755) * 2;
     anchor = Anchor.topLeft;
 
     // text
     final text = TextBoxComponent(
       text: weatherDescription,
       textRenderer: TextPaint(
-        style: typography.tp20,
+        style: typography.tp40,
       ),
       align: Anchor.center,
       anchor: Anchor.center,
       position: Vector2(size.x / 2, size.y / 2),
       boxConfig: TextBoxConfig(
+        maxWidth: 690,
         timePerChar: 0.05,
       ),
       size: size,

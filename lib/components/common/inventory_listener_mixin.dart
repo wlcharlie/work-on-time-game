@@ -21,8 +21,12 @@ mixin InventoryListenerMixin on Component, RiverpodComponentMixin {
   void setupInventoryListener() {
     addToGameWidgetBuild(() {
       ref.listen(inventoryNotifierProvider, (previous, next) {
+        print('inventoryListener');
         final previousNameOfItems = previous!.items;
         final nextNameOfItems = next.items;
+
+        // 如果previous有東西代表要加回畫面
+        // 如果next有東西代表有東西要從畫面移除
 
         // check what item is added/removed
         final addItemNames = nextNameOfItems
@@ -65,7 +69,7 @@ mixin InventoryListenerMixin on Component, RiverpodComponentMixin {
           final itemComponent = ItemComponent(
             imagePath: item.imagePath,
             name: item.name,
-            position: item.position,
+            position: item.position * 2,
             priority: item.priority,
             action: onItemTapDown,
           );
@@ -74,6 +78,9 @@ mixin InventoryListenerMixin on Component, RiverpodComponentMixin {
             OpacityEffect.to(
               1,
               EffectController(duration: 0.5, startDelay: 0.5),
+              onComplete: () {
+                RemoveEffect();
+              },
             ),
           );
           add(itemComponent);

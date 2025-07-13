@@ -48,7 +48,7 @@ class WOTGame extends FlameGame
         'interaction_capture':
             WorldRoute(InteractionCaptureWorld.new, maintainState: false),
       },
-      initialRoute: 'event_scene',
+      initialRoute: 'lobby',
     );
     add(router);
 
