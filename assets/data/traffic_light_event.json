@@ -1,0 +1,222 @@
+{
+  "id": "traffic_light_event",
+  "name": "紅綠燈倒數",
+  "preconditions": [],
+  "flow": [
+    {
+      "id": "light_countdown",
+      "text": "紅綠燈剩下3秒？！綠燈即將變紅燈。",
+      "choices": [
+        {
+          "id": "run_quickly",
+          "text": "快速奔跑過馬路",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": [
+              {"type": "status_min", "status": "energy", "value": 15}
+            ],
+            "disabled_text": "快速奔跑過馬路 (體力不足)"
+          },
+          "delay": 1.0,
+          "outcomes": [
+            {
+              "conditions": [
+                {"type": "random_chance", "percentage": 80}
+              ],
+              "effects": [
+                {"type": "character_status", "status": "energy", "delta": -10},
+                {"type": "character_status", "status": "mind", "delta": 5}
+              ],
+              "result": {
+                "title": "成功",
+                "description": "順利在紅燈前通過！省下等待時間。"
+              }
+            },
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "energy", "delta": -15},
+                {"type": "character_status", "status": "mind", "delta": -8}
+              ],
+              "goto": "almost_accident"
+            }
+          ]
+        },
+        {
+          "id": "walk_slowly",
+          "text": "慢慢來",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0.5,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": 3}
+              ],
+              "goto": "wait_for_light"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "almost_accident",
+      "text": "差點被車撞到！司機按喇叭抗議。",
+      "choices": [
+        {
+          "id": "apologize",
+          "text": "向司機道歉",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": 2}
+              ],
+              "result": {
+                "title": "和解",
+                "description": "司機接受了道歉，提醒你要小心。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "ignore_driver",
+          "text": "假裝沒聽到",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": -5}
+              ],
+              "result": {
+                "title": "尷尬",
+                "description": "司機更生氣了，其他路人都在看你。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "reflect_on_safety",
+          "text": "反思自己的行為",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": 5}
+              ],
+              "result": {
+                "title": "成長",
+                "description": "意識到安全的重要性，以後會更小心。"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wait_for_light",
+      "text": "你在路邊等待綠燈，這時看到一個小孩也在等。",
+      "choices": [
+        {
+          "id": "talk_to_child",
+          "text": "和小孩聊天",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 1.0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": 8}
+              ],
+              "result": {
+                "title": "童真",
+                "description": "小孩天真的話語讓你想起美好的童年。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "use_phone",
+          "text": "滑手機打發時間",
+          "visibility": {
+            "conditions": [
+              {"type": "inventory_has", "item": "phone"}
+            ]
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0.5,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": 2}
+              ],
+              "result": {
+                "title": "消磨時間",
+                "description": "看了一些有趣的內容，等待時間過得很快。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "observe_surroundings",
+          "text": "觀察周圍環境",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": 5}
+              ],
+              "result": {
+                "title": "注意細節",
+                "description": "注意到路邊有漂亮的花朵，城市也有美好的一面。"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

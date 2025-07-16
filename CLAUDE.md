@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Flutter game called "Work On Time Game" built with the Flame engine. It's a time management game where players collect items at home and navigate through various scenes and challenges.
+This is a Flutter game called "Work On Time Game" built with the Flame engine. It's a time management game where players collect items at home and navigate through various scenes before leaving for work.
 
-Please aware that although this project use the game engine `Flame`, some part of code like overlays might use `material`.
+**Important**: Although this project uses the Flame game engine, some parts like overlays use Material widgets.
 
 ## Development Commands
 
@@ -73,17 +73,17 @@ Uses Riverpod with code generation for state management:
 - **Global**: `lib/providers/global.dart` - Global app state
 - **Inventory**: `lib/providers/inventory.dart` - Player inventory management
 - **Character Status**: `lib/providers/character_status.dart` - Player attributes (mind, saving, energy)
+- **Game Events**: `lib/providers/game_event_provider.dart` - Event-driven scene transitions
 
 ### Directory Structure
 
 - `lib/components/` - Reusable Flame components
 - `lib/config/` - Game configuration (colors, images, audio, etc.)
-- `lib/models/` - Data models
+- `lib/models/` - Data models with Freezed
 - `lib/overlays/` - Flutter overlays that appear over the game
 - `lib/providers/` - Riverpod state management
 - `lib/screen/` - Game worlds and screens
-- `lib/routes/` - Route definitions (currently empty)
-- `assets/` - Game assets (images, audio, fonts)
+- `assets/` - Game assets (images, audio, fonts, data, rive)
 
 ### Key Features
 
@@ -93,10 +93,11 @@ Uses Riverpod with code generation for state management:
 - **Character Attributes**: Mind, saving, and energy meters
 - **Audio**: Background music and sound effects
 - **Custom Fonts**: TaiwanPearl font family
+- **Animations**: Rive animations for character movement
 
 ### Game Scenes
 
-- **Home Levels**: Bed room, living room, entrance way with interactive items
+- **Home Levels**: Bedroom, living room, entrance way with interactive items
 - **Traffic System**: Dice-based navigation with game board
 - **Event Scenes**: Rain scene, MRT scene with dynamic events
 - **Photo Capture**: Camera-like interaction system
@@ -118,3 +119,11 @@ Debug mode is enabled by default in `WOTGame` class. Visual debug information is
 ### Pan Controls
 
 Camera panning is context-aware - only works in the home level (`level_home`) and can be disabled via the `isPannable` flag.
+
+### Event System
+
+Game events automatically trigger scene transitions. Events are managed through `GameEventProvider` and can cause immediate or delayed scene changes.
+
+### Default Background for Scenes
+
+BaseScene now provides automatic fallback to `EndlessBackground` when scenes don't define their own backgrounds. Scenes can opt out by overriding `useDefaultBackground` to return false.

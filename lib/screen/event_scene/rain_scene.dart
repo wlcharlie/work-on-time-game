@@ -35,6 +35,10 @@ enum RainSceneState {
 }
 
 class RainScene extends BaseScene {
+  // 雨景有自己的背景，不使用默认背景
+  @override
+  bool get useDefaultBackground => false;
+  
   // 场景状态 - 暂时保留，可能后续会用到
   // RainSceneState _rainSceneState = RainSceneState.waitingToStart;
 

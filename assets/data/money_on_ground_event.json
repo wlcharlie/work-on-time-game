@@ -1,0 +1,122 @@
+{
+  "id": "money_on_ground_event",
+  "name": "地上有錢",
+  "preconditions": [],
+  "flow": [
+    {
+      "id": "found_money",
+      "text": "地上有錢？！是一張50元鈔票。",
+      "choices": [
+        {
+          "id": "pick_up",
+          "text": "撿起來",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0.5,
+          "outcomes": [
+            {
+              "conditions": [
+                {"type": "random_chance", "percentage": 70}
+              ],
+              "effects": [
+                {"type": "character_status", "status": "saving", "delta": 50},
+                {"type": "character_status", "status": "mind", "delta": 5}
+              ],
+              "result": {
+                "title": "小確幸",
+                "description": "撿到50元！今天運氣不錯。"
+              }
+            },
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": -10}
+              ],
+              "goto": "fake_money"
+            }
+          ]
+        },
+        {
+          "id": "dont_pick",
+          "text": "不要撿",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": 3}
+              ],
+              "result": {
+                "title": "謹慎",
+                "description": "路邊的錢不要隨便撿，繼續前進吧。"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fake_money",
+      "text": "仔細一看，是玩具鈔票！上面還寫著「天地銀行」。",
+      "choices": [
+        {
+          "id": "laugh_it_off",
+          "text": "笑笑丟掉",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": 5}
+              ],
+              "result": {
+                "title": "樂觀",
+                "description": "被騙了但覺得好笑，至少有個有趣的經歷。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "get_angry",
+          "text": "生氣踢開",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": -5},
+                {"type": "character_status", "status": "energy", "delta": -2}
+              ],
+              "result": {
+                "title": "生氣",
+                "description": "誰這麼無聊放假鈔票騙人！"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

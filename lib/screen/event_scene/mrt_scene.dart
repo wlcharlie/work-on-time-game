@@ -4,6 +4,10 @@ import 'package:work_on_time_game/components/scene/scene_element.dart';
 import 'package:work_on_time_game/config/images.dart';
 
 class MrtScene extends BaseScene {
+  // MRT场景有自己的背景，不使用默认背景
+  @override
+  bool get useDefaultBackground => false;
+  
   @override
   List<SceneElement> defineSceneElements() {
     return [

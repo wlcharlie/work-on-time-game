@@ -1,0 +1,148 @@
+{
+  "id": "grandma_crossing_event",
+  "name": "老奶奶過馬路",
+  "preconditions": [],
+  "flow": [
+    {
+      "id": "grandma_waiting",
+      "text": "看到老奶奶要過馬路？！她站在路邊看起來有點猶豫。",
+      "choices": [
+        {
+          "id": "help_cross",
+          "text": "扶著她過馬路",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": [
+              {"type": "status_min", "status": "energy", "value": 10}
+            ],
+            "disabled_text": "扶老奶奶過馬路 (體力不足)"
+          },
+          "delay": 2.0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": 15},
+                {"type": "character_status", "status": "energy", "delta": -5}
+              ],
+              "goto": "grandma_grateful"
+            }
+          ]
+        },
+        {
+          "id": "ignore",
+          "text": "無視",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": -3}
+              ],
+              "result": {
+                "title": "冷漠",
+                "description": "假裝沒看到，快速走過。心裡有點不舒服。"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grandma_grateful",
+      "text": "老奶奶安全過馬路後，非常感謝你的幫助。",
+      "choices": [
+        {
+          "id": "say_no_problem",
+          "text": "「不客氣，應該的」",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": 5}
+              ],
+              "result": {
+                "title": "善良",
+                "description": "做好事不求回報，心情很好。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "accept_thanks",
+          "text": "接受老奶奶的感謝",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 0,
+          "outcomes": [
+            {
+              "conditions": [
+                {"type": "random_chance", "percentage": 30}
+              ],
+              "effects": [
+                {"type": "character_status", "status": "saving", "delta": 20},
+                {"type": "character_status", "status": "mind", "delta": 8}
+              ],
+              "result": {
+                "title": "意外收穫",
+                "description": "老奶奶堅持要給你車費，說：「好人有好報！」"
+              }
+            },
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": 8}
+              ],
+              "result": {
+                "title": "溫暖",
+                "description": "老奶奶的感謝讓你覺得很溫暖。"
+              }
+            }
+          ]
+        },
+        {
+          "id": "chat_with_grandma",
+          "text": "和老奶奶聊天",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 1.5,
+          "outcomes": [
+            {
+              "conditions": [],
+              "effects": [
+                {"type": "character_status", "status": "mind", "delta": 12}
+              ],
+              "result": {
+                "title": "人生智慧",
+                "description": "老奶奶分享了人生經驗，讓你學到很多。"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

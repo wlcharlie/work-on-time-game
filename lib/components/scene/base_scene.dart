@@ -3,7 +3,9 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/animation.dart';
+import 'package:work_on_time_game/components/background/endless_background.dart';
 import 'package:work_on_time_game/components/scene/scene_element.dart';
+import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 /// 场景状态
@@ -34,8 +36,14 @@ abstract class BaseScene extends Component with HasGameReference<WOTGame> {
   // 场景完成计时器
   Timer? _sceneCompletionTimer;
 
+  // 背景组件
+  EndlessBackground? _backgroundComponent;
+
   /// 子类需要实现：定义场景元素
   List<SceneElement> defineSceneElements();
+
+  /// 子类可选择重写：是否使用默认背景
+  bool get useDefaultBackground => true;
 
   /// 子类可选择重写：场景完成后的回调
   void onSceneCompleted() {
@@ -54,6 +62,11 @@ abstract class BaseScene extends Component with HasGameReference<WOTGame> {
   /// 加载场景
   Future<void> _loadScene() async {
     _sceneState = SceneState.loading;
+
+    // 添加默认背景（如果启用）
+    if (useDefaultBackground) {
+      await _addDefaultBackground();
+    }
 
     final elements = defineSceneElements();
 
@@ -78,6 +91,21 @@ abstract class BaseScene extends Component with HasGameReference<WOTGame> {
 
     _sceneState = SceneState.playing;
     _startAnimations();
+  }
+
+  /// 添加默认背景
+  Future<void> _addDefaultBackground() async {
+    final images = Images();
+    await game.images.load(images.greenDotBackground);
+    
+    _backgroundComponent = EndlessBackground(
+      image: game.images.fromCache(images.greenDotBackground),
+    );
+    
+    // 设置背景的优先级为最低，确保它在所有其他元素后面
+    _backgroundComponent!.priority = -1000;
+    
+    add(_backgroundComponent!);
   }
 
   /// 开始所有动画

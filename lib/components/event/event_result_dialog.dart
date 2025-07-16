@@ -7,7 +7,7 @@ import 'package:work_on_time_game/config/typography.dart';
 import 'package:work_on_time_game/models/event_data.dart';
 
 const double dialogWidth = 660.0;
-const double dialogHeight = 330.0;
+const double dialogHeight = 440.0;
 
 class EventResultDialog extends PositionComponent {
   final ResultData result;

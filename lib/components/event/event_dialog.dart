@@ -188,8 +188,8 @@ class EventDialogContainer extends PositionComponent
   void update(double dt) {
     super.update(dt);
 
-    // Update delay timers
-    for (final timer in delayTimers.values) {
+    // Update delay timers - use toList() to avoid concurrent modification
+    for (final timer in delayTimers.values.toList()) {
       timer.update(dt);
     }
   }
