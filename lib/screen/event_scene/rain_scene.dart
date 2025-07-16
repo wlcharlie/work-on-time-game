@@ -34,7 +34,7 @@ enum RainSceneState {
   completed, // 场景完成
 }
 
-class RainScene extends BaseScene {
+class RainScene extends BaseScene with RiverpodComponentMixin {
   // 雨景有自己的背景，不使用默认背景
   @override
   bool get useDefaultBackground => false;
@@ -266,6 +266,7 @@ class RainScene extends BaseScene {
       // 创建事件控制器
       eventController = EventFlowController(
         eventData: eventData,
+        ref: ref,
         onEventCompleted: (result, appliedEffects) {
           print('Event completed: ${result.title}');
           _showFinalResult(result, appliedEffects);

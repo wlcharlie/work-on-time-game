@@ -7,7 +7,7 @@ import 'package:work_on_time_game/enums/character_status.dart';
 import 'package:work_on_time_game/providers/character_status.dart';
 import 'package:work_on_time_game/providers/inventory.dart';
 
-class EventFlowController extends Component with RiverpodComponentMixin {
+class EventFlowController extends Component {
   final EventData eventData;
   late String currentStepId;
   final Map<String, FlowStepData> flowSteps = {};
@@ -15,9 +15,13 @@ class EventFlowController extends Component with RiverpodComponentMixin {
   // Callback when event is completed
   final void Function(ResultData result, List<EffectData> appliedEffects)? onEventCompleted;
   final void Function()? onStepChanged;
+  
+  // Riverpod reference from parent component
+  final ComponentRef ref;
 
   EventFlowController({
     required this.eventData,
+    required this.ref,
     this.onEventCompleted,
     this.onStepChanged,
   }) {

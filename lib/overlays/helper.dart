@@ -147,7 +147,7 @@ class _HelperState extends ConsumerState<Helper> {
                 children: [
                   // 这里是选单内容，您可以根据需要自行填充
                   _buildMenuItem(Icons.home, '首頁'),
-                  _buildMenuItem(Icons.picture_in_picture, '下雨場景'),
+                  _buildMenuItem(Icons.picture_in_picture, '事件場景'),
                   _buildMenuItem(Icons.traffic, '交通場景(mui)'),
                   _buildMenuItem(Icons.camera, '互動場景(拍照企鵝)'),
                   Divider(height: 1),
@@ -225,7 +225,7 @@ class _HelperState extends ConsumerState<Helper> {
           case '首頁':
             widget.game.router.pushNamed('lobby');
             break;
-          case '下雨場景':
+          case '事件場景':
             widget.game.router.pushNamed('event_scene');
             break;
           case '交通場景(mui)':
