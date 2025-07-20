@@ -91,6 +91,15 @@ class Typography {
         color: Color(0xFF887768),
       );
 
+  TextStyle get tp18 => TextStyle(
+        fontSize: 18,
+        fontWeight: regular,
+        fontFamily: 'TaiwanPearl',
+        height: 1,
+        letterSpacing: 0,
+        color: Color(0xFF887768),
+      );
+
   TextStyle get tp16m => TextStyle(
         fontSize: 16,
         fontWeight: medium,
@@ -111,6 +120,15 @@ class Typography {
 
   TextStyle get tp14 => TextStyle(
         fontSize: 14,
+        fontWeight: regular,
+        fontFamily: 'TaiwanPearl',
+        height: 1,
+        letterSpacing: 0,
+        color: Color(0xFF887768),
+      );
+
+  TextStyle get tp12 => TextStyle(
+        fontSize: 12,
         fontWeight: regular,
         fontFamily: 'TaiwanPearl',
         height: 1,

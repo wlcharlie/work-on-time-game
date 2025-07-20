@@ -152,13 +152,13 @@ class _AnimalCollectionOverlayState
   Widget _buildAnimalGrid() {
     return Container(
       color: AppColors.white2,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(13),
       child: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 4,
-          childAspectRatio: 0.85,
-          mainAxisSpacing: 16,
-          crossAxisSpacing: 16,
+          childAspectRatio: 90 / 152.5,
+          mainAxisSpacing: 2,
+          crossAxisSpacing: 2,
         ),
         itemCount: animals.length,
         itemBuilder: (context, index) {
@@ -169,44 +169,64 @@ class _AnimalCollectionOverlayState
   }
 
   Widget _buildAnimalCard(AnimalData animal) {
-    return Column(
-      children: [
-        Container(
-          width: 70,
-          height: 70,
-          decoration: BoxDecoration(
-            color: AppColors.brown300.withValues(alpha: 0.4),
-            borderRadius: BorderRadius.circular(16),
+    return Container(
+      width: 90,
+      height: 152.5,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text('no.',
+                  style: typography.tp12.m.withColor(AppColors.textColor500)),
+              Text(
+                animal.id,
+                style: typography.tp18.m.withColor(AppColors.textColor500),
+              ),
+            ],
           ),
-          child: Center(
-            child: Text(
-              animal.icon,
-              style: typography.tp36,
+          Expanded(
+            child: Container(
+              alignment: Alignment.center,
+              child: Text(
+                animal.icon,
+                style: typography.tp36,
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          'no.${animal.id}',
-          style: typography.tp14.withColor(AppColors.textColor500),
-        ),
-        const SizedBox(height: 2),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.camera_alt,
-              size: 14,
-              color: AppColors.textColor500,
+          SizedBox(
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: const Icon(
+                    Icons.camera_alt,
+                    size: 18,
+                    color: AppColors.brown400,
+                  ),
+                ),
+                const SizedBox(width: 7),
+                Text(
+                  '${animal.collected}/${animal.total}',
+                  style: typography.tp16.m.withColor(AppColors.textColor500),
+                ),
+              ],
             ),
-            const SizedBox(width: 2),
-            Text(
-              '${animal.collected}/${animal.total}',
-              style: typography.tp14.withColor(AppColors.textColor500),
-            ),
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 
