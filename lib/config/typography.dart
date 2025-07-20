@@ -100,6 +100,15 @@ class Typography {
         color: Color(0xFF887768),
       );
 
+  TextStyle get tp16 => TextStyle(
+        fontSize: 16,
+        fontWeight: regular,
+        fontFamily: 'TaiwanPearl',
+        height: 1,
+        letterSpacing: 0,
+        color: Color(0xFF887768),
+      );
+
   TextStyle get tp14 => TextStyle(
         fontSize: 14,
         fontWeight: regular,
@@ -137,4 +146,8 @@ extension TextStyleExtension on TextStyle {
   TextStyle withFontWeight(FontWeight weight) => copyWith(fontWeight: weight);
 
   TextStyle withColor(Color color) => copyWith(color: color);
+
+  TextStyle get m => copyWith(fontWeight: FontWeight.w500);
+  TextStyle get sb => copyWith(fontWeight: FontWeight.w600);
+  TextStyle get b => copyWith(fontWeight: FontWeight.w700);
 }

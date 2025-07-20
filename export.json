@@ -1,0 +1,143 @@
+{
+  "Collection 1": {
+    "name": "Collection 1",
+    "modal-content-color": {
+      "name": "modal-content-color",
+      "description": "",
+      "value": "#f4e9d6",
+      "type": "color"
+    },
+    "green-400": {
+      "name": "green-400",
+      "description": "",
+      "value": "#bdd89c",
+      "type": "color"
+    },
+    "blue-400": {
+      "name": "blue-400",
+      "description": "",
+      "value": "#aacfcf",
+      "type": "color"
+    },
+    "yellow-400": {
+      "name": "yellow-400",
+      "description": "",
+      "value": "#e9d686",
+      "type": "color"
+    },
+    "text-color-500": {
+      "name": "text-color-500",
+      "description": "",
+      "value": "#3b3b3b",
+      "type": "color"
+    },
+    "grey-200": {
+      "name": "grey-200",
+      "description": "",
+      "value": "#e7e7e7",
+      "type": "color"
+    },
+    "orange-400": {
+      "name": "orange-400",
+      "description": "",
+      "value": "#fc7b64",
+      "type": "color"
+    },
+    "grey-300": {
+      "name": "grey-300",
+      "description": "",
+      "value": "#9f9f9f",
+      "type": "color"
+    },
+    "text-color-400": {
+      "name": "text-color-400",
+      "description": "",
+      "value": "#525252",
+      "type": "color"
+    },
+    "brown-500": {
+      "name": "brown-500",
+      "description": "",
+      "value": "#907054",
+      "type": "color"
+    },
+    "brown-400": {
+      "name": "brown-400",
+      "description": "",
+      "value": "#a9886c",
+      "type": "color"
+    },
+    "modal-content-border": {
+      "name": "modal-content-border",
+      "description": "",
+      "value": "#ae866b",
+      "type": "color"
+    },
+    "brown-600": {
+      "name": "brown-600",
+      "description": "",
+      "value": "#887768",
+      "type": "color"
+    },
+    "green-500": {
+      "name": "green-500",
+      "description": "",
+      "value": "#92c05f",
+      "type": "color"
+    },
+    "brown-700": {
+      "name": "brown-700",
+      "description": "",
+      "value": "#644c3b",
+      "type": "color"
+    },
+    "brown-300": {
+      "name": "brown-300",
+      "description": "",
+      "value": "#be936b",
+      "type": "color"
+    },
+    "border-brown": {
+      "name": "border-brown",
+      "description": "",
+      "value": "#a9886c",
+      "type": "color"
+    },
+    "black-opacity-80": {
+      "name": "black-opacity-80",
+      "description": "",
+      "value": "#000000",
+      "type": "color"
+    },
+    "pale-400": {
+      "name": "pale-400",
+      "description": "",
+      "value": "#f4ebe3",
+      "type": "color"
+    },
+    "pale-500": {
+      "name": "pale-500",
+      "description": "",
+      "value": "#e1c4ab",
+      "type": "color"
+    },
+    "pale-300": {
+      "name": "pale-300",
+      "description": "",
+      "value": "#f7f2ed",
+      "type": "color"
+    },
+    "white": {
+      "name": "white",
+      "description": "",
+      "value": "#ffffff",
+      "type": "color"
+    },
+    "outline_bg_click": {
+      "name": "outline_bg_click",
+      "description": "",
+      "value": "#f4f1ee",
+      "type": "color"
+    }
+  }
+}

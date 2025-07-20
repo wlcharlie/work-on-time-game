@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Pre
+
+Check @docs/lyra.md
+
 ## Project Overview
 
 This is a Flutter game called "Work On Time Game" built with the Flame engine. It's a time management game where players collect items at home and navigate through various scenes before leaving for work.

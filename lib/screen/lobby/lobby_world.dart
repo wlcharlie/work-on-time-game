@@ -30,6 +30,7 @@ class LobbyWorld extends World
     game.camera.viewfinder.zoom = 1;
     game.camera.viewfinder.position = Vector2(0, 0);
     game.overlays.add('lobbyTools');
+    game.overlays.add('animalCollection');
   }
 
   @override

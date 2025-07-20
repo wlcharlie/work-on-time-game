@@ -5,6 +5,7 @@ import 'package:work_on_time_game/overlays/helper.dart';
 import 'package:work_on_time_game/overlays/home_level_inspector.dart';
 import 'package:work_on_time_game/overlays/inventory.dart';
 import 'package:work_on_time_game/overlays/lobby_tools.dart';
+import 'package:work_on_time_game/overlays/animal_collection.dart';
 import 'package:work_on_time_game/screen/level_traffic/traffic_screen.dart';
 import 'package:work_on_time_game/screen/loading.dart';
 import 'package:work_on_time_game/wot_game.dart';
@@ -44,6 +45,7 @@ class WOTApp extends StatelessWidget {
                           HomeLevelInspector(game: game),
                       'inventory': (_, game) => Inventory(game: game),
                       'helper': (_, game) => Helper(game: game),
+                      'animalCollection': (_, game) => AnimalCollectionOverlay(game: game),
                     },
                   ),
                 ],

@@ -150,10 +150,12 @@ class _HelperState extends ConsumerState<Helper> {
                   _buildMenuItem(Icons.picture_in_picture, '事件場景'),
                   _buildMenuItem(Icons.traffic, '交通場景(mui)'),
                   _buildMenuItem(Icons.camera, '互動場景(拍照企鵝)'),
+                  _buildMenuItem(Icons.pets, '動物圖鑑'),
                   Divider(height: 1),
                   _buildMenuItem(Icons.settings, '設定'),
                   Divider(height: 1),
                   _buildMenuItem(Icons.info, '關於'),
+                  Divider(height: 1),
                   // 可以根据需要添加更多选项
                 ],
               ),
@@ -233,6 +235,9 @@ class _HelperState extends ConsumerState<Helper> {
             break;
           case '互動場景(拍照企鵝)':
             widget.game.router.pushNamed('interaction_capture');
+            break;
+          case '動物圖鑑':
+            widget.game.overlays.add('animalCollection');
             break;
           default:
             break;

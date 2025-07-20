@@ -12,6 +12,7 @@ import 'package:work_on_time_game/screen/lobby/lobby_world.dart';
 import 'package:work_on_time_game/screen/event_scene/rain_scene.dart';
 import 'package:work_on_time_game/screen/event_scene/scene_world.dart';
 import 'package:work_on_time_game/screen/level_traffic/traffic_world.dart';
+import 'package:work_on_time_game/screen/animal_collection/animal_collection_world.dart';
 
 class WOTGame extends FlameGame
     with TapDetector, PanDetector, RiverpodGameMixin {
@@ -49,6 +50,8 @@ class WOTGame extends FlameGame
         // 互動 相機
         'interaction_capture':
             WorldRoute(InteractionCaptureWorld.new, maintainState: false),
+        // 收藏 動物圖鑑
+        'animal_code': WorldRoute(AnimalCollectionWorld.new),
       },
       initialRoute: 'lobby',
     );
