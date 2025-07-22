@@ -34,11 +34,13 @@ enum RainSceneState {
   completed, // 场景完成
 }
 
+const double switchSceneDuration = 8.0;
+
 class RainScene extends BaseScene with RiverpodComponentMixin {
   // 雨景有自己的背景，不使用默认背景
   @override
   bool get useDefaultBackground => false;
-  
+
   // 场景状态 - 暂时保留，可能后续会用到
   // RainSceneState _rainSceneState = RainSceneState.waitingToStart;
 
@@ -197,7 +199,7 @@ class RainScene extends BaseScene with RiverpodComponentMixin {
     print('onSceneCompleted called, creating timer');
 
     // Create timer using Flame's pattern - no callback, check finished in update
-    _switchSceneTimer = Timer(2);
+    _switchSceneTimer = Timer(switchSceneDuration);
 
     print('Timer created: ${_switchSceneTimer != null}');
   }
@@ -344,7 +346,6 @@ class RainScene extends BaseScene with RiverpodComponentMixin {
     print('Final result: ${result.title} - ${result.description}');
   }
 
-
   @override
   Future<void> onLoad() async {
     // 初始化音频播放器
@@ -372,19 +373,19 @@ class RainScene extends BaseScene with RiverpodComponentMixin {
     await super.onLoad();
 
     // 开发用的重置按钮
-    ButtonComponent resetButton = ButtonComponent(
-      priority: 99999,
-      size: Vector2(100, 100),
-      position: Vector2(100, 100),
-      button: TextComponent(
-        text: 'replay',
-      ),
-      onPressed: () {
-        replay();
-      },
-    );
+    // ButtonComponent resetButton = ButtonComponent(
+    //   priority: 99999,
+    //   size: Vector2(100, 100),
+    //   position: Vector2(100, 100),
+    //   button: TextComponent(
+    //     text: 'replay',
+    //   ),
+    //   onPressed: () {
+    //     replay();
+    //   },
+    // );
 
-    add(resetButton);
+    // add(resetButton);
   }
 
   @override
@@ -410,7 +411,7 @@ class RainScene extends BaseScene with RiverpodComponentMixin {
     if (_switchSceneTimer != null && !_switchSceneTimer!.finished) {
       _switchSceneTimer!.update(dt);
       print(
-          'Timer updating: ${_switchSceneTimer!.current.toStringAsFixed(1)}s / 2s');
+          'Timer updating: ${_switchSceneTimer!.current.toStringAsFixed(1)}s / $switchSceneDuration s');
 
       // 检查是否完成
       if (_switchSceneTimer!.finished) {

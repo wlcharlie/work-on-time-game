@@ -44,9 +44,12 @@ class FramingCrosshair extends PositionComponent
     super.onLoad();
 
     size = Vector2(662, 532);
+    anchor = Anchor.center;
+
+    // position = Vector2(game.size.x / 2, game.size.y / 2);
 
     // 使用 extension 方法將物件置於畫面正中心
-    centerInGame();
+    // centerInGame();
 
     final framingCornerImage1 = await game.images.load(images.framingCorner1);
     final framingCornerImage2 = await game.images.load(images.framingCorner2);

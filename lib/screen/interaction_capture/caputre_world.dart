@@ -58,12 +58,25 @@ class InteractionCaptureWorld extends World
     // Create a MoveToEffect that takes exactly 2 seconds
     final moveEffect = MoveToEffect(
       _penguinNextRandomPosition,
-      EffectController(duration: 2.0, curve: Curves.easeOut),
+      EffectController(duration: 1, curve: Curves.easeOut),
     );
 
     // Remove any existing move effects and add the new one
     _movingPenguin.removeWhere((component) => component is MoveToEffect);
     _movingPenguin.add(moveEffect);
+
+    // _framingCrosshair.position = _movingPenguin.position + Vector2(150, 600);
+
+    final frameMoveEffect = MoveToEffect(
+      _penguinNextRandomPosition +
+          Vector2(100 + Random().nextInt(50).toDouble(),
+              550 + Random().nextInt(50).toDouble()),
+      EffectController(
+          duration: 1.5, curve: Curves.decelerate, startDelay: 0.5),
+    );
+
+    _framingCrosshair.removeWhere((component) => component is MoveToEffect);
+    _framingCrosshair.add(frameMoveEffect);
   }
 
   void _seeResult() {
@@ -152,19 +165,26 @@ class InteractionCaptureWorld extends World
   @override
   void onMount() {
     super.onMount();
+    debugMode = true;
     _canCapture = true;
     game.camera.viewfinder.anchor = Anchor.topLeft;
     game.camera.viewfinder.zoom = 1;
     add(_bg);
 
     // 第一階段 拍照元件
-    _movingPenguin.position = Vector2(0, 0);
+    _movingPenguin.position = Vector2(1000, 1000);
     _movingPenguin.anchor = Anchor.center;
 
     _snapshotComponent = SnapshotComponent()
+      ..anchor = Anchor.center
       ..size = Vector2(300, 300)
-      ..position = Vector2(game.size.x / 2 - 150, game.size.y / 2 - 150)
+      ..position = Vector2(game.size.x / 2, game.size.y / 2)
       ..add(_movingPenguin);
+
+    _framingCrosshair.position = Vector2(
+      -500,
+      -500,
+    );
 
     add(_snapshotComponent!);
     add(_penguinRandomPositionTimerComponent);

@@ -1,0 +1,116 @@
+{
+  "id": "your_event_id",
+  "name": "Your Event Name",
+  "preconditions": [
+    {
+      "type": "status_min",
+      "property": "mind",
+      "value": 20
+    }
+  ],
+  "flow": [
+    {
+      "id": "start",
+      "text": "This is the initial text shown to the player when the event begins.",
+      "choices": [
+        {
+          "id": "choice_1",
+          "text": "First choice option",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": [
+              {
+                "type": "inventory_has",
+                "item": "item_name"
+              }
+            ],
+            "disabled_text": "You need an item to select this option."
+          },
+          "delay": 2,
+          "outcomes": [
+            {
+              "weight": 1,
+              "effects": [
+                {
+                  "type": "character_status",
+                  "property": "energy",
+                  "delta": -10
+                }
+              ],
+              "result": {
+                "title": "Outcome Title",
+                "description": "Description of what happened as a result of this choice."
+              }
+            }
+          ]
+        },
+        {
+          "id": "choice_2",
+          "text": "Second choice option",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 1,
+          "outcomes": [
+            {
+              "weight": 0.7,
+              "goto": "second_node"
+            },
+            {
+              "weight": 0.3,
+              "effects": [
+                {
+                  "type": "character_status",
+                  "property": "mind",
+                  "delta": 5
+                }
+              ],
+              "result": {
+                "title": "Alternative Outcome",
+                "description": "This happens 30% of the time due to random chance."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "second_node",
+      "text": "This is a continuation node reached via 'goto' from a previous choice.",
+      "choices": [
+        {
+          "id": "final_choice",
+          "text": "Make final decision",
+          "visibility": {
+            "conditions": []
+          },
+          "availability": {
+            "conditions": []
+          },
+          "delay": 1,
+          "outcomes": [
+            {
+              "weight": 1,
+              "effects": [
+                {
+                  "type": "character_status",
+                  "property": "saving",
+                  "delta": -20
+                }
+              ],
+              "result": {
+                "title": "Event Complete",
+                "description": "You completed the event with this final choice."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

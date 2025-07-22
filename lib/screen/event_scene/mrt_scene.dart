@@ -7,7 +7,7 @@ class MrtScene extends BaseScene {
   // MRT场景有自己的背景，不使用默认背景
   @override
   bool get useDefaultBackground => false;
-  
+
   @override
   List<SceneElement> defineSceneElements() {
     return [
@@ -47,6 +47,30 @@ class MrtScene extends BaseScene {
         ],
       ),
 
+      SceneElement.character(
+        id: 'penguin',
+        imagePath: images.penguin,
+        position: Vector2(game.size.x + 105, 1274),
+        scale: Vector2(0.89, 0.89),
+        opacity: 0,
+        animations: [
+          SceneAnimation.slideIn(
+            startPosition: Vector2(game.size.x + 105, 1274),
+            targetPosition: Vector2(0, 1284),
+            duration: 2,
+            delay: 3.5,
+          ),
+          SceneAnimation.fadeIn(
+            duration: 1.5,
+            delay: 3.5,
+          ),
+          SceneAnimation.fadeOut(
+            duration: 1.5,
+            delay: 7,
+          ),
+        ],
+      ),
+
       // 角色 - 放在底部中央
       SceneElement.character(
         imagePath: images.mrtSceneCharacters,
@@ -55,7 +79,7 @@ class MrtScene extends BaseScene {
         animations: [
           SceneAnimation.fadeIn(
             duration: 1.5,
-            delay: 3.5,
+            delay: 6,
           ),
         ],
       ),

@@ -97,14 +97,14 @@ abstract class BaseScene extends Component with HasGameReference<WOTGame> {
   Future<void> _addDefaultBackground() async {
     final images = Images();
     await game.images.load(images.greenDotBackground);
-    
+
     _backgroundComponent = EndlessBackground(
       image: game.images.fromCache(images.greenDotBackground),
     );
-    
+
     // 设置背景的优先级为最低，确保它在所有其他元素后面
     _backgroundComponent!.priority = -1000;
-    
+
     add(_backgroundComponent!);
   }
 
@@ -133,7 +133,7 @@ abstract class BaseScene extends Component with HasGameReference<WOTGame> {
     if (maxEndTime > 0) {
       print('场景将在 ${maxEndTime + 0.1} 秒后完成');
       _sceneCompletionTimer = Timer(
-        maxEndTime + 0.1, // 额外加0.1秒确保所有动画都完成
+        maxEndTime + 2, // 额外加0.1秒确保所有动画都完成
         onTick: () {
           print('场景动画全部完成，触发 onSceneCompleted');
           setSceneState(SceneState.completed);
@@ -147,7 +147,7 @@ abstract class BaseScene extends Component with HasGameReference<WOTGame> {
     void executeAnimation() {
       // 调用onStart回调
       animation.onStart?.call();
-      
+
       switch (animation.type) {
         case SceneAnimationType.slideIn:
           _applySlideInAnimation(sprite, animation);
@@ -163,6 +163,9 @@ abstract class BaseScene extends Component with HasGameReference<WOTGame> {
           break;
         case SceneAnimationType.opacityLoop:
           _applyOpacityLoopAnimation(sprite, animation);
+          break;
+        case SceneAnimationType.scaleIn:
+          _applyScaleInAnimation(sprite, animation);
           break;
       }
     }
@@ -271,6 +274,19 @@ abstract class BaseScene extends Component with HasGameReference<WOTGame> {
           ),
         ],
         infinite: animation.infinite,
+      ),
+    );
+  }
+
+  /// 缩放动画
+  void _applyScaleInAnimation(
+      SpriteComponent sprite, SceneAnimation animation) {
+    sprite.add(
+      ScaleEffect.to(
+        Vector2(animation.targetScale ?? 1.0, animation.targetScale ?? 1.0),
+        EffectController(
+          duration: animation.duration,
+        ),
       ),
     );
   }

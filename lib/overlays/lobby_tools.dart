@@ -1,7 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:work_on_time_game/config/images.dart';
 import 'package:work_on_time_game/config/typography.dart';
+import 'package:work_on_time_game/providers/global.dart';
 import 'package:work_on_time_game/wot_game.dart';
 
 final tabBarIcons = [
@@ -181,10 +183,24 @@ class _LobbyToolsState extends ConsumerState<LobbyTools> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: tabBarIcons
-            .map(
-              (icon) => Image.asset(
-                icon,
-                width: 48,
+            .mapIndexed(
+              (index, icon) => GestureDetector(
+                onTap: () {
+                  final global = ref.read(globalNotifierProvider.notifier);
+                  final scenes = [
+                    'rain',
+                    'mrt',
+                    'moneyOnGround',
+                    'grandmaCrossing',
+                    'trafficLight',
+                  ];
+                  global.setCurrentEventScene(scenes[index]);
+                  widget.game.router.pushNamed('event_scene');
+                },
+                child: Image.asset(
+                  icon,
+                  width: 48,
+                ),
               ),
             )
             .toList(),

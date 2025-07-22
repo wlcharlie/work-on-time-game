@@ -187,7 +187,7 @@ class _HelperState extends ConsumerState<Helper> {
                 width: _buttonRadius * 2,
                 height: _buttonRadius * 2,
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 73, 66, 114),
+                  color: Color.fromARGB(80, 73, 66, 114),
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
@@ -201,7 +201,7 @@ class _HelperState extends ConsumerState<Helper> {
                   child: Icon(
                     Icons.drag_handle,
                     size: 15,
-                    color: Color.fromARGB(255, 241, 237, 246),
+                    color: Color.fromARGB(125, 241, 237, 246),
                   ),
                 ),
               ),
@@ -229,6 +229,7 @@ class _HelperState extends ConsumerState<Helper> {
             break;
           case '事件場景':
             widget.game.router.pushNamed('event_scene');
+
             break;
           case '交通場景(mui)':
             Navigator.pushNamed(context, '/traffic');

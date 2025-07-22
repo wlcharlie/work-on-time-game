@@ -7,6 +7,7 @@ enum SceneAnimationType {
   fadeOut, // 淡出动画
   moveLoop, // 循环移动
   opacityLoop, // 透明度循环
+  scaleIn, // 缩放动画
 }
 
 /// 场景动画配置
@@ -17,6 +18,8 @@ class SceneAnimation {
   final Vector2? targetPosition;
   final double? startOpacity;
   final double? targetOpacity;
+  final double? startScale;
+  final double? targetScale;
   final Vector2? moveDistance;
   final Vector2? resetPosition;
   final bool infinite;
@@ -30,6 +33,8 @@ class SceneAnimation {
     this.targetPosition,
     this.startOpacity,
     this.targetOpacity,
+    this.startScale,
+    this.targetScale,
     this.moveDistance,
     this.resetPosition,
     this.infinite = false,
@@ -119,6 +124,21 @@ class SceneAnimation {
         delay: delay,
         onStart: onStart,
       );
+
+  static SceneAnimation scaleIn({
+    double duration = 1.0,
+    double delay = 0,
+    double startScale = 0.0,
+    double targetScale = 1.0,
+  }) =>
+      SceneAnimation(
+        type: SceneAnimationType.scaleIn,
+        duration: duration,
+        startScale: startScale,
+        targetScale: targetScale,
+        infinite: false,
+        delay: delay,
+      );
 }
 
 /// 场景元素配置
@@ -161,6 +181,7 @@ class SceneElement {
 
   /// 创建角色元素
   static SceneElement character({
+    String? id,
     required String imagePath,
     required Vector2 position,
     Anchor? anchor,
@@ -169,7 +190,7 @@ class SceneElement {
     List<SceneAnimation> animations = const [],
   }) =>
       SceneElement(
-        id: 'character',
+        id: id ?? 'character',
         imagePath: imagePath,
         position: position,
         anchor: anchor,
