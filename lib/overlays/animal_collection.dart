@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:work_on_time_game/wot_game.dart';
@@ -18,41 +20,230 @@ class AnimalCollectionOverlay extends ConsumerStatefulWidget {
 class _AnimalCollectionOverlayState
     extends ConsumerState<AnimalCollectionOverlay> {
   int selectedTab = 0;
+  bool isDetailView = false;
+  String? selectedAnimalId;
 
   final List<AnimalData> animals = [
-    AnimalData(id: "001", name: "Hamster", icon: "🐹", collected: 0, total: 2),
-    AnimalData(id: "002", name: "Pikachu", icon: "⚡", collected: 0, total: 2),
-    AnimalData(id: "003", name: "Bear", icon: "🐻", collected: 0, total: 2),
-    AnimalData(id: "004", name: "Elephant", icon: "🐘", collected: 0, total: 2),
     AnimalData(
-        id: "001", name: "Squirrel", icon: "🐿️", collected: 0, total: 2),
-    AnimalData(id: "001", name: "Penguin", icon: "🐧", collected: 0, total: 2),
-    AnimalData(id: "001", name: "Cat", icon: "🐱", collected: 0, total: 2),
+        id: "001",
+        name: "Bear",
+        headImagePath: images.bearHead,
+        fullImagePath: images.bearFull,
+        collected: 1,
+        total: 2,
+        seen: true),
     AnimalData(
-        id: "001", name: "Elephant2", icon: "🐘", collected: 0, total: 2),
-    AnimalData(id: "001", name: "Giraffe", icon: "🦒", collected: 0, total: 2),
-    AnimalData(id: "001", name: "Chick", icon: "🐥", collected: 0, total: 2),
-    AnimalData(id: "001", name: "Hamster2", icon: "🐹", collected: 0, total: 2),
-    AnimalData(id: "001", name: "Hippo", icon: "🦛", collected: 0, total: 2),
-    AnimalData(id: "001", name: "Pig", icon: "🐷", collected: 0, total: 2),
-    AnimalData(id: "001", name: "Rabbit", icon: "🐰", collected: 0, total: 2),
+        id: "002",
+        name: "Capybara",
+        headImagePath: images.capybaraHead,
+        fullImagePath: images.capybaraFull,
+        collected: 0,
+        total: 2,
+        seen: true),
+    AnimalData(
+        id: "003",
+        name: "Collie",
+        headImagePath: images.collieHead,
+        fullImagePath: images.collieFull,
+        collected: 0,
+        total: 2,
+        seen: false),
+    AnimalData(
+        id: "004",
+        name: "Deer",
+        headImagePath: images.deerHead,
+        fullImagePath: images.deerFull,
+        collected: 2,
+        total: 2,
+        seen: true),
+    AnimalData(
+        id: "005",
+        name: "Elephant",
+        headImagePath: images.elephantHead,
+        fullImagePath: images.elephantFull,
+        collected: 0,
+        total: 2,
+        seen: true),
+    AnimalData(
+        id: "006",
+        name: "Giraffe",
+        headImagePath: images.giraffeHead,
+        fullImagePath: images.giraffeFull,
+        collected: 0,
+        total: 2,
+        seen: false),
+    AnimalData(
+        id: "007",
+        name: "Golden",
+        headImagePath: images.goldenHead,
+        fullImagePath: images.goldenFull,
+        collected: 1,
+        total: 2,
+        seen: true),
+    AnimalData(
+        id: "008",
+        name: "Hamster",
+        headImagePath: images.hamustaHead,
+        fullImagePath: images.hamustaFull,
+        collected: 0,
+        total: 2,
+        seen: false),
+    AnimalData(
+        id: "009",
+        name: "Hippo",
+        headImagePath: images.hippoHead,
+        fullImagePath: images.hippoFull,
+        collected: 0,
+        total: 2,
+        seen: true),
+    AnimalData(
+        id: "010",
+        name: "企鵝走走",
+        headImagePath: images.penguinHead,
+        fullImagePath: images.penguinFull,
+        collected: 1,
+        total: 2,
+        seen: true),
+    AnimalData(
+        id: "011",
+        name: "Pig",
+        headImagePath: images.pigHead,
+        fullImagePath: images.pigFull,
+        collected: 1,
+        total: 2,
+        seen: true),
+    AnimalData(
+        id: "012",
+        name: "Rabbit",
+        headImagePath: images.rabbitHead,
+        fullImagePath: images.rabbitFull,
+        collected: 0,
+        total: 2,
+        seen: false),
+    // 未知動物
+    AnimalData(
+        id: "013",
+        name: "???",
+        headImagePath: images.notFoundHead,
+        fullImagePath: images.notFoundFull,
+        collected: 0,
+        total: 2,
+        seen: false),
+    AnimalData(
+        id: "014",
+        name: "???",
+        headImagePath: images.notFoundHead,
+        fullImagePath: images.notFoundFull,
+        collected: 0,
+        total: 2,
+        seen: false),
+    AnimalData(
+        id: "015",
+        name: "???",
+        headImagePath: images.notFoundHead,
+        fullImagePath: images.notFoundFull,
+        collected: 0,
+        total: 2,
+        seen: false),
+    AnimalData(
+        id: "016",
+        name: "???",
+        headImagePath: images.notFoundHead,
+        fullImagePath: images.notFoundFull,
+        collected: 0,
+        total: 2,
+        seen: false),
+    AnimalData(
+        id: "017",
+        name: "???",
+        headImagePath: images.notFoundHead,
+        fullImagePath: images.notFoundFull,
+        collected: 0,
+        total: 2,
+        seen: false),
+    AnimalData(
+        id: "018",
+        name: "???",
+        headImagePath: images.notFoundHead,
+        fullImagePath: images.notFoundFull,
+        collected: 0,
+        total: 2,
+        seen: false),
+    AnimalData(
+        id: "019",
+        name: "???",
+        headImagePath: images.notFoundHead,
+        fullImagePath: images.notFoundFull,
+        collected: 0,
+        total: 2,
+        seen: false),
+    AnimalData(
+        id: "020",
+        name: "???",
+        headImagePath: images.notFoundHead,
+        fullImagePath: images.notFoundFull,
+        collected: 0,
+        total: 2,
+        seen: false),
+    AnimalData(
+        id: "021",
+        name: "???",
+        headImagePath: images.notFoundHead,
+        fullImagePath: images.notFoundFull,
+        collected: 0,
+        total: 2,
+        seen: false),
+    AnimalData(
+        id: "022",
+        name: "???",
+        headImagePath: images.notFoundHead,
+        fullImagePath: images.notFoundFull,
+        collected: 0,
+        total: 2,
+        seen: false),
+    AnimalData(
+        id: "023",
+        name: "???",
+        headImagePath: images.notFoundHead,
+        fullImagePath: images.notFoundFull,
+        collected: 0,
+        total: 2,
+        seen: false),
+    AnimalData(
+        id: "024",
+        name: "???",
+        headImagePath: images.notFoundHead,
+        fullImagePath: images.notFoundFull,
+        collected: 0,
+        total: 2,
+        seen: false),
   ];
+
+  AnimalData? _getSelectedAnimal() {
+    if (selectedAnimalId == null) return null;
+    try {
+      return animals.firstWhere((animal) => animal.id == selectedAnimalId);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  String _getAnimalStatusText(AnimalData animal) {
+    if (animal.collected > 0) {
+      return animal.collected == animal.total ? '已完全收集！' : '已收集，還可以收集更多';
+    } else if (animal.seen) {
+      return '曾經見過，但還沒有收集到';
+    } else {
+      return '尚未發現';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
-          children: [
-            _buildHeaderWithTabs(),
-            _buildTitle(),
-            const SizedBox(height: 1),
-            Expanded(
-              child: _buildAnimalGrid(),
-            ),
-          ],
-        ),
+        child: isDetailView ? _buildAnimalDetailView() : _buildAnimalGridView(),
       ),
       bottomNavigationBar: _buildBottomBar(context),
     );
@@ -152,7 +343,7 @@ class _AnimalCollectionOverlayState
   Widget _buildAnimalGrid() {
     return Container(
       color: AppColors.white2,
-      padding: const EdgeInsets.all(13),
+      padding: const EdgeInsets.fromLTRB(13, 13, 13, 0),
       child: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 4,
@@ -168,71 +359,301 @@ class _AnimalCollectionOverlayState
     );
   }
 
-  Widget _buildAnimalCard(AnimalData animal) {
+  Widget _buildAnimalGridView() {
+    return Column(
+      children: [
+        _buildHeaderWithTabs(),
+        _buildTitle(),
+        Expanded(
+          child: _buildAnimalGrid(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAnimalDetailView() {
+    final selectedAnimal = _getSelectedAnimal();
+    if (selectedAnimal == null) return const SizedBox();
+
+    final isSeen = selectedAnimal.seen || selectedAnimal.collected > 0;
+
     return Container(
-      width: 90,
-      height: 152.5,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      color: AppColors.white2,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
+          Container(
+            width: double.infinity,
+            height: 89.5,
+            color: AppColors.white,
+          ),
+
+          Stack(
+            clipBehavior: Clip.none,
             children: [
-              Text('no.',
-                  style: typography.tp12.m.withColor(AppColors.textColor500)),
-              Text(
-                animal.id,
-                style: typography.tp18.m.withColor(AppColors.textColor500),
+              Container(
+                width: double.infinity,
+                height: 79,
+                color: AppColors.pale400,
+                padding: const EdgeInsets.only(bottom: 21.5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      isSeen ? selectedAnimal.name : '???',
+                      style:
+                          typography.tp18.m.withColor(AppColors.textColor500),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                top: -55,
+                left: 0,
+                right: 0,
+                child: SizedBox(
+                  width: 75,
+                  height: 75,
+                  child: _buildAnimalImage(selectedAnimal),
+                ),
               ),
             ],
           ),
-          Expanded(
-            child: Container(
-              alignment: Alignment.center,
-              child: Text(
-                animal.icon,
-                style: typography.tp36,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: Row(
+
+          // 動物圖片區域
+
+          const SizedBox(height: 24),
+
+          // 根據 seen 狀態決定顯示內容
+          isSeen
+              ? _buildPolaroidView(selectedAnimal)
+              : _buildUnseenMessageView(),
+          const SizedBox(height: 15),
+          if (isSeen)
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: 18,
-                  height: 18,
-                  child: const Icon(
-                    Icons.camera_alt,
-                    size: 18,
-                    color: AppColors.brown400,
+                Container(
+                  width: 10,
+                  height: 10,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF8B7158),
+                    shape: BoxShape.circle,
                   ),
                 ),
-                const SizedBox(width: 7),
-                Text(
-                  '${animal.collected}/${animal.total}',
-                  style: typography.tp16.m.withColor(AppColors.textColor500),
+                const SizedBox(width: 6),
+                Container(
+                  width: 10,
+                  height: 10,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFD9D9D9),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Container(
+                  width: 10,
+                  height: 10,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFD9D9D9),
+                    shape: BoxShape.circle,
+                  ),
                 ),
               ],
-            ),
+            )
+          // indicator to scroll
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPolaroidView(AnimalData selectedAnimal) {
+    return Container(
+      width: 333,
+      height: 449.5,
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        children: [
+          SizedBox(height: 15.5),
+          Stack(
+            children: [
+              Container(
+                width: 306.5,
+                height: 334.5,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24),
+                  color: AppColors.modalContentColor,
+                ),
+              ),
+              Positioned(
+                left: 0,
+                top: 0,
+                right: 0,
+                bottom: 0,
+                child: Image.asset(
+                  images.getFullPath(selectedAnimal.fullImagePath),
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 35 / 2),
+          Text(
+            selectedAnimal.name,
+            style: typography.tp24.m.withColor(AppColors.brown500),
+          ),
+          SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                images.getFullPath(images.starFit),
+                width: 24,
+                height: 24,
+              ),
+              const SizedBox(width: 8),
+              Image.asset(
+                images.getFullPath(images.starFit),
+                width: 24,
+                height: 24,
+              ),
+              const SizedBox(width: 8),
+              Image.asset(
+                images.getFullPath(images.starFit),
+                width: 24,
+                height: 24,
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
+  Widget _buildUnseenMessageView() {
+    return Expanded(
+      child: Container(
+        alignment: Alignment.center,
+        child: Text(
+          '有遇見他，似乎來不及拍照',
+          style: typography.tp18.m.withColor(AppColors.textColor400),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAnimalCard(AnimalData animal) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedAnimalId = animal.id;
+          isDetailView = true;
+        });
+      },
+      child: Container(
+        width: 90,
+        height: 152.5,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text('no.',
+                    style: typography.tp12.m.withColor(AppColors.textColor500)),
+                Text(
+                  animal.id,
+                  style: typography.tp18.m.withColor(AppColors.textColor500),
+                ),
+              ],
+            ),
+            Expanded(
+              child: Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(8),
+                child: _buildAnimalImage(animal),
+              ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: const Icon(
+                      Icons.camera_alt,
+                      size: 18,
+                      color: AppColors.brown400,
+                    ),
+                  ),
+                  const SizedBox(width: 7),
+                  Text(
+                    '${animal.collected}/${animal.total}',
+                    style: typography.tp16.m.withColor(AppColors.textColor500),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ), // 關閉 GestureDetector
+    );
+  }
+
+  Widget _buildAnimalImage(AnimalData animal) {
+    // 根據收集狀態決定顯示效果
+    if (animal.collected > 0 || animal.name == '???') {
+      // 已收集：正常顯示
+      return Image.asset(
+        images.getFullPath(animal.headImagePath),
+        fit: BoxFit.contain,
+      );
+    } else if (animal.seen) {
+      // 看過但未收集：覆蓋半透明棕色
+      return ColorFiltered(
+        colorFilter: const ColorFilter.mode(
+          Color.fromRGBO(139, 113, 88, 0.5), // 50% opacity 的棕色
+          BlendMode.srcATop,
+        ),
+        child: Opacity(
+          opacity: 0.3,
+          child: Image.asset(
+            images.getFullPath(animal.headImagePath),
+            fit: BoxFit.contain,
+          ),
+        ),
+      );
+    } else {
+      // 從未見過：顯示剪影
+      return ColorFiltered(
+        colorFilter: const ColorFilter.mode(
+          Color(0xFF8B7158),
+          BlendMode.srcIn,
+        ),
+        child: Image.asset(
+          images.getFullPath(animal.headImagePath),
+          fit: BoxFit.contain,
+        ),
+      );
+    }
+  }
+
   Widget _buildBottomBar(BuildContext context) {
     return Container(
-      height: 87 + MediaQuery.of(context).padding.bottom,
+      height: 75 + MediaQuery.of(context).padding.bottom,
       padding: EdgeInsets.fromLTRB(
           12, 12, 12, MediaQuery.of(context).padding.bottom),
       decoration: const BoxDecoration(
@@ -249,7 +670,14 @@ class _AnimalCollectionOverlayState
         children: [
           GestureDetector(
             onTap: () {
-              widget.game.overlays.remove('animalCollection');
+              if (isDetailView) {
+                setState(() {
+                  isDetailView = false;
+                  selectedAnimalId = null;
+                });
+              } else {
+                widget.game.overlays.remove('animalCollection');
+              }
             },
             child: ClipPath(
               clipper: BackButtonClipper(),
@@ -270,7 +698,7 @@ class _AnimalCollectionOverlayState
           ),
           SizedBox(
             width: double.infinity,
-            height: 36,
+            height: 24,
             child: Image.asset(
               images.getFullPath(images.logo),
               width: 97.22,
@@ -328,15 +756,19 @@ class BackButtonClipper extends CustomClipper<Path> {
 class AnimalData {
   final String id;
   final String name;
-  final String icon;
+  final String headImagePath;
+  final String fullImagePath;
   final int collected;
   final int total;
+  final bool seen;
 
   AnimalData({
     required this.id,
     required this.name,
-    required this.icon,
+    required this.headImagePath,
+    required this.fullImagePath,
     required this.collected,
     required this.total,
+    this.seen = false,
   });
 }

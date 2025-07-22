@@ -139,10 +139,43 @@ class Images {
   final String framingCorner3 = 'camera/framing_corner_3.png';
   final String framingCorner4 = 'camera/framing_corner_4.png';
 
+  // Animal images
   final String penguin = 'animal/penguin.png';
+
+  // Animal Head Images
+  final String bearHead = 'animal/bear_head.png';
+  final String capybaraHead = 'animal/capybara_head.png';
+  final String penguinHead = 'animal/penguin_head.png';
+  final String collieHead = 'animal/collie_head.png';
+  final String deerHead = 'animal/deer_head.png';
+  final String elephantHead = 'animal/elephant_head.png';
+  final String giraffeHead = 'animal/giraffe_head.png';
+  final String goldenHead = 'animal/golden_head.png';
+  final String hamustaHead = 'animal/hamusta_head.png';
+  final String hippoHead = 'animal/hippo_head.png';
+  final String pigHead = 'animal/pig_head.png';
+  final String rabbitHead = 'animal/rabbit_head.png';
+  final String notFoundHead = 'animal/not_found.png';
+
+  // Animal Full Images (暫時使用 head images)
+  final String bearFull = 'animal/bear_head.png';
+  final String capybaraFull = 'animal/capybara_head.png';
+  final String penguinFull = 'animal/penguin.png';
+  final String collieFull = 'animal/collie_head.png';
+  final String deerFull = 'animal/deer_head.png';
+  final String elephantFull = 'animal/elephant_head.png';
+  final String giraffeFull = 'animal/giraffe_head.png';
+  final String goldenFull = 'animal/golden_head.png';
+  final String hamustaFull = 'animal/hamusta_head.png';
+  final String hippoFull = 'animal/hippo_head.png';
+  final String pigFull = 'animal/pig_head.png';
+  final String rabbitFull = 'animal/rabbit_head.png';
+  final String notFoundFull = 'animal/not_found.png';
+
   final String goose = 'card/goose.png';
 
   final String star = 'star.png';
+  final String starFit = 'star_fit.png';
 
   String getFullPath(String image) {
     return 'assets/images/$image';
